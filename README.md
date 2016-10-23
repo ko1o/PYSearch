@@ -26,20 +26,11 @@
 ## <a id="支持哪些风格"></a>支持哪些风格
 
 #### 热门搜索风格
-![(img)](https://github.com/iphone5solo/learngit/raw/master/imagesForPYSearch/PYHotSearchStyleDefault.png)
-![(img)](https://github.com/iphone5solo/learngit/raw/master/imagesForPYSearch/PYHotSearchStyleColorfulTag.png)
-![(img)](https://github.com/iphone5solo/learngit/raw/master/imagesForPYSearch/PYHotSearchStyleBorderTag.png)
-![(img)](https://github.com/iphone5solo/learngit/raw/master/imagesForPYSearch/PYHotSearchStyleARCBorderTag.png)
-![(img)](https://github.com/iphone5solo/learngit/raw/master/imagesForPYSearch/PYHotSearchStyleRankTag.png)
-![(img)](https://github.com/iphone5solo/learngit/raw/master/imagesForPYSearch/PYHotSearchStyleRectangleTag.png)
+![(img)](https://github.com/iphone5solo/learngit/raw/master/imagesForPYSearch/hotSearchStyle01.png) ![(img)](https://github.com/iphone5solo/learngit/raw/master/imagesForPYSearch/hotSearchStyle02.png)![(img)](https://github.com/iphone5solo/learngit/raw/master/imagesForPYSearch/hotSearchStyle03.png) ![(img)](https://github.com/iphone5solo/learngit/raw/master/imagesForPYSearch/hotSearchStyle04.png)![(img)](https://github.com/iphone5solo/learngit/raw/master/imagesForPYSearch/hotSearchStyle05.png) ![(img)](https://github.com/iphone5solo/learngit/raw/master/imagesForPYSearch/hotSearchStyle06.png)
 
 #### 搜索历史风格
 
-![(img)](https://github.com/iphone5solo/learngit/raw/master/imagesForPYSearch/PYSearchHistoryStyleDefault.png)
-![(img)](https://github.com/iphone5solo/learngit/raw/master/imagesForPYSearch/PYSearchHistoryStyleNormalTag.png)
-![(img)](https://github.com/iphone5solo/learngit/raw/master/imagesForPYSearch/PYSearchHistoryStyleColorfulTag.png)
-![(img)](https://github.com/iphone5solo/learngit/raw/master/imagesForPYSearch/PYSearchHistoryStyleBorderTag.png)
-![(img)](https://github.com/iphone5solo/learngit/raw/master/imagesForPYSearch/PYSearchHistoryStyleARCBorderTag.png)
+![(img)](https://github.com/iphone5solo/learngit/raw/master/imagesForPYSearch/searchHistoryStyle01.png) ![(img)](https://github.com/iphone5solo/learngit/raw/master/imagesForPYSearch/searchHistoryStyle02.png)![(img)](https://github.com/iphone5solo/learngit/raw/master/imagesForPYSearch/searchHistoryStyle03.png) ![(img)](https://github.com/iphone5solo/learngit/raw/master/imagesForPYSearch/searchHistoryStyle04.png)![(img)](https://github.com/iphone5solo/learngit/raw/master/imagesForPYSearch/searchHistoryStyle05.png)
 
 ## <a id="如何使用PYSearch"></a>如何使用PYSearch
 * 手动导入：
