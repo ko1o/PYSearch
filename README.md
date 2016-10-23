@@ -21,25 +21,25 @@
 
 ## <a id="效果图"></a>效果图
 
+![(img)](http://oe1ml9cxe.bkt.clouddn.com/PYSearchDemo.gif)
+
 ## <a id="支持哪些风格"></a>支持哪些风格
 
-#### 热门搜索
-[img](http://oe1ml9cxe.bkt.clouddn.com/PYHotSearchStyleDefault.png)
-[img](http://oe1ml9cxe.bkt.clouddn.com/PYHotSearchStyleColorfulTag.png)
-[img](http://oe1ml9cxe.bkt.clouddn.com/PYHotSearchStyleBorderTag.png)
-[img](http://oe1ml9cxe.bkt.clouddn.com/PYHotSearchStyleBorderTag.png)
-[img](http://oe1ml9cxe.bkt.clouddn.com/PYHotSearchStyleARCBorderTag.png)
+#### 热门搜索风格
+![(img)](https://github.com/iphone5solo/learngit/raw/master/imagesForPYSearch/PYHotSearchStyleDefault.png)
+![(img)](https://github.com/iphone5solo/learngit/raw/master/imagesForPYSearch/PYHotSearchStyleColorfulTag.png)
+![(img)](https://github.com/iphone5solo/learngit/raw/master/imagesForPYSearch/PYHotSearchStyleBorderTag.png)
+![(img)](https://github.com/iphone5solo/learngit/raw/master/imagesForPYSearch/PYHotSearchStyleARCBorderTag.png)
+![(img)](https://github.com/iphone5solo/learngit/raw/master/imagesForPYSearch/PYHotSearchStyleRankTag.png)
+![(img)](https://github.com/iphone5solo/learngit/raw/master/imagesForPYSearch/PYHotSearchStyleRectangleTag.png)
 
-[img](http://oe1ml9cxe.bkt.clouddn.com/PYHotSearchStyleColorfulTag.png)
-[img](http://oe1ml9cxe.bkt.clouddn.com/PYHotSearchStyleRectangleTag.png)
+#### 搜索历史风格
 
-#### 搜索历史
-[img](http://oe1ml9cxe.bkt.clouddn.com/PYSearchHistoryDefault.png)
-[img](http://oe1ml9cxe.bkt.clouddn.com/PYSearchHistoryDefault.png)
-[img](http://oe1ml9cxe.bkt.clouddn.com/PYSearchHistoryColorfulTag.png)
-[img](http://oe1ml9cxe.bkt.clouddn.com/PYSearchHistoryBorderTag.png)
-[img](http://oe1ml9cxe.bkt.clouddn.com/PYSearchHistoryBorderTag.png)
-[img](http://oe1ml9cxe.bkt.clouddn.com/PYSearchHistoryARCBorderTag.png)
+![(img)](https://github.com/iphone5solo/learngit/raw/master/imagesForPYSearch/PYSearchHistoryStyleDefault.png)
+![(img)](https://github.com/iphone5solo/learngit/raw/master/imagesForPYSearch/PYSearchHistoryStyleNormalTag.png)
+![(img)](https://github.com/iphone5solo/learngit/raw/master/imagesForPYSearch/PYSearchHistoryStyleColorfulTag.png)
+![(img)](https://github.com/iphone5solo/learngit/raw/master/imagesForPYSearch/PYSearchHistoryStyleBorderTag.png)
+![(img)](https://github.com/iphone5solo/learngit/raw/master/imagesForPYSearch/PYSearchHistoryStyleARCBorderTag.png)
 
 ## <a id="如何使用PYSearch"></a>如何使用PYSearch
 * 手动导入：
@@ -63,7 +63,7 @@
 
 ```
 
-## <a id="自定义searchViewContoller"></a>自定义searchViewContoller
+## <a id="自定义PYSearch"></a>自定义PYSearch
 
 ### 通过设置searchViewContoller的对象属性值即可修改
 
