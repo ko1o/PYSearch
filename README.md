@@ -2,12 +2,19 @@
 - 🔍 An elegant search controller for iOS.
 - 🔍 iOS 中一款优雅的搜索控制器。
 
+## Features
+- [x] 支持多种热门搜索风格
+- [x] 支持多种搜索历史风格
+- [x] 支持搜索建议
+- [x] 支持搜索历史（记录）缓存
+- [x] 支持使用delegate 或者 block 完成搜索时的回调
+- [x] 支持CocoaPods
+
 ## Requirements
 * iOS 7.0 or later
-* Xcode 7.3 or later
+* Xcode 8.0 or later
 
 ## Contents
-
 * Getting Started
   * [Renderings【效果图】](#效果图)
   * [Styles 【支持哪些风格】](#支持哪些风格)
@@ -32,6 +39,9 @@
 <img src="https://github.com/iphone5solo/learngit/raw/master/imagesForPYSearch/searchHistoryStyle01.png" width="375"> <img src="https://github.com/iphone5solo/learngit/raw/master/imagesForPYSearch/searchHistoryStyle02.png" width="375"><br><img src="https://github.com/iphone5solo/learngit/raw/master/imagesForPYSearch/searchHistoryStyle03.png" width="375"> <img src="https://github.com/iphone5solo/learngit/raw/master/imagesForPYSearch/searchHistoryStyle04.png" width="375"><br><img src="https://github.com/iphone5solo/learngit/raw/master/imagesForPYSearch/searchHistoryStyle05.png" width="375">
 
 ## <a id="如何使用PYSearch"></a>如何使用PYSearch
+* 使用CocoaPods:
+  - `pod "PYSearch"`
+  - 导入主头文件`#import <PYSearch.h>`
 * 手动导入：
   - 将`PYSearch`文件夹中的所有文件拽入项目中
   - 导入主头文件`#import "PYSearch.h"`
