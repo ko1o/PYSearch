@@ -21,7 +21,7 @@
 
 ## <a id="效果图"></a>效果图
 
-<video src="https://github.com/iphone5solo/learngit/raw/master/imagesForPYSearch/PYSearchDemo.mov" autoplay width="375" loop></video>
+<img src="https://github.com/iphone5solo/learngit/raw/master/imagesForPYSearch/PYSearchDemo.gif" width="375"> 
 
 ## <a id="支持哪些风格"></a>支持哪些风格
 
