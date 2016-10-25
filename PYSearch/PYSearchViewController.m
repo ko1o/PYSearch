@@ -144,11 +144,12 @@
     }
     return _emptyButton;
 }
+
 - (UIView *)searchHistoryTagsContentView
 {
     if (!_searchHistoryTagsContentView) {
         UIView *searchHistoryTagsContentView = [[UIView alloc] init];
-        searchHistoryTagsContentView.py_width = self.hotSearchTagsContentView.py_width;
+        searchHistoryTagsContentView.py_width = PYScreenW - PYMargin * 2;
         searchHistoryTagsContentView.py_y = CGRectGetMaxY(self.hotSearchTagsContentView.frame) + PYMargin;
         [self.headerContentView addSubview:searchHistoryTagsContentView];
         _searchHistoryTagsContentView = searchHistoryTagsContentView;
@@ -201,8 +202,8 @@
 {
     [super viewWillAppear:animated];
     
-    // 没有热门搜索就隐藏
-    if (self.hotSearches.count == 0) {
+    // 没有热门搜索并且搜索历史为默认PYHotSearchStyleDefault就隐藏
+    if (self.hotSearches.count == 0 && self.searchHistoryStyle == PYHotSearchStyleDefault) {
         self.tableView.tableHeaderView.py_height = 0;
         self.tableView.tableHeaderView.hidden = YES;
     }
@@ -465,10 +466,10 @@
     // 隐藏尾部清除按钮
     self.tableView.tableFooterView = nil;
     // 添加搜索历史头部
-    self.searchHistoryHeader.py_y = CGRectGetMaxY(self.hotSearchTagsContentView.frame) + PYMargin * 1.5;
+    self.searchHistoryHeader.py_y = self.hotSearches.count > 0 ? CGRectGetMaxY(self.hotSearchTagsContentView.frame) + PYMargin * 1.5 : 0;
     self.searchHistoryTagsContentView.py_y = CGRectGetMaxY(self.emptyButton.frame) + PYMargin;
     // 添加和布局标签
-    self.searchHistoryTags = [self addAndLayoutTagsWithTagsContentView:self.searchHistoryTagsContentView tagTexts:self.searchHistories];
+    self.searchHistoryTags = [self addAndLayoutTagsWithTagsContentView:self.searchHistoryTagsContentView tagTexts:[self.searchHistories copy]];
 }
 
 /**  添加和布局标签 */
@@ -539,6 +540,12 @@
 - (void)setHotSearches:(NSArray *)hotSearches
 {
     _hotSearches = hotSearches;
+    // 没有热门搜索,隐藏相关控件，直接返回
+    if (hotSearches.count == 0) {
+        self.hotSearchTagsContentView.hidden = YES;
+        self.hotSearchHeader.hidden = YES;
+        return;
+    };
     
     if (self.hotSearchStyle == PYHotSearchStyleDefault
         || self.hotSearchStyle == PYHotSearchStyleColorfulTag
