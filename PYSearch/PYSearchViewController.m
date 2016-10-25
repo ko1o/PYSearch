@@ -203,8 +203,8 @@
     
     // 没有热门搜索就隐藏
     if (self.hotSearches.count == 0) {
+        self.tableView.tableHeaderView.py_height = 0;
         self.tableView.tableHeaderView.hidden = YES;
-        self.tableView.contentInset = UIEdgeInsetsZero;
     }
     // 弹出键盘
     [self.searchBar becomeFirstResponder];
