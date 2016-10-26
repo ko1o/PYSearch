@@ -1,5 +1,3 @@
-![img](https://github.com/iphone5solo/learngit/raw/master/imagesForPYSearch/PYsearchLogo.jpg)
-
 # PYSearch
 - 🔍 An elegant search controller for iOS.
 - 🔍 iOS 中一款优雅的搜索控制器。
