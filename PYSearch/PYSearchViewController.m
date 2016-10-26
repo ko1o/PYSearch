@@ -207,6 +207,13 @@
         self.tableView.tableHeaderView.py_height = 0;
         self.tableView.tableHeaderView.hidden = YES;
     }
+}
+
+/** 视图完全显示 */
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
     // 弹出键盘
     [self.searchBar becomeFirstResponder];
 }
