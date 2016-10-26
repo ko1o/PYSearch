@@ -38,6 +38,8 @@ typedef NS_ENUM(NSInteger, PYSearchHistoryStyle) {  // 搜索历史风格
 - (void)searchViewController:(PYSearchViewController *)searchViewController didSearchWithsearchBar:(UISearchBar *)searchBar searchText:(NSString *)searchText;
 /** 搜索框文本变化时，显示的搜索建议通过searchViewController的searchSuggestions赋值即可 */
 - (void)searchViewController:(PYSearchViewController *)searchViewController  searchTextDidChange:(UISearchBar *)seachBar searchText:(NSString *)searchText;
+/** 点击取消时调用 */
+- (void)didClickCancel:(PYSearchViewController *)searchViewController;
 
 @end
 

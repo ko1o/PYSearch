@@ -667,7 +667,13 @@
 {
     [self.searchBar resignFirstResponder];
     
+    // dismiss ViewController
     [self dismissViewControllerAnimated:NO completion:nil];
+    
+    // 调用代理方法
+    if ([self.delegate respondsToSelector:@selector(didClickCancel:)]) {
+        [self.delegate didClickCancel:self];
+    }
 }
 
 /** 键盘显示完成（弹出） */
@@ -777,6 +783,7 @@
     [NSKeyedArchiver archiveRootObject:self.searchHistories toFile:PYSearchHistoriesPath];
     // 刷新
     [self.tableView reloadData];
+    
 }
 
 #pragma mark - Table view data source
