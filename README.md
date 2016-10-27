@@ -5,6 +5,7 @@
 ## Features
 - [x] 支持多种热门搜索风格
 - [x] 支持多种搜索历史风格
+- [x] 支持多种搜索结果显示模式
 - [x] 支持搜索建议
 - [x] 支持搜索历史（记录）缓存
 - [x] 支持使用delegate 或者 block 完成搜索时的回调
@@ -54,8 +55,7 @@
     // 2. 创建搜索控制器
     PYSearchViewController *searchViewController = [PYSearchViewController searchViewControllerWithHotSearches:hotSeaches searchBarPlaceholder:@"搜索编程语言" didSearchBlock:^(PYSearchViewController *searchViewController, UISearchBar *searchBar, NSString *searchText) {
         // 开始(点击)搜索时执行以下代码
-        // 如：跳转到指定控制器
-        [searchViewController.navigationController pushViewController:[[UIViewController alloc] init] animated:YES];
+        // 如：设置搜索结果控制器标题searchViewController.searchResultController.title = @"PYSearchResultController";
     }];
     // 3. 跳转到搜索控制器
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:searchViewController];
@@ -77,6 +77,12 @@
 ```objc
 	// 设置搜索历史为带边框标签风格
 	searchViewController.searchHistoryStyle = PYSearchHistoryStyleBorderTag;
+```
+
+* 设置搜索结果显示模式（默认为PYSearchResultShowModePush）
+```objc
+	// 设置搜索模式为内嵌
+	searchViewController.searchResultShowMode = PYSearchResultShowModeEmbed;
 ```
 
 * 隐藏搜索建议（默认为：NO）
