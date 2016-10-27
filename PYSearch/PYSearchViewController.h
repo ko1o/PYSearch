@@ -1,10 +1,9 @@
-//
-//  PYSearchViewController.h
-//  iCooc
-//
-//  Created by 谢培艺 on 2016/10/19.
+// 
+//  代码地址: https://github.com/iphone5solo/PYSearch
+//  代码地址: http://www.code4app.com/thread-11175-1-1.html
+//  Created by CoderKo1o.
 //  Copyright © 2016年 iphone5solo. All rights reserved.
-//
+//  最主要的搜索控制器
 
 #import <UIKit/UIKit.h>
 
@@ -31,6 +30,13 @@ typedef NS_ENUM(NSInteger, PYSearchHistoryStyle) {  // 搜索历史风格
     PYSearchHistoryStyleDefault = PYSearchHistoryStyleCell // 默认为 PYSearchHistoryStyleCell
 };
 
+typedef NS_ENUM(NSInteger, PYSearchResultShowMode) { // 搜索结果显示方式
+    PYSearchResultShowModePush,     // 通过Push控制器显示
+    PYSearchResultShowModeEmbed, // 通过内嵌控制器View显示
+    PYSearchResultShowModeCustom,   // 通过自定义显示
+    PYSearchResultShowModeDefault = PYSearchResultShowModePush // 默认为Push
+};
+
 @protocol PYSearchViewControllerDelegate <NSObject, UITableViewDelegate>
 
 @optional
@@ -43,7 +49,7 @@ typedef NS_ENUM(NSInteger, PYSearchHistoryStyle) {  // 搜索历史风格
 
 @end
 
-@interface PYSearchViewController : UITableViewController
+@interface PYSearchViewController : UIViewController
 
 /** 
  * 排名标签背景色对应的16进制字符串（如：@"#ffcc99"）数组(四个颜色)
@@ -65,6 +71,8 @@ typedef NS_ENUM(NSInteger, PYSearchHistoryStyle) {  // 搜索历史风格
 @property (nonatomic, assign) PYHotSearchStyle hotSearchStyle;
 /** 搜索历史风格 （默认为：PYSearchHistoryStyleDefault）*/
 @property (nonatomic, assign) PYSearchHistoryStyle searchHistoryStyle;
+/** 显示搜索结果模式（默认为：PYSearchResultShowModeDefault） */
+@property (nonatomic, assign) PYSearchResultShowMode searchResultShowMode;
 
 /** 搜索时调用此Block */
 @property (nonatomic, copy) PYDidSearchBlock didSearchBlock;
@@ -72,6 +80,11 @@ typedef NS_ENUM(NSInteger, PYSearchHistoryStyle) {  // 搜索历史风格
 @property (nonatomic, copy) NSArray<NSString *> *searchSuggestions;
 /** 搜索建议是否隐藏 默认为：NO */
 @property (nonatomic, assign) BOOL searchSuggestionHidden;
+
+/** 搜索结果TableView (只有searchResultShowMode != PYSearchResultShowModeCustom才有值) */
+@property (nonatomic, weak) UITableView *searchResultTableView;
+/** 搜索结果控制器 */
+@property (nonatomic, strong) UITableViewController *searchResultController;
 
 /**
  * 快速创建PYSearchViewController对象

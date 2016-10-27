@@ -14,7 +14,6 @@
 		6B139A381DBC96C600EA5E83 /* PYSearchExampleUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B139A371DBC96C600EA5E83 /* PYSearchExampleUITests.m */; };
 		6B139A4B1DBC96EB00EA5E83 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B139A461DBC96EB00EA5E83 /* AppDelegate.m */; };
 		6B139A4C1DBC96EB00EA5E83 /* PYSearchExampleController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B139A481DBC96EB00EA5E83 /* PYSearchExampleController.m */; };
-		6B139A4D1DBC96EB00EA5E83 /* PYTempViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B139A4A1DBC96EB00EA5E83 /* PYTempViewController.m */; };
 		6B139A5B1DBC971E00EA5E83 /* PYSearch.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6B139A4F1DBC971E00EA5E83 /* PYSearch.bundle */; };
 		6B139A5C1DBC971E00EA5E83 /* PYSearchConst.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B139A521DBC971E00EA5E83 /* PYSearchConst.m */; };
 		6B139A5D1DBC971E00EA5E83 /* PYSearchSuggestionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B139A541DBC971E00EA5E83 /* PYSearchSuggestionViewController.m */; };
@@ -56,8 +55,6 @@
 		6B139A461DBC96EB00EA5E83 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		6B139A471DBC96EB00EA5E83 /* PYSearchExampleController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PYSearchExampleController.h; sourceTree = "<group>"; };
 		6B139A481DBC96EB00EA5E83 /* PYSearchExampleController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PYSearchExampleController.m; sourceTree = "<group>"; };
-		6B139A491DBC96EB00EA5E83 /* PYTempViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PYTempViewController.h; sourceTree = "<group>"; };
-		6B139A4A1DBC96EB00EA5E83 /* PYTempViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PYTempViewController.m; sourceTree = "<group>"; };
 		6B139A4F1DBC971E00EA5E83 /* PYSearch.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = PYSearch.bundle; sourceTree = "<group>"; };
 		6B139A501DBC971E00EA5E83 /* PYSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PYSearch.h; sourceTree = "<group>"; };
 		6B139A511DBC971E00EA5E83 /* PYSearchConst.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PYSearchConst.h; sourceTree = "<group>"; };
@@ -125,8 +122,6 @@
 				6B139A461DBC96EB00EA5E83 /* AppDelegate.m */,
 				6B139A471DBC96EB00EA5E83 /* PYSearchExampleController.h */,
 				6B139A481DBC96EB00EA5E83 /* PYSearchExampleController.m */,
-				6B139A491DBC96EB00EA5E83 /* PYTempViewController.h */,
-				6B139A4A1DBC96EB00EA5E83 /* PYTempViewController.m */,
 				6B139A1E1DBC96C500EA5E83 /* Assets.xcassets */,
 				6B139A201DBC96C500EA5E83 /* LaunchScreen.storyboard */,
 				6B139A231DBC96C500EA5E83 /* Info.plist */,
@@ -322,7 +317,6 @@
 				6B139A4B1DBC96EB00EA5E83 /* AppDelegate.m in Sources */,
 				6B139A5E1DBC971E00EA5E83 /* PYSearchViewController.m in Sources */,
 				6B139A141DBC96C500EA5E83 /* main.m in Sources */,
-				6B139A4D1DBC96EB00EA5E83 /* PYTempViewController.m in Sources */,
 				6B139A5F1DBC971E00EA5E83 /* UIColor+PYExtension.m in Sources */,
 				6B139A601DBC971E00EA5E83 /* UIView+PYExtension.m in Sources */,
 				6B139A5D1DBC971E00EA5E83 /* PYSearchSuggestionViewController.m in Sources */,

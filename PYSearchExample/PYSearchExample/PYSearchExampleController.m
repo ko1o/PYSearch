@@ -1,14 +1,12 @@
-//
-//  PYSearchExampleController.m
-//  PYSearchViewControllerExample
-//
-//  Created by 谢培艺 on 2016/10/22.
-//  Copyright © 2016年 CoderKo1o. All rights reserved.
+// 
+//  代码地址: https://github.com/iphone5solo/PYSearch
+//  代码地址: http://www.code4app.com/thread-11175-1-1.html
+//  Created by CoderKo1o.
+//  Copyright © 2016年 iphone5solo. All rights reserved.
 //
 
 #import "PYSearchExampleController.h"
 #import "PYSearch.h"
-#import "PYTempViewController.h"
 
 @interface PYSearchExampleController () <PYSearchViewControllerDelegate>
 
@@ -34,6 +32,7 @@
 {
     return 2;
 }
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return section ? 5 : 6;
 }
@@ -56,7 +55,8 @@
     // 2. 创建控制器
     PYSearchViewController *searchViewController = [PYSearchViewController searchViewControllerWithHotSearches:hotSeaches searchBarPlaceholder:@"搜索编程语言" didSearchBlock:^(PYSearchViewController *searchViewController, UISearchBar *searchBar, NSString *searchText) {
         // 开始搜索执行以下代码
-        [searchViewController.navigationController pushViewController:[PYTempViewController alloc] animated:YES];
+        // 设置搜索结果控制器标题
+        searchViewController.searchResultController.title = @"PYSearchResultController";
     }];
     // 3. 设置风格
     if (indexPath.section == 0) { // 选择热门搜索
@@ -86,7 +86,7 @@
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{ // 搜素完毕
             // 显示建议搜索结果
             NSMutableArray *searchSuggestionsM = [NSMutableArray array];
-            for (int i = 0; i < arc4random_uniform(5) + 5; i++) {
+            for (int i = 0; i < arc4random_uniform(5) + 10; i++) {
                 NSString *searchSuggestion = [NSString stringWithFormat:@"搜索建议 %d", i];
                 [searchSuggestionsM addObject:searchSuggestion];
             }

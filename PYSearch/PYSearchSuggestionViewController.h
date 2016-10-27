@@ -1,9 +1,8 @@
-//
-//  PYSearchSuggestionViewController.h
-//  PYSearchViewControllerExample
-//
-//  Created by 谢培艺 on 2016/10/22.
-//  Copyright © 2016年 CoderKo1o. All rights reserved.
+// 
+//  代码地址: https://github.com/iphone5solo/PYSearch
+//  代码地址: http://www.code4app.com/thread-11175-1-1.html
+//  Created by CoderKo1o.
+//  Copyright © 2016年 iphone5solo. All rights reserved.
 //  搜索建议控制器
 
 #import <UIKit/UIKit.h>
