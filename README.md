@@ -1,4 +1,10 @@
 # PYSearch
+
+[![Build Status](https://travis-ci.org/iphone5solo/PYSearch.svg?branch=master)](https://travis-ci.org/iphone5solo/PYSearch)
+[![Pod Version](http://img.shields.io/cocoapods/v/PYSearch.svg?style=flat)](http://cocoadocs.org/docsets/PYSearch/)
+[![Pod Platform](http://img.shields.io/cocoapods/p/PYSearch.svg?style=flat)](http://cocoadocs.org/docsets/PYSearch/)
+[![Pod License](http://img.shields.io/cocoapods/l/PYSearch.svg?style=flat)](https://opensource.org/licenses/MIT)
+
 - 🔍 An elegant search controller for iOS.
 - 🔍 iOS 中一款优雅的搜索控制器。
 
@@ -55,7 +61,8 @@
     // 2. 创建搜索控制器
     PYSearchViewController *searchViewController = [PYSearchViewController searchViewControllerWithHotSearches:hotSeaches searchBarPlaceholder:@"搜索编程语言" didSearchBlock:^(PYSearchViewController *searchViewController, UISearchBar *searchBar, NSString *searchText) {
         // 开始(点击)搜索时执行以下代码
-        // 如：设置搜索结果控制器标题searchViewController.searchResultController.title = @"PYSearchResultController";
+        // 如：设置搜索结果控制器标题
+	searchViewController.searchResultController.title = @"PYSearchResultController";
     }];
     // 3. 跳转到搜索控制器
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:searchViewController];
