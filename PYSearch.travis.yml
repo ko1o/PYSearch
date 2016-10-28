@@ -1,0 +1,4 @@
+osx_image: xcode8
+language: objective-c
+xcode_workspace: PYSearchExample/PYSearchExample.xcodeproj
+xcode_schemes: PYSearchExample
