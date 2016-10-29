@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0800"
+   LastUpgradeVersion = "0730"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "6B139A0E1DBC96C500EA5E83"
+               BlueprintIdentifier = "6B9717621DC48FA800B2DAA1"
                BuildableName = "PYSearchExample.app"
                BlueprintName = "PYSearchExample"
                ReferencedContainer = "container:PYSearchExample.xcodeproj">
@@ -32,7 +32,7 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "6B139A271DBC96C600EA5E83"
+               BlueprintIdentifier = "6B97177E1DC48FA800B2DAA1"
                BuildableName = "PYSearchExampleTests.xctest"
                BlueprintName = "PYSearchExampleTests"
                ReferencedContainer = "container:PYSearchExample.xcodeproj">
@@ -42,7 +42,7 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "6B139A321DBC96C600EA5E83"
+               BlueprintIdentifier = "6B9717891DC48FA800B2DAA1"
                BuildableName = "PYSearchExampleUITests.xctest"
                BlueprintName = "PYSearchExampleUITests"
                ReferencedContainer = "container:PYSearchExample.xcodeproj">
@@ -52,7 +52,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "6B139A0E1DBC96C500EA5E83"
+            BlueprintIdentifier = "6B9717621DC48FA800B2DAA1"
             BuildableName = "PYSearchExample.app"
             BlueprintName = "PYSearchExample"
             ReferencedContainer = "container:PYSearchExample.xcodeproj">
@@ -75,7 +75,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "6B139A0E1DBC96C500EA5E83"
+            BlueprintIdentifier = "6B9717621DC48FA800B2DAA1"
             BuildableName = "PYSearchExample.app"
             BlueprintName = "PYSearchExample"
             ReferencedContainer = "container:PYSearchExample.xcodeproj">
@@ -94,7 +94,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "6B139A0E1DBC96C500EA5E83"
+            BlueprintIdentifier = "6B9717621DC48FA800B2DAA1"
             BuildableName = "PYSearchExample.app"
             BlueprintName = "PYSearchExample"
             ReferencedContainer = "container:PYSearchExample.xcodeproj">

@@ -1,4 +1,4 @@
-// 
+//
 //  代码地址: https://github.com/iphone5solo/PYSearch
 //  代码地址: http://www.code4app.com/thread-11175-1-1.html
 //  Created by CoderKo1o.
@@ -474,6 +474,8 @@
     contentView.py_height = CGRectGetMaxY(self.rankViews.lastObject.frame);
     // 设置tableHeaderView高度
     self.baseSearchTableView.tableHeaderView.py_height  = self.headerContentView.py_height = CGRectGetMaxY(contentView.frame) + PYMargin * 2;
+    // 重新赋值，注意：当操作系统为iOS 9.x系列的tableHeaderView高度设置失效，需要重新设置tableHeaderView
+    [self.baseSearchTableView setTableHeaderView:self.baseSearchTableView.tableHeaderView];
 }
 
 /**
@@ -487,7 +489,7 @@
     self.hotSearchTags = [self addAndLayoutTagsWithTagsContentView:self.hotSearchTagsContentView tagTexts:self.hotSearches];
 }
 
-/** 
+/**
  * 设置搜索历史标签
  * PYSearchHistoryStyleTag
  */
@@ -541,6 +543,8 @@
     contentView.py_height = CGRectGetMaxY(contentView.subviews.lastObject.frame);
     // 设置头部高度
     self.baseSearchTableView.tableHeaderView.py_height = self.headerContentView.py_height = CGRectGetMaxY(contentView.frame) + PYMargin * 2;
+    // 重新赋值, 注意：当操作系统为iOS 9.x系列的tableHeaderView高度设置失效，需要重新设置tableHeaderView
+    [self.baseSearchTableView setTableHeaderView:self.baseSearchTableView.tableHeaderView];
     return [tagsM copy];
 }
 
