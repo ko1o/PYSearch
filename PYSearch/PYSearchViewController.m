@@ -156,10 +156,12 @@
         [emptyButton setTitleColor:PYTextColor forState:UIControlStateNormal];
         [emptyButton setTitle:@"清空" forState:UIControlStateNormal];
         [emptyButton setImage:[UIImage imageNamed:@"PYSearch.bundle/empty"] forState:UIControlStateNormal];
-        [emptyButton addTarget:self action:@selector(emptySearchHistoryDidClick) forControlEvents:UIControlEventTouchDown];
+        [emptyButton addTarget:self action:@selector(emptySearchHistoryDidClick) forControlEvents:UIControlEventTouchUpInside];
         [emptyButton sizeToFit];
+        emptyButton.py_width += PYMargin;
+        emptyButton.py_height += PYMargin;
         emptyButton.py_centerY = self.searchHistoryHeader.py_centerY;
-        emptyButton.py_x = self.searchHistoryTagsContentView.py_width - emptyButton.py_width;
+        emptyButton.py_x = self.headerContentView.py_width - emptyButton.py_width;
         [self.headerContentView addSubview:emptyButton];
         _emptyButton = emptyButton;
     }
@@ -228,8 +230,6 @@
         self.baseSearchTableView.tableHeaderView.py_height = 0;
         self.baseSearchTableView.tableHeaderView.hidden = YES;
     }
-    
-    PYSearchLog(@"%@", NSStringFromUIEdgeInsets(self.searchSuggestionVC.tableView.contentInset));
 }
 
 /** 视图完全显示 */
@@ -786,12 +786,10 @@
             // 添加搜索结果的视图
             [self.view addSubview:self.searchResultController.tableView];
             [self addChildViewController:self.searchResultController];
-            
             break;
         case PYSearchResultShowModeCustom: // 自定义
             
             break;
-            
         default:
             break;
     }
@@ -817,10 +815,10 @@
     }
 }
 
-- (void)closeDidClick:(UITapGestureRecognizer *)gr
+- (void)closeDidClick:(UIButton *)sender
 {
     // 获取当前cell
-    UITableViewCell *cell = (UITableViewCell *)gr.view.superview;
+    UITableViewCell *cell = (UITableViewCell *)sender.superview;
     // 移除搜索信息
     [self.searchHistories removeObject:cell.textLabel.text];
     // 保存搜索信息
@@ -852,11 +850,15 @@
         cell.textLabel.font = [UIFont systemFontOfSize:14];
         cell.backgroundColor = [UIColor clearColor];
         
-        // 添加关闭
+        // 添加关闭按钮
+        UIButton *closetButton = [[UIButton alloc] init];
+        // 设置图片容器大小、图片原图居中
+        closetButton.py_size = CGSizeMake(cell.py_height, cell.py_height);
+        [closetButton setImage:[UIImage imageNamed:@"PYSearch.bundle/close"] forState:UIControlStateNormal];
         UIImageView *closeView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"PYSearch.bundle/close"]];
-        closeView.userInteractionEnabled = YES;
-        [closeView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(closeDidClick:)]];
-        cell.accessoryView =  closeView;
+        [closetButton addTarget:self action:@selector(closeDidClick:) forControlEvents:UIControlEventTouchUpInside];
+        closeView.contentMode = UIViewContentModeCenter;
+        cell.accessoryView = closetButton;
         // 添加分割线
         UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"PYSearch.bundle/cell-content-line"]];
         line.py_height = 0.5;

@@ -22,8 +22,8 @@ typedef NS_ENUM(NSInteger, PYHotSearchStyle)  { // 热门搜索标签风格
 };
 
 typedef NS_ENUM(NSInteger, PYSearchHistoryStyle) {  // 搜索历史风格
-    PYSearchHistoryStyleCell,   // UITableViewCell 风格
-    PYSearchHistoryStyleNormalTag,    // PYHotSearchStyleNormalTag 标签风格
+    PYSearchHistoryStyleCell,           // UITableViewCell 风格
+    PYSearchHistoryStyleNormalTag,      // PYHotSearchStyleNormalTag 标签风格
     PYSearchHistoryStyleColorfulTag,    // 彩色标签（不带边框，背景色为随机彩色）
     PYSearchHistoryStyleBorderTag,      // 带有边框的标签,此时标签背景色为clearColor
     PYSearchHistoryStyleARCBorderTag,   // 带有圆弧边框的标签,此时标签背景色为clearColor
@@ -32,7 +32,7 @@ typedef NS_ENUM(NSInteger, PYSearchHistoryStyle) {  // 搜索历史风格
 
 typedef NS_ENUM(NSInteger, PYSearchResultShowMode) { // 搜索结果显示方式
     PYSearchResultShowModePush,     // 通过Push控制器显示
-    PYSearchResultShowModeEmbed, // 通过内嵌控制器View显示
+    PYSearchResultShowModeEmbed,    // 通过内嵌控制器View显示
     PYSearchResultShowModeCustom,   // 通过自定义显示
     PYSearchResultShowModeDefault = PYSearchResultShowModePush // 默认为Push
 };
@@ -71,7 +71,7 @@ typedef NS_ENUM(NSInteger, PYSearchResultShowMode) { // 搜索结果显示方式
 @property (nonatomic, assign) PYHotSearchStyle hotSearchStyle;
 /** 搜索历史风格 （默认为：PYSearchHistoryStyleDefault）*/
 @property (nonatomic, assign) PYSearchHistoryStyle searchHistoryStyle;
-/** 显示搜索结果模式（默认为：PYSearchResultShowModeDefault） */
+/** 显示搜索结果模式（默认为push：PYSearchResultShowModeDefault） */
 @property (nonatomic, assign) PYSearchResultShowMode searchResultShowMode;
 
 /** 搜索时调用此Block */
