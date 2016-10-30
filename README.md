@@ -19,7 +19,18 @@
 
 ## Requirements
 * iOS 7.0 or later
-* Xcode 8.0 or later
+* Xcode 7.0 or later
+
+## Architecture
+### Main
+- `PYSearch`
+- `PYSearchConst`
+- `PYSearchViewController`
+- `PYSearchSuggestionViewController`
+
+### Category
+- `UIColor+PYExtension`
+- `UIView+PYExtension`
 
 ## Contents
 * Getting Started
@@ -62,7 +73,7 @@
     PYSearchViewController *searchViewController = [PYSearchViewController searchViewControllerWithHotSearches:hotSeaches searchBarPlaceholder:@"搜索编程语言" didSearchBlock:^(PYSearchViewController *searchViewController, UISearchBar *searchBar, NSString *searchText) {
         // 开始(点击)搜索时执行以下代码
         // 如：设置搜索结果控制器标题
-	searchViewController.searchResultController.title = @"PYSearchResultController";
+		searchViewController.searchResultController.title = @"PYSearchResultController";
     }];
     // 3. 跳转到搜索控制器
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:searchViewController];
