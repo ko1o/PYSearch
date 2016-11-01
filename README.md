@@ -72,8 +72,9 @@
     // 2. 创建搜索控制器
     PYSearchViewController *searchViewController = [PYSearchViewController searchViewControllerWithHotSearches:hotSeaches searchBarPlaceholder:@"搜索编程语言" didSearchBlock:^(PYSearchViewController *searchViewController, UISearchBar *searchBar, NSString *searchText) {
         // 开始(点击)搜索时执行以下代码
-        // 如：设置搜索结果控制器标题
-		searchViewController.searchResultController.title = @"PYSearchResultController";
+        // 如：跳转到指定控制器
+        [searchViewController.navigationController pushViewController:[[UIViewController alloc] init] animated:YES];
+        
     }];
     // 3. 跳转到搜索控制器
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:searchViewController];
@@ -115,6 +116,7 @@
 - 与其给我点star，不如向我狠狠地抛来一个BUG！
 - 如果想要参与这个项目的维护或者有好的设计风格，欢迎pull request！
 - 如果您想要更多的接口来自定义或者建议/意见，欢迎issue me！我会根据大家的需求提供更多的接口！
+- 如果您在使用中觉得略有不适，欢迎联系我QQ:499491531，希望一起完善此项目，让它变成更强大，能够满足大多数用户的需求！
 
 ## Licenses
 All source code is licensed under the MIT License.
