@@ -7,6 +7,7 @@
 
 #import "PYSearchExampleController.h"
 #import "PYSearch.h"
+#import "PYTempViewController.h"
 
 @interface PYSearchExampleController () <PYSearchViewControllerDelegate>
 
@@ -55,8 +56,8 @@
     // 2. 创建控制器
     PYSearchViewController *searchViewController = [PYSearchViewController searchViewControllerWithHotSearches:hotSeaches searchBarPlaceholder:@"搜索编程语言" didSearchBlock:^(PYSearchViewController *searchViewController, UISearchBar *searchBar, NSString *searchText) {
         // 开始搜索执行以下代码
-        // 设置搜索结果控制器标题
-        searchViewController.searchResultController.title = @"PYSearchResultController";
+        // 如：跳转到指定控制器
+        [searchViewController.navigationController pushViewController:[[PYTempViewController alloc] init] animated:YES];
     }];
     // 3. 设置风格
     if (indexPath.section == 0) { // 选择热门搜索

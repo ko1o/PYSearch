@@ -31,10 +31,10 @@ typedef NS_ENUM(NSInteger, PYSearchHistoryStyle) {  // 搜索历史风格
 };
 
 typedef NS_ENUM(NSInteger, PYSearchResultShowMode) { // 搜索结果显示方式
+    PYSearchResultShowModeCustom,   // 通过自定义显示
     PYSearchResultShowModePush,     // 通过Push控制器显示
     PYSearchResultShowModeEmbed,    // 通过内嵌控制器View显示
-    PYSearchResultShowModeCustom,   // 通过自定义显示
-    PYSearchResultShowModeDefault = PYSearchResultShowModePush // 默认为Push
+    PYSearchResultShowModeDefault = PYSearchResultShowModeCustom // 默认为用户自定义（自己处理）
 };
 
 @protocol PYSearchViewControllerDelegate <NSObject, UITableViewDelegate>
@@ -71,7 +71,7 @@ typedef NS_ENUM(NSInteger, PYSearchResultShowMode) { // 搜索结果显示方式
 @property (nonatomic, assign) PYHotSearchStyle hotSearchStyle;
 /** 搜索历史风格 （默认为：PYSearchHistoryStyleDefault）*/
 @property (nonatomic, assign) PYSearchHistoryStyle searchHistoryStyle;
-/** 显示搜索结果模式（默认为push：PYSearchResultShowModeDefault） */
+/** 显示搜索结果模式（默认为自定义：PYSearchResultShowModeDefault） */
 @property (nonatomic, assign) PYSearchResultShowMode searchResultShowMode;
 
 /** 搜索时调用此Block */

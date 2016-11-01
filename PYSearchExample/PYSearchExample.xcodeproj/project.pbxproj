@@ -20,6 +20,7 @@
 		6B9717841DC48FA800B2DAA1 /* PYSearchExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B9717831DC48FA800B2DAA1 /* PYSearchExampleTests.m */; };
 		6B97178F1DC48FA800B2DAA1 /* PYSearchExampleUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B97178E1DC48FA800B2DAA1 /* PYSearchExampleUITests.m */; };
 		6B97179E1DC48FE800B2DAA1 /* PYSearchExampleController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B97179D1DC48FE800B2DAA1 /* PYSearchExampleController.m */; };
+		6B9DA6011DC8415700D07A16 /* PYTempViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B9DA6001DC8415700D07A16 /* PYTempViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,6 +68,8 @@
 		6B9717901DC48FA800B2DAA1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6B97179C1DC48FE800B2DAA1 /* PYSearchExampleController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PYSearchExampleController.h; sourceTree = "<group>"; };
 		6B97179D1DC48FE800B2DAA1 /* PYSearchExampleController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PYSearchExampleController.m; sourceTree = "<group>"; };
+		6B9DA5FF1DC8415700D07A16 /* PYTempViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PYTempViewController.h; sourceTree = "<group>"; };
+		6B9DA6001DC8415700D07A16 /* PYTempViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PYTempViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -142,6 +145,8 @@
 				6B3EB2101DC498370080DF86 /* AppDelegate.m */,
 				6B97179C1DC48FE800B2DAA1 /* PYSearchExampleController.h */,
 				6B97179D1DC48FE800B2DAA1 /* PYSearchExampleController.m */,
+				6B9DA5FF1DC8415700D07A16 /* PYTempViewController.h */,
+				6B9DA6001DC8415700D07A16 /* PYTempViewController.m */,
 				6B9717751DC48FA800B2DAA1 /* Assets.xcassets */,
 				6B9717771DC48FA800B2DAA1 /* LaunchScreen.storyboard */,
 				6B97177A1DC48FA800B2DAA1 /* Info.plist */,
@@ -311,6 +316,7 @@
 				6B97179E1DC48FE800B2DAA1 /* PYSearchExampleController.m in Sources */,
 				6B3EB2211DC498410080DF86 /* PYSearchSuggestionViewController.m in Sources */,
 				6B3EB2221DC498410080DF86 /* PYSearchViewController.m in Sources */,
+				6B9DA6011DC8415700D07A16 /* PYTempViewController.m in Sources */,
 				6B9717681DC48FA800B2DAA1 /* main.m in Sources */,
 				6B3EB2231DC498410080DF86 /* UIColor+PYExtension.m in Sources */,
 				6B3EB2111DC498370080DF86 /* AppDelegate.m in Sources */,

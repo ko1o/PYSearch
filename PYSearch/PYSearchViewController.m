@@ -783,7 +783,7 @@
     [NSKeyedArchiver archiveRootObject:self.searchHistories toFile:PYSearchHistoriesPath];
     // 处理搜索结果
     switch (self.searchResultShowMode) {
-        case PYSearchResultShowModeDefault: // Push
+        case PYSearchResultShowModePush: // Push
             [self.navigationController pushViewController:self.searchResultController animated:YES];
             break;
         case PYSearchResultShowModeEmbed: // 内嵌
