@@ -57,12 +57,22 @@ typedef NS_ENUM(NSInteger, PYSearchResultShowMode) { // 搜索结果显示方式
  * 该属性只有在设置hotSearchStyle为PYHotSearchStyleColorfulTag才生效
  */
 @property (nonatomic, strong) NSArray<NSString *> *rankTagBackgroundColorHexStrings;
-
 /** 
  * web安全色池,存储的是UIColor数组，用于设置标签的背景色
  * 该属性只有在设置hotSearchStyle为PYHotSearchStyleColorfulTag才生效
  */
 @property (nonatomic, strong) NSMutableArray<UIColor *> *colorPol;
+/** 热门搜索 */
+@property (nonatomic, copy) NSArray<NSString *> *hotSearches;
+/** 所有的热门标签 */
+@property (nonatomic, copy) NSArray<UILabel *> *hotSearchTags;
+/** 热门标签头部 */
+@property (nonatomic, weak) UILabel *hotSearchHeader;
+
+/** 所有的搜索历史标签,只有当PYSearchHistoryStyle != PYSearchHistoryStyleCell才有值 */
+@property (nonatomic, copy) NSArray<UILabel *> *searchHistoryTags;
+/** 搜索历史标题,只有当PYSearchHistoryStyle != PYSearchHistoryStyleCell才有值 */
+@property (nonatomic, weak) UILabel *searchHistoryHeader;
 
 /** 代理 */
 @property (nonatomic, weak) id<PYSearchViewControllerDelegate> delegate;

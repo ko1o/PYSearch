@@ -21,9 +21,6 @@
 /** 头部内容view */
 @property (nonatomic, weak) UIView *headerContentView;
 
-/** 热门搜索 */
-@property (nonatomic, copy) NSArray<NSString *> *hotSearches;
-
 /** 搜索历史 */
 @property (nonatomic, strong) NSMutableArray *searchHistories;
 
@@ -40,10 +37,6 @@
 
 /** 热门标签容器 */
 @property (nonatomic, weak) UIView *hotSearchTagsContentView;
-/** 所有的热门标签 */
-@property (nonatomic, copy) NSArray<UILabel *> *hotSearchTags;
-/** 热门标签头部 */
-@property (nonatomic, weak) UILabel *hotSearchHeader;
 
 /** 排名标签(第几名) */
 @property (nonatomic, copy) NSArray<UILabel *> *rankTags;
@@ -54,13 +47,8 @@
 
 /** 搜索历史标签容器，只有在PYSearchHistoryStyle值为PYSearchHistoryStyleTag才有值 */
 @property (nonatomic, weak) UIView *searchHistoryTagsContentView;
-/** 存储搜索历史标签 */
-@property (nonatomic, copy) NSArray<UILabel *> *searchHistoryTags;
-/** 搜索历史标题 */
-@property (nonatomic, weak) UILabel *searchHistoryHeader;
 /** 搜索历史标签的清空按钮 */
 @property (nonatomic, weak) UIButton *emptyButton;
-
 
 /** 基本搜索TableView(显示历史搜索和搜索记录) */
 @property (nonatomic, strong) UITableView *baseSearchTableView;
