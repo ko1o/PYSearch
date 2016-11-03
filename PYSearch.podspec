@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
     s.name         = 'PYSearch'
-    s.version      = '0.3.1'
-    s.summary      = '🔍 An elegant search controller for iOS.'
+    s.version      = '0.3.2'
+    s.summary      = 'An elegant search controller for iOS.'
     s.homepage     = 'https://github.com/iphone5solo/PYSearch'
     s.license      = 'MIT'
     s.authors      = {'CoderKo1o' => '499491531@qq.com'}
