@@ -32,6 +32,7 @@
 #define PYScreenH (PYRealyScreenW > PYRealyScreenH ? PYRealyScreenW : PYRealyScreenH)
 #define PYScreenSize CGSizeMake(PYScreenW, PYScreenH)
 
+#define PYSearchHistoriesPath [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"PYSearchhistories.plist"] // 搜索历史存储路径
 #define PYSearchHistoryImage [UIImage imageNamed:@"PYSearch.bundle/search_history"] // 搜索历史Cell的图片
 #define PYSearchSuggestionImage [UIImage imageNamed:@"PYSearch.bundle/search"] // 搜索建议时，Cell的图片
 

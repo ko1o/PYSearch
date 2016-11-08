@@ -83,6 +83,8 @@ typedef NS_ENUM(NSInteger, PYSearchResultShowMode) { // 搜索结果显示方式
 @property (nonatomic, assign) PYSearchHistoryStyle searchHistoryStyle;
 /** 显示搜索结果模式（默认为自定义：PYSearchResultShowModeDefault） */
 @property (nonatomic, assign) PYSearchResultShowMode searchResultShowMode;
+/** 搜索栏 */
+@property (nonatomic, weak) UISearchBar *searchBar;
 
 /** 搜索时调用此Block */
 @property (nonatomic, copy) PYDidSearchBlock didSearchBlock;

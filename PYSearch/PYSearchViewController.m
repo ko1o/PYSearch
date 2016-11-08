@@ -13,9 +13,6 @@
 #define PYTextColor PYColor(113, 113, 113)  // 文本字体颜色
 #define PYColorPolRandomColor self.colorPol[arc4random_uniform((uint32_t)self.colorPol.count)] // 随机选取颜色池中的颜色
 
-// 搜索历史存储路径
-#define PYSearchHistoriesPath [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"PYRexentSearchs.plist"]
-
 @interface PYSearchViewController () <UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource>
 
 /** 头部内容view */
@@ -23,9 +20,6 @@
 
 /** 搜索历史 */
 @property (nonatomic, strong) NSMutableArray *searchHistories;
-
-/** 搜索栏 */
-@property (nonatomic, weak) UISearchBar *searchBar;
 
 /** 键盘正在移动 */
 @property (nonatomic, assign) BOOL keyboardshowing;
