@@ -197,6 +197,17 @@
     return _colorPol;
 }
 
+#pragma mark  包装cancelButton
+- (UIBarButtonItem *)cancelButton
+{
+    return self.navigationItem.rightBarButtonItem;
+}
+
+- (void)setCancelButton:(UIBarButtonItem *)cancelButton
+{
+    self.navigationItem.rightBarButtonItem = cancelButton;
+}
+
 /** 视图加载完毕 */
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -531,6 +542,22 @@
 }
 
 #pragma mark - setter
+- (void)setSearchBarBackgroundColor:(UIColor *)searchBarBackgroundColor
+{
+    _searchBarBackgroundColor = searchBarBackgroundColor;
+    
+    // 取出搜索栏的textField设置其背景色
+    for (UIView *subView in [[self.searchBar.subviews lastObject] subviews]) {
+        if ([[subView class] isSubclassOfClass:[UITextField class]]) { // 是UItextField
+            // 设置UItextField的背景色
+            UITextField *textField = (UITextField *)subView;
+            textField.backgroundColor = searchBarBackgroundColor;
+            // 退出循环
+            break;
+        }
+    }
+}
+
 - (void)setSearchSuggestions:(NSArray<NSString *> *)searchSuggestions
 {
     if (self.searchSuggestionHidden) return; // 如果隐藏，直接返回，避免刷新操作
