@@ -542,6 +542,14 @@
 }
 
 #pragma mark - setter
+- (void)setHotSearchTags:(NSArray<UILabel *> *)hotSearchTags
+{
+    // 设置热门搜索时(标签tag为1，搜索历史为0)
+    for (UILabel *tagLabel in hotSearchTags) {
+        tagLabel.tag = 1;
+    }
+    _hotSearchTags = hotSearchTags;
+}
 - (void)setSearchBarBackgroundColor:(UIColor *)searchBarBackgroundColor
 {
     _searchBarBackgroundColor = searchBarBackgroundColor;
@@ -752,6 +760,17 @@
         // 更新
         self.searchHistoryStyle = self.searchHistoryStyle;
     }
+    
+    if (label.tag == 1) { // 热门搜索标签
+        // 取出下标
+        if ([self.delegate respondsToSelector:@selector(searchViewController:didSelectHotSearchAtIndex:searchText:)]) {
+            [self.delegate searchViewController:self didSelectHotSearchAtIndex:[self.hotSearchTags indexOfObject:label] searchText:label.text];
+        }
+    } else { // 搜索历史标签
+        if ([self.delegate respondsToSelector:@selector(searchViewController:didSelectSearchHistoryAtIndex:searchText:)]) {
+            [self.delegate searchViewController:self didSelectSearchHistoryAtIndex:[self.searchHistoryTags indexOfObject:label] searchText:label.text];
+        }
+    }
     PYSearchLog(@"搜索 %@", label.text);
 }
 
@@ -902,6 +921,10 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     self.searchBar.text = cell.textLabel.text;
     [self searchBarSearchButtonClicked:self.searchBar];
+    
+    if ([self.delegate respondsToSelector:@selector(searchViewController:didSelectSearchHistoryAtIndex:searchText:)]) { // 实现代理方法则调用
+        [self.delegate searchViewController:self didSelectSearchHistoryAtIndex:indexPath.row searchText:cell.textLabel.text];
+    }
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
