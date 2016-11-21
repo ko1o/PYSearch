@@ -593,11 +593,12 @@
     _hotSearches = hotSearches;
     // 没有热门搜索,隐藏相关控件，直接返回
     if (hotSearches.count == 0) {
-        self.hotSearchTagsContentView.hidden = YES;
-        self.hotSearchHeader.hidden = YES;
+        self.baseSearchTableView.tableHeaderView.hidden = YES;
         return;
     };
-    
+    // 有热门搜索，取消相关隐藏
+    self.baseSearchTableView.tableHeaderView.hidden = NO;
+    // 根据hotSearchStyle设置标签
     if (self.hotSearchStyle == PYHotSearchStyleDefault
         || self.hotSearchStyle == PYHotSearchStyleColorfulTag
         || self.hotSearchStyle == PYHotSearchStyleBorderTag
