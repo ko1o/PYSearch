@@ -223,13 +223,6 @@
         self.baseSearchTableView.tableHeaderView.py_height = 0;
         self.baseSearchTableView.tableHeaderView.hidden = YES;
     }
-}
-
-/** 视图完全显示 */
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-    
     // 弹出键盘
     [self.searchBar becomeFirstResponder];
 }
@@ -361,6 +354,7 @@
     contentView.py_height = CGRectGetMaxY(contentView.subviews.lastObject.frame);
     // 设置tableHeaderView高度
     self.baseSearchTableView.tableHeaderView.py_height  = self.headerContentView.py_height = CGRectGetMaxY(contentView.frame) + PYMargin * 2;
+    self.baseSearchTableView.tableHeaderView = self.headerContentView.superview;
     // 添加分割线
     for (int i = 0; i < PYRectangleTagMaxCol - 1; i++) { // 添加垂直分割线
         UIImageView *verticalLine = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"PYSearch.bundle/cell-content-line-vertical"]];
