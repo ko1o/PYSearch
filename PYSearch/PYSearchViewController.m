@@ -223,6 +223,13 @@
         self.baseSearchTableView.tableHeaderView.py_height = 0;
         self.baseSearchTableView.tableHeaderView.hidden = YES;
     }
+
+    // 刷新热门搜索
+    [self setHotSearches:self.hotSearches];
+    // 刷新热门搜索Style
+    [self setHotSearchStyle:self.hotSearchStyle];
+    // 刷新搜索历史Style
+    [self setSearchHistoryStyle:self.searchHistoryStyle];
 }
 
 /** 视图完全显示 */
@@ -458,7 +465,7 @@
     self.rankViews = rankViewM;
     
     // 计算位置
-    for (int i = 0; i < self.hotSearchTags.count; i++) { // 每行两个
+    for (int i = 0; i < self.rankViews.count; i++) { // 每行两个
         UIView *rankView = self.rankViews[i];
         rankView.py_x = (PYMargin + rankView.py_width) * (i % 2);
         rankView.py_y = rankView.py_height * (i / 2);
@@ -492,6 +499,7 @@
     self.baseSearchTableView.tableFooterView = nil;
     // 添加搜索历史头部
     self.searchHistoryHeader.py_y = self.hotSearches.count > 0 ? CGRectGetMaxY(self.hotSearchTagsContentView.frame) + PYMargin * 1.5 : 0;
+    self.emptyButton.py_y = self.searchHistoryHeader.py_y - PYMargin * 0.5;
     self.searchHistoryTagsContentView.py_y = CGRectGetMaxY(self.emptyButton.frame) + PYMargin;
     // 添加和布局标签
     self.searchHistoryTags = [self addAndLayoutTagsWithTagsContentView:self.searchHistoryTagsContentView tagTexts:[self.searchHistories copy]];
@@ -518,7 +526,8 @@
     CGFloat countCol = 0;
     
     // 调整布局
-    for (UILabel *subView in tagsM) {
+    for (int i = 0; i < contentView.subviews.count; i++) {
+        UILabel *subView = contentView.subviews[i];
         // 当搜索字数过多，宽度为contentView的宽度
         if (subView.py_width > contentView.py_width) subView.py_width = contentView.py_width;
         if (currentX + subView.py_width + PYMargin * countRow > contentView.py_width) { // 得换行
@@ -550,6 +559,7 @@
     }
     _hotSearchTags = hotSearchTags;
 }
+
 - (void)setSearchBarBackgroundColor:(UIColor *)searchBarBackgroundColor
 {
     _searchBarBackgroundColor = searchBarBackgroundColor;
