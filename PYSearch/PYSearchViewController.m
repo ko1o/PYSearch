@@ -89,7 +89,7 @@
 {
     if (!_baseSearchTableView) {
         UITableView *baseSearchTableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
-        baseSearchTableView.backgroundColor = PYBackgroundColor;
+        baseSearchTableView.backgroundColor = [UIColor clearColor];
         baseSearchTableView.delegate = self;
         baseSearchTableView.dataSource = self;
         [self.view addSubview:baseSearchTableView];
@@ -250,6 +250,8 @@
 /** 初始化 */
 - (void)setup
 {
+    //设置PYSearchViewController的view的背景颜色，默认白色，外面可更改
+    self.view.backgroundColor = [UIColor whiteColor];
     self.baseSearchTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardDidShowNotification object:nil];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStyleDone target:self action:@selector(cancelDidClick)];
