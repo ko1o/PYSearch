@@ -614,6 +614,7 @@
         || self.hotSearchStyle == PYHotSearchStyleBorderTag
         || self.hotSearchStyle == PYHotSearchStyleARCBorderTag) { // 不带排名的标签
         [self setupHotSearchNormalTags];
+        [self setHotSearchStyle:self.hotSearchStyle];
     } else if (self.hotSearchStyle == PYHotSearchStyleRankTag) { // 带有排名的标签
         [self setupHotSearchRankTags];
     } else if (self.hotSearchStyle == PYHotSearchStyleRectangleTag) { // 矩阵标签
