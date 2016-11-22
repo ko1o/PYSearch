@@ -10,7 +10,7 @@
 #import "UIColor+PYExtension.h"
 
 #define PYMargin 10 // 默认边距
-
+#define PYBackgroundColor PYColor(255, 255, 255) // tableView背景颜色
 // 日志输出
 #ifdef DEBUG
 #define PYSearchLog(...) NSLog(__VA_ARGS__)

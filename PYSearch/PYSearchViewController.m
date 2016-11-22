@@ -208,30 +208,6 @@
     self.navigationItem.rightBarButtonItem = cancelButton;
 }
 
-/** 视图加载完毕 */
-- (void)viewDidLoad {
-    [super viewDidLoad];
-}
-
-/** 视图将要显示 */
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    
-    // 没有热门搜索并且搜索历史为默认PYHotSearchStyleDefault就隐藏
-    if (self.hotSearches.count == 0 && self.searchHistoryStyle == PYHotSearchStyleDefault) {
-        self.baseSearchTableView.tableHeaderView.py_height = 0;
-        self.baseSearchTableView.tableHeaderView.hidden = YES;
-    }
-
-    // 刷新热门搜索
-    [self setHotSearches:self.hotSearches];
-    // 刷新热门搜索Style
-    [self setHotSearchStyle:self.hotSearchStyle];
-    // 刷新搜索历史Style
-    [self setSearchHistoryStyle:self.searchHistoryStyle];
-}
-
 /** 视图完全显示 */
 - (void)viewDidAppear:(BOOL)animated
 {
@@ -250,7 +226,7 @@
 /** 初始化 */
 - (void)setup
 {
-    //设置PYSearchViewController的view的背景颜色，默认为白色
+    // 设置背景颜色为白色
     self.view.backgroundColor = [UIColor whiteColor];
     self.baseSearchTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardDidShowNotification object:nil];
@@ -491,6 +467,8 @@
 {
     // 添加和布局标签
     self.hotSearchTags = [self addAndLayoutTagsWithTagsContentView:self.hotSearchTagsContentView tagTexts:self.hotSearches];
+    // 根据hotSearchStyle设置标签样式
+    [self setHotSearchStyle:self.hotSearchStyle];
 }
 
 /**
@@ -549,6 +527,8 @@
     contentView.py_height = CGRectGetMaxY(contentView.subviews.lastObject.frame);
     // 设置头部高度
     self.baseSearchTableView.tableHeaderView.py_height = self.headerContentView.py_height = CGRectGetMaxY(contentView.frame) + PYMargin * 2;
+    // 取消隐藏
+    self.baseSearchTableView.tableHeaderView.hidden = NO;
     // 重新赋值, 注意：当操作系统为iOS 9.x系列的tableHeaderView高度设置失效，需要重新设置tableHeaderView
     [self.baseSearchTableView setTableHeaderView:self.baseSearchTableView.tableHeaderView];
     return [tagsM copy];
@@ -608,22 +588,24 @@
     // 没有热门搜索,隐藏相关控件，直接返回
     if (hotSearches.count == 0) {
         self.baseSearchTableView.tableHeaderView.hidden = YES;
+        self.hotSearchHeader.hidden = YES;
         return;
     };
     // 有热门搜索，取消相关隐藏
     self.baseSearchTableView.tableHeaderView.hidden = NO;
+    self.hotSearchHeader.hidden = NO;
     // 根据hotSearchStyle设置标签
     if (self.hotSearchStyle == PYHotSearchStyleDefault
         || self.hotSearchStyle == PYHotSearchStyleColorfulTag
         || self.hotSearchStyle == PYHotSearchStyleBorderTag
         || self.hotSearchStyle == PYHotSearchStyleARCBorderTag) { // 不带排名的标签
         [self setupHotSearchNormalTags];
-        [self setHotSearchStyle:self.hotSearchStyle];
     } else if (self.hotSearchStyle == PYHotSearchStyleRankTag) { // 带有排名的标签
         [self setupHotSearchRankTags];
     } else if (self.hotSearchStyle == PYHotSearchStyleRectangleTag) { // 矩阵标签
         [self setupHotSearchRectangleTags];
     }
+    // 刷新搜索历史布局
     [self setSearchHistoryStyle:self.searchHistoryStyle];
 }
 
@@ -842,7 +824,6 @@
         default:
             break;
     }
-    
     // 如果代理实现了代理方法则调用代理方法
     if ([self.delegate respondsToSelector:@selector(searchViewController:didSearchWithsearchBar:searchText:)]) {
         [self.delegate searchViewController:self didSearchWithsearchBar:searchBar searchText:searchBar.text];
@@ -854,7 +835,7 @@
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
 {
-    //如果有搜索文本且显示搜索建议，则隐藏baseSearchTableView；
+    // 如果有搜索文本且显示搜索建议，则隐藏
     self.baseSearchTableView.hidden = searchText.length && !self.searchSuggestionHidden;
     // 根据输入文本显示建议搜索条件
     self.searchSuggestionVC.view.hidden = self.searchSuggestionHidden || !searchText.length;
