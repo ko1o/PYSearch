@@ -250,7 +250,7 @@
 /** 初始化 */
 - (void)setup
 {
-    //设置PYSearchViewController的view的背景颜色，默认白色，外面可更改
+    //设置PYSearchViewController的view的背景颜色，默认为白色
     self.view.backgroundColor = [UIColor whiteColor];
     self.baseSearchTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardDidShowNotification object:nil];
@@ -854,6 +854,8 @@
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
 {
+    //如果有搜索文本且显示搜索建议，则隐藏baseSearchTableView；
+    self.baseSearchTableView.hidden = searchText.length && !self.searchSuggestionHidden;
     // 根据输入文本显示建议搜索条件
     self.searchSuggestionVC.view.hidden = self.searchSuggestionHidden || !searchText.length;
     // 放在最上层
