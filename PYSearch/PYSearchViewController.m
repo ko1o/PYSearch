@@ -622,6 +622,7 @@
     } else if (self.hotSearchStyle == PYHotSearchStyleRectangleTag) { // 矩阵标签
         [self setupHotSearchRectangleTags];
     }
+    [self setSearchHistoryStyle:self.searchHistoryStyle];
 }
 
 - (void)setSearchHistoryStyle:(PYSearchHistoryStyle)searchHistoryStyle
