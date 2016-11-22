@@ -385,6 +385,8 @@
         verticalLine.py_width = contentView.py_width;
         [contentView addSubview:verticalLine];
     }
+    // 重新赋值，注意：当操作系统为iOS 9.x系列的tableHeaderView高度设置失效，需要重新设置tableHeaderView
+    [self.baseSearchTableView setTableHeaderView:self.baseSearchTableView.tableHeaderView];
 }
 
 /** 设置热门搜索标签（带有排名）PYHotSearchStyleRankTag */
