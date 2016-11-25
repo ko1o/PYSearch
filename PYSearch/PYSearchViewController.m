@@ -115,8 +115,15 @@
         searchSuggestionVC.didSelectCellBlock = ^(UITableViewCell *didSelectCell) {
             // 设置搜索信息
             _weakSelf.searchBar.text = didSelectCell.textLabel.text;
-            // 点击搜索
-            [_weakSelf searchBarSearchButtonClicked:_weakSelf.searchBar];
+            // 如果实现搜索建议代理方法则searchBarSearchButtonClicked失效
+            if ([self.delegate respondsToSelector:@selector(searchViewController:didSelectSearchSuggestionAtIndex:searchText:)]) {
+                // 获取下标
+                NSIndexPath *indexPath = [_weakSelf.searchSuggestionVC.tableView indexPathForCell:didSelectCell];
+                [self.delegate searchViewController:_weakSelf didSelectSearchSuggestionAtIndex:indexPath.row searchText:_weakSelf.searchBar.text];
+            } else {
+                // 点击搜索
+                [_weakSelf searchBarSearchButtonClicked:_weakSelf.searchBar];
+            }
         };
         searchSuggestionVC.view.frame = CGRectMake(0, 64, self.view.py_width, self.view.py_height);
         searchSuggestionVC.tableView.contentInset = UIEdgeInsetsMake(-30, 0, self.keyboardHeight, 0);
@@ -750,7 +757,6 @@
 {
     UILabel *label = (UILabel *)gr.view;
     self.searchBar.text = label.text;
-    [self searchBarSearchButtonClicked:self.searchBar];
     
     if (self.searchHistoryStyle == PYSearchHistoryStyleCell) { // 搜索历史为标签时，刷新标签
         // 刷新tableView
@@ -764,10 +770,14 @@
         // 取出下标
         if ([self.delegate respondsToSelector:@selector(searchViewController:didSelectHotSearchAtIndex:searchText:)]) {
             [self.delegate searchViewController:self didSelectHotSearchAtIndex:[self.hotSearchTags indexOfObject:label] searchText:label.text];
+        } else {
+            [self searchBarSearchButtonClicked:self.searchBar];
         }
     } else { // 搜索历史标签
         if ([self.delegate respondsToSelector:@selector(searchViewController:didSelectSearchHistoryAtIndex:searchText:)]) {
             [self.delegate searchViewController:self didSelectSearchHistoryAtIndex:[self.searchHistoryTags indexOfObject:label] searchText:label.text];
+        } else {
+            [self searchBarSearchButtonClicked:self.searchBar];
         }
     }
     PYSearchLog(@"搜索 %@", label.text);
@@ -920,10 +930,11 @@
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     self.searchBar.text = cell.textLabel.text;
-    [self searchBarSearchButtonClicked:self.searchBar];
     
-    if ([self.delegate respondsToSelector:@selector(searchViewController:didSelectSearchHistoryAtIndex:searchText:)]) { // 实现代理方法则调用
+    if ([self.delegate respondsToSelector:@selector(searchViewController:didSelectSearchHistoryAtIndex:searchText:)]) { // 实现代理方法则调用，则搜索历史时searchViewController:didSearchWithsearchBar:searchText:失效
         [self.delegate searchViewController:self didSelectSearchHistoryAtIndex:indexPath.row searchText:cell.textLabel.text];
+    } else {
+        [self searchBarSearchButtonClicked:self.searchBar];
     }
 }
 
