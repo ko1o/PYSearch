@@ -182,7 +182,7 @@
 - (NSMutableArray *)searchHistories
 {
     if (!_searchHistories) {
-        _searchHistories = [NSKeyedUnarchiver unarchiveObjectWithFile:PYSearchHistoriesPath];
+        _searchHistories = [NSKeyedUnarchiver unarchiveObjectWithFile:self.searchHistoriesCachePath];
         if (!_searchHistories) {
             _searchHistories = [NSMutableArray array];
         }
@@ -239,6 +239,9 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardDidShowNotification object:nil];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStyleDone target:self action:@selector(cancelDidClick)];
     
+    /**
+     * 设置一些默认设置
+     */
     // 热门搜索风格设置
     self.hotSearchStyle = PYHotSearchStyleDefault;
     // 设置搜索历史风格
@@ -247,6 +250,8 @@
     self.searchResultShowMode = PYSearchResultShowModeDefault;
     // 显示搜索建议
     self.searchSuggestionHidden = NO;
+    // 搜索历史缓存路径
+    self.searchHistoriesCachePath = PYSearchHistoriesPath;
     
     // 创建搜索框
     UIView *titleView = [[UIView alloc] init];
@@ -297,6 +302,9 @@
     [footerView addSubview:emptySearchHistoryLabel];
     footerView.py_height = 30;
     self.baseSearchTableView.tableFooterView = footerView;
+    
+    // 默认没有热门搜索
+    self.hotSearches = nil;
 }
 
 /** 创建并设置标题 */
@@ -542,6 +550,15 @@
 }
 
 #pragma mark - setter
+- (void)setSearchHistoriesCachePath:(NSString *)searchHistoriesCachePath
+{
+    _searchHistoriesCachePath = [searchHistoriesCachePath copy];
+    
+    // 刷新
+    self.searchHistories = nil;
+    [self.baseSearchTableView reloadData];
+}
+
 - (void)setHotSearchTags:(NSArray<UILabel *> *)hotSearchTags
 {
     // 设置热门搜索时(标签tag为1，搜索历史为0)
@@ -817,7 +834,7 @@
         self.searchHistoryStyle = self.searchHistoryStyle;
     }
     // 保存搜索信息
-    [NSKeyedArchiver archiveRootObject:self.searchHistories toFile:PYSearchHistoriesPath];
+    [NSKeyedArchiver archiveRootObject:self.searchHistories toFile:self.searchHistoriesCachePath];
     // 处理搜索结果
     switch (self.searchResultShowMode) {
         case PYSearchResultShowModePush: // Push
