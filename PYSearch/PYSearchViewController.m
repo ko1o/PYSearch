@@ -553,10 +553,13 @@
 - (void)setSearchHistoriesCachePath:(NSString *)searchHistoriesCachePath
 {
     _searchHistoriesCachePath = [searchHistoriesCachePath copy];
-    
     // 刷新
     self.searchHistories = nil;
-    [self.baseSearchTableView reloadData];
+    if (self.searchHistoryStyle == PYSearchHistoryStyleCell) { // 搜索历史为cell类型
+        [self.baseSearchTableView reloadData];
+    } else { // 搜索历史为标签类型
+        [self setSearchHistoryStyle:self.searchHistoryStyle];
+    }
 }
 
 - (void)setHotSearchTags:(NSArray<UILabel *> *)hotSearchTags
@@ -758,7 +761,7 @@
     // 移除所有历史搜索
     [self.searchHistories removeAllObjects];
     // 移除数据缓存
-    [NSKeyedArchiver archiveRootObject:self.searchHistories toFile:PYSearchHistoriesPath];
+    [NSKeyedArchiver archiveRootObject:self.searchHistories toFile:self.searchHistoriesCachePath];
     if (self.searchHistoryStyle == PYSearchHistoryStyleCell) {
         // 刷新cell
         [self.baseSearchTableView reloadData];
