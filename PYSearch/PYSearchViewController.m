@@ -13,7 +13,7 @@
 #define PYTextColor PYColor(113, 113, 113)  // 文本字体颜色
 #define PYColorPolRandomColor self.colorPol[arc4random_uniform((uint32_t)self.colorPol.count)] // 随机选取颜色池中的颜色
 
-@interface PYSearchViewController () <UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource>
+@interface PYSearchViewController () <UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource, PYSearchSuggestionViewDataSource>
 
 /** 头部内容view */
 @property (nonatomic, weak) UIView *headerContentView;
@@ -129,6 +129,8 @@
         searchSuggestionVC.tableView.contentInset = UIEdgeInsetsMake(-30, 0, self.keyboardHeight, 0);
         searchSuggestionVC.view.backgroundColor = self.baseSearchTableView.backgroundColor;
         searchSuggestionVC.view.hidden = YES;
+        // 设置数据源
+        searchSuggestionVC.dataSource = self;
         [self.view addSubview:searchSuggestionVC.view];
         [self addChildViewController:searchSuggestionVC];
         _searchSuggestionVC = searchSuggestionVC;
@@ -210,11 +212,6 @@
     return self.navigationItem.rightBarButtonItem;
 }
 
-- (void)setCancelButton:(UIBarButtonItem *)cancelButton
-{
-    self.navigationItem.rightBarButtonItem = cancelButton;
-}
-
 /** 视图完全显示 */
 - (void)viewDidAppear:(BOOL)animated
 {
@@ -222,6 +219,15 @@
     
     // 弹出键盘
     [self.searchBar becomeFirstResponder];
+}
+
+/** 视图即将消失 */
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    // 回收键盘
+    [self.searchBar resignFirstResponder];
 }
 
 /** 控制器销毁 */
@@ -550,6 +556,11 @@
 }
 
 #pragma mark - setter
+- (void)setCancelButton:(UIBarButtonItem *)cancelButton
+{
+    self.navigationItem.rightBarButtonItem = cancelButton;
+}
+
 - (void)setSearchHistoriesCachePath:(NSString *)searchHistoriesCachePath
 {
     _searchHistoriesCachePath = [searchHistoriesCachePath copy];
@@ -821,6 +832,39 @@
     return label;
 }
 
+#pragma mark - PYSearchSuggestionViewDataSource
+- (NSInteger)numberOfSectionsInSearchSuggestionView:(UITableView *)searchSuggestionView
+{
+    if ([self.dataSource respondsToSelector:@selector(numberOfSectionsInSearchSuggestionView:)]) {
+        return [self.dataSource numberOfSectionsInSearchSuggestionView:searchSuggestionView];
+    }
+    return 1;
+}
+
+- (NSInteger)searchSuggestionView:(UITableView *)searchSuggestionView numberOfRowsInSection:(NSInteger)section
+{
+    if ([self.dataSource respondsToSelector:@selector(searchSuggestionView:numberOfRowsInSection:)]) {
+        return [self.dataSource searchSuggestionView:searchSuggestionView numberOfRowsInSection:section];
+    }
+    return self.searchSuggestions.count;
+}
+
+- (UITableViewCell *)searchSuggestionView:(UITableView *)searchSuggestionView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if ([self.dataSource respondsToSelector:@selector(searchSuggestionView:cellForRowAtIndexPath:)]) {
+        return [self.dataSource searchSuggestionView:searchSuggestionView cellForRowAtIndexPath:indexPath];
+    }
+    return nil;
+}
+
+- (CGFloat)searchSuggestionView:(UITableView *)searchSuggestionView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if ([self.dataSource respondsToSelector:@selector(searchSuggestionView:heightForRowAtIndexPath:)]) {
+        return [self.dataSource searchSuggestionView:searchSuggestionView heightForRowAtIndexPath:indexPath];
+    }
+    return 44.0;
+}
+
 #pragma mark - UISearchBarDelegate
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
 {
@@ -891,7 +935,6 @@
 
 #pragma mark - Table view data source
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    
     return  1;
 }
 

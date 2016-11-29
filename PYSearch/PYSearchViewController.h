@@ -7,7 +7,7 @@
 
 #import <UIKit/UIKit.h>
 
-@class PYSearchViewController;
+@class PYSearchViewController, PYSearchSuggestionViewController;
 
 typedef void(^PYDidSearchBlock)(PYSearchViewController *searchViewController, UISearchBar *searchBar, NSString *searchText); // 开始搜索时调用的block
 
@@ -36,6 +36,19 @@ typedef NS_ENUM(NSInteger, PYSearchResultShowMode) { // 搜索结果显示方式
     PYSearchResultShowModeEmbed,    // 通过内嵌控制器View显示
     PYSearchResultShowModeDefault = PYSearchResultShowModeCustom // 默认为用户自定义（自己处理）
 };
+
+@protocol PYSearchViewControllerDataSource <NSObject, UITableViewDataSource>
+/** 返回用户自定义搜索建议Cell */
+- (UITableViewCell *)searchSuggestionView:(UITableView *)SearchSuggestionView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
+/** 返回用户自定义搜索建议cell的rows */
+- (NSInteger)searchSuggestionView:(UITableView *)searchSuggestionView numberOfRowsInSection:(NSInteger)section;
+@optional
+/** 返回用户自定义搜索建议cell的section */
+- (NSInteger)numberOfSectionsInSearchSuggestionView:(UITableView *)searchSuggestionView;
+/** 返回用户自定义搜索建议cell高度 */
+- (CGFloat)searchSuggestionView:(UITableView *)searchSuggestionView heightForRowAtIndexPath:(NSIndexPath *)indexPath;
+
+@end
 
 @protocol PYSearchViewControllerDelegate <NSObject, UITableViewDelegate>
 
@@ -85,6 +98,8 @@ typedef NS_ENUM(NSInteger, PYSearchResultShowMode) { // 搜索结果显示方式
 
 /** 代理 */
 @property (nonatomic, weak) id<PYSearchViewControllerDelegate> delegate;
+/** 数据源 */
+@property (nonatomic, weak) id<PYSearchViewControllerDataSource> dataSource;
 
 /** 热门搜索风格 （默认为：PYHotSearchStyleDefault）*/
 @property (nonatomic, assign) PYHotSearchStyle hotSearchStyle;

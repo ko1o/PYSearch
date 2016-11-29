@@ -8,7 +8,7 @@
 #import "PYSearchSuggestionViewController.h"
 #import "PYSearchConst.h"
 
-@interface PYSearchSuggestionViewController ()
+@interface PYSearchSuggestionViewController () 
 
 @end
 
@@ -38,16 +38,25 @@
 
 #pragma mark - Table view data source
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    if ([self.dataSource respondsToSelector:@selector(numberOfSectionsInSearchSuggestionView:)]) {
+        return [self.dataSource numberOfSectionsInSearchSuggestionView:tableView];
+    }
     return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    
+    if ([self.dataSource respondsToSelector:@selector(searchSuggestionView:numberOfRowsInSection:)]) {
+        return [self.dataSource searchSuggestionView:tableView numberOfRowsInSection:section];
+    }
     return self.searchSuggestions.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
+    if ([self.dataSource respondsToSelector:@selector(searchSuggestionView:cellForRowAtIndexPath:)]) {
+        UITableViewCell *cell= [self.dataSource searchSuggestionView:tableView cellForRowAtIndexPath:indexPath];
+        if (cell) return cell;
+    }
+    // 使用默认的搜索建议Cell
     static NSString *cellID = @"PYSearchSuggestionCellID";
     // 创建cell
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
@@ -65,12 +74,18 @@
         line.py_width = PYScreenW;
         [cell.contentView addSubview:line];
     }
-    
     // 设置数据
     cell.imageView.image = PYSearchSuggestionImage;
     cell.textLabel.text = self.searchSuggestions[indexPath.row];
-    
     return cell;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if ([self.dataSource respondsToSelector:@selector(searchSuggestionView:heightForRowAtIndexPath:)]) {
+        return [self.dataSource searchSuggestionView:tableView heightForRowAtIndexPath:indexPath];
+    }
+    return 44.0;
 }
 
 #pragma mark - UITableViewDelegate
