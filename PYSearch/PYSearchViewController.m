@@ -98,15 +98,6 @@
     return _baseSearchTableView;
 }
 
-- (UITableViewController *)searchResultController
-{
-    if (!_searchResultController) {
-        _searchResultController = [[UITableViewController alloc] init];
-        self.searchResultTableView = _searchResultController.tableView;
-    }
-    return _searchResultController;
-}
-
 - (PYSearchSuggestionViewController *)searchSuggestionVC
 {
     if (!_searchSuggestionVC) {
@@ -885,12 +876,16 @@
     // 处理搜索结果
     switch (self.searchResultShowMode) {
         case PYSearchResultShowModePush: // Push
+            self.searchResultController.view.hidden = NO;
             [self.navigationController pushViewController:self.searchResultController animated:YES];
             break;
         case PYSearchResultShowModeEmbed: // 内嵌
             // 添加搜索结果的视图
-            [self.view addSubview:self.searchResultController.tableView];
+            [self.view addSubview:self.searchResultController.view];
             [self addChildViewController:self.searchResultController];
+            self.searchResultController.view.hidden = NO;
+            self.searchResultController.view.py_y = 64;
+            self.searchSuggestionVC.view.hidden = YES;
             break;
         case PYSearchResultShowModeCustom: // 自定义
             
@@ -919,6 +914,15 @@
     if ([self.delegate respondsToSelector:@selector(searchViewController:searchTextDidChange:searchText:)]) {
         [self.delegate searchViewController:self searchTextDidChange:searchBar searchText:searchText];
     }
+}
+
+- (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar
+{
+    // 搜索结果隐藏
+    self.searchResultController.view.hidden = YES;
+    // 根据输入文本显示建议搜索条件
+    self.searchSuggestionVC.view.hidden = self.searchSuggestionHidden || !searchBar.text.length;
+    return YES;
 }
 
 - (void)closeDidClick:(UIButton *)sender

@@ -91,6 +91,9 @@
 #pragma mark - UITableViewDelegate
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    // 取消选中
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
     if (self.didSelectCellBlock) self.didSelectCellBlock([tableView cellForRowAtIndexPath:indexPath]);
 }
 
