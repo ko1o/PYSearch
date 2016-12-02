@@ -918,10 +918,13 @@
 
 - (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar
 {
-    // 搜索结果隐藏
-    self.searchResultController.view.hidden = YES;
-    // 根据输入文本显示建议搜索条件
-    self.searchSuggestionVC.view.hidden = self.searchSuggestionHidden || !searchBar.text.length;
+    if (self.searchResultShowMode == PYSearchResultShowModeEmbed) { // 搜索结果为内嵌时
+        // 搜索结果隐藏
+        self.searchResultController.view.hidden = YES;
+        // 根据输入文本显示建议搜索条件
+        self.searchSuggestionVC.view.hidden = self.searchSuggestionHidden || !searchBar.text.length;    // 如果有搜索文本且显示搜索建议，则隐藏
+        self.baseSearchTableView.hidden = searchBar.text.length && !self.searchSuggestionHidden;
+    }
     return YES;
 }
 
