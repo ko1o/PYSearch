@@ -175,10 +175,7 @@
 - (NSMutableArray *)searchHistories
 {
     if (!_searchHistories) {
-        _searchHistories = [NSKeyedUnarchiver unarchiveObjectWithFile:self.searchHistoriesCachePath];
-        if (!_searchHistories) {
-            _searchHistories = [NSMutableArray array];
-        }
+        _searchHistories = [NSMutableArray arrayWithArray:[NSKeyedUnarchiver unarchiveObjectWithFile:self.searchHistoriesCachePath]];
     }
     return _searchHistories;
 }
@@ -249,6 +246,8 @@
     self.searchSuggestionHidden = NO;
     // 搜索历史缓存路径
     self.searchHistoriesCachePath = PYSearchHistoriesPath;
+    // 搜索历史缓存最多条数
+    self.searchHistoriesCount = 20;
     
     // 创建搜索框
     UIView *titleView = [[UIView alloc] init];
@@ -780,14 +779,6 @@
     UILabel *label = (UILabel *)gr.view;
     self.searchBar.text = label.text;
     
-    if (self.searchHistoryStyle == PYSearchHistoryStyleCell) { // 搜索历史为标签时，刷新标签
-        // 刷新tableView
-        [self.baseSearchTableView reloadData];
-    } else {
-        // 更新
-        self.searchHistoryStyle = self.searchHistoryStyle;
-    }
-    
     if (label.tag == 1) { // 热门搜索标签
         // 取出下标
         if ([self.delegate respondsToSelector:@selector(searchViewController:didSelectHotSearchAtIndex:searchText:)]) {
@@ -868,6 +859,19 @@
     if (self.searchHistoryStyle == PYSearchHistoryStyleCell) { // 普通风格Cell
         [self.baseSearchTableView reloadData];
     } else { // 搜索历史为标签
+        // 更新
+        self.searchHistoryStyle = self.searchHistoryStyle;
+    }
+    // 移除多余的缓存
+    if (self.searchHistories.count > self.searchHistoriesCount) {
+        // 移除最后一条缓存
+        [self.searchHistories removeLastObject];
+    }
+    // 刷新页面
+    if (self.searchHistoryStyle == PYSearchHistoryStyleCell) { // 搜索历史为标签时，刷新标签
+        // 刷新tableView
+        [self.baseSearchTableView reloadData];
+    } else {
         // 更新
         self.searchHistoryStyle = self.searchHistoryStyle;
     }
