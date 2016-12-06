@@ -117,7 +117,7 @@
             }
         };
         searchSuggestionVC.view.frame = CGRectMake(0, 64, self.view.py_width, self.view.py_height);
-        searchSuggestionVC.tableView.contentInset = UIEdgeInsetsMake(-30, 0, self.keyboardHeight, 0);
+        searchSuggestionVC.tableView.contentInset = UIEdgeInsetsMake(-30, 0, self.keyboardHeight + 30, 0);
         searchSuggestionVC.view.backgroundColor = self.baseSearchTableView.backgroundColor;
         searchSuggestionVC.view.hidden = YES;
         // 设置数据源

@@ -8,7 +8,9 @@
 #import "PYSearchSuggestionViewController.h"
 #import "PYSearchConst.h"
 
-@interface PYSearchSuggestionViewController () 
+@interface PYSearchSuggestionViewController ()
+/** 记录消失前的contentInset */
+@property (nonatomic, assign) UIEdgeInsets originalContentInset;
 
 @end
 
@@ -18,23 +20,58 @@
 {
     PYSearchSuggestionViewController *searchSuggestionVC = [[PYSearchSuggestionViewController alloc] init];
     searchSuggestionVC.didSelectCellBlock = didSelectCellBlock;
+    searchSuggestionVC.automaticallyAdjustsScrollViewInsets = NO;
     return searchSuggestionVC;
 }
 
+/** 视图加载完毕 */
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     // 取消分割线
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    
+    // 监听键盘
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboradFrameDidChange:) name:UIKeyboardDidShowNotification object:nil];
 }
 
+/** 控制器销毁 */
+- (void)dealloc
+{
+    // 移除监听
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+/** 视图即将消失 */
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    // 记录消失前的tableView.contentInset
+    self.originalContentInset = self.tableView.contentInset;
+}
+
+/** 键盘frame改变 */
+- (void)keyboradFrameDidChange:(NSNotification *)notification
+{
+    // 刷新
+    [self setSearchSuggestions:_searchSuggestions];
+}
+
+#pragma mark - setter
 - (void)setSearchSuggestions:(NSArray<NSString *> *)searchSuggestions
 {
     _searchSuggestions = [searchSuggestions copy];
     
     // 刷新数据
     [self.tableView reloadData];
+    
+    // 还原contentInset
+    if (!UIEdgeInsetsEqualToEdgeInsets(self.originalContentInset, UIEdgeInsetsZero)) { // originalContentInset非零
+        self.tableView.contentInset =  self.originalContentInset;
+    }
 }
+
 
 #pragma mark - Table view data source
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
