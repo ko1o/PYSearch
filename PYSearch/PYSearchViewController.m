@@ -106,11 +106,15 @@
         searchSuggestionVC.didSelectCellBlock = ^(UITableViewCell *didSelectCell) {
             // 设置搜索信息
             _weakSelf.searchBar.text = didSelectCell.textLabel.text;
+            
+            // 缓存数据并且刷新界面
+            [_weakSelf saveSearchCacheAndRefreshView];
+            
             // 如果实现搜索建议代理方法则searchBarSearchButtonClicked失效
-            if ([self.delegate respondsToSelector:@selector(searchViewController:didSelectSearchSuggestionAtIndex:searchText:)]) {
+            if ([_weakSelf.delegate respondsToSelector:@selector(searchViewController:didSelectSearchSuggestionAtIndex:searchText:)]) {
                 // 获取下标
                 NSIndexPath *indexPath = [_weakSelf.searchSuggestionVC.tableView indexPathForCell:didSelectCell];
-                [self.delegate searchViewController:_weakSelf didSelectSearchSuggestionAtIndex:indexPath.row searchText:_weakSelf.searchBar.text];
+                [_weakSelf.delegate searchViewController:_weakSelf didSelectSearchSuggestionAtIndex:indexPath.row searchText:_weakSelf.searchBar.text];
             } else {
                 // 点击搜索
                 [_weakSelf searchBarSearchButtonClicked:_weakSelf.searchBar];
@@ -779,6 +783,9 @@
     UILabel *label = (UILabel *)gr.view;
     self.searchBar.text = label.text;
     
+    // 缓存数据并且刷新界面
+    [self saveSearchCacheAndRefreshView];
+    
     if (label.tag == 1) { // 热门搜索标签
         // 取出下标
         if ([self.delegate respondsToSelector:@selector(searchViewController:didSelectHotSearchAtIndex:searchText:)]) {
@@ -812,6 +819,54 @@
     label.py_width += 20;
     label.py_height += 14;
     return label;
+}
+
+/** 进入搜索状态调用此方法 */
+- (void)saveSearchCacheAndRefreshView
+{
+    UISearchBar *searchBar = self.searchBar;
+    // 回收键盘
+    [searchBar resignFirstResponder];
+    // 先移除再刷新
+    [self.searchHistories removeObject:searchBar.text];
+    [self.searchHistories insertObject:searchBar.text atIndex:0];
+    
+    // 移除多余的缓存
+    if (self.searchHistories.count > self.searchHistoriesCount) {
+        // 移除最后一条缓存
+        [self.searchHistories removeLastObject];
+    }
+    // 保存搜索信息
+    [NSKeyedArchiver archiveRootObject:self.searchHistories toFile:self.searchHistoriesCachePath];
+    
+    // 刷新数据
+    if (self.searchHistoryStyle == PYSearchHistoryStyleCell) { // 普通风格Cell
+        [self.baseSearchTableView reloadData];
+    } else { // 搜索历史为标签
+        // 更新
+        self.searchHistoryStyle = self.searchHistoryStyle;
+    }
+    
+    // 处理搜索结果
+    switch (self.searchResultShowMode) {
+        case PYSearchResultShowModePush: // Push
+            self.searchResultController.view.hidden = NO;
+            [self.navigationController pushViewController:self.searchResultController animated:YES];
+            break;
+        case PYSearchResultShowModeEmbed: // 内嵌
+            // 添加搜索结果的视图
+            [self.view addSubview:self.searchResultController.view];
+            [self addChildViewController:self.searchResultController];
+            self.searchResultController.view.hidden = NO;
+            self.searchResultController.view.py_y = 64;
+            self.searchSuggestionVC.view.hidden = YES;
+            break;
+        case PYSearchResultShowModeCustom: // 自定义
+            
+            break;
+        default:
+            break;
+    }
 }
 
 #pragma mark - PYSearchSuggestionViewDataSource
@@ -850,53 +905,6 @@
 #pragma mark - UISearchBarDelegate
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
 {
-    // 回收键盘
-    [searchBar resignFirstResponder];
-    // 先移除再刷新
-    [self.searchHistories removeObject:searchBar.text];
-    [self.searchHistories insertObject:searchBar.text atIndex:0];
-    // 刷新数据
-    if (self.searchHistoryStyle == PYSearchHistoryStyleCell) { // 普通风格Cell
-        [self.baseSearchTableView reloadData];
-    } else { // 搜索历史为标签
-        // 更新
-        self.searchHistoryStyle = self.searchHistoryStyle;
-    }
-    // 移除多余的缓存
-    if (self.searchHistories.count > self.searchHistoriesCount) {
-        // 移除最后一条缓存
-        [self.searchHistories removeLastObject];
-    }
-    // 刷新页面
-    if (self.searchHistoryStyle == PYSearchHistoryStyleCell) { // 搜索历史为标签时，刷新标签
-        // 刷新tableView
-        [self.baseSearchTableView reloadData];
-    } else {
-        // 更新
-        self.searchHistoryStyle = self.searchHistoryStyle;
-    }
-    // 保存搜索信息
-    [NSKeyedArchiver archiveRootObject:self.searchHistories toFile:self.searchHistoriesCachePath];
-    // 处理搜索结果
-    switch (self.searchResultShowMode) {
-        case PYSearchResultShowModePush: // Push
-            self.searchResultController.view.hidden = NO;
-            [self.navigationController pushViewController:self.searchResultController animated:YES];
-            break;
-        case PYSearchResultShowModeEmbed: // 内嵌
-            // 添加搜索结果的视图
-            [self.view addSubview:self.searchResultController.view];
-            [self addChildViewController:self.searchResultController];
-            self.searchResultController.view.hidden = NO;
-            self.searchResultController.view.py_y = 64;
-            self.searchSuggestionVC.view.hidden = YES;
-            break;
-        case PYSearchResultShowModeCustom: // 自定义
-            
-            break;
-        default:
-            break;
-    }
     // 如果代理实现了代理方法则调用代理方法
     if ([self.delegate respondsToSelector:@selector(searchViewController:didSearchWithsearchBar:searchText:)]) {
         [self.delegate searchViewController:self didSearchWithsearchBar:searchBar searchText:searchBar.text];
@@ -1004,6 +1012,9 @@
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     self.searchBar.text = cell.textLabel.text;
+    
+    // 缓存数据并且刷新界面
+    [self saveSearchCacheAndRefreshView];
     
     if ([self.delegate respondsToSelector:@selector(searchViewController:didSelectSearchHistoryAtIndex:searchText:)]) { // 实现代理方法则调用，则搜索历史时searchViewController:didSearchWithsearchBar:searchText:失效
         [self.delegate searchViewController:self didSelectSearchHistoryAtIndex:indexPath.row searchText:cell.textLabel.text];
