@@ -106,13 +106,13 @@
         UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"PYSearch.bundle/cell-content-line"]];
         line.py_height = 0.5;
         line.alpha = 0.7;
-        line.py_x = PYMargin;
+        line.py_x = PYSEARCH_MARGIN;
         line.py_y = 43;
         line.py_width = PYScreenW;
         [cell.contentView addSubview:line];
     }
     // 设置数据
-    cell.imageView.image = PYSearchSuggestionImage;
+    cell.imageView.image = PYSEARCH_SEARCH_SUGGESTION_IMAGE;
     cell.textLabel.text = self.searchSuggestions[indexPath.row];
     return cell;
 }

@@ -5,9 +5,9 @@
 //  Copyright © 2016年 iphone5solo. All rights reserved.
 //
 
-#import "UIView+PYExtension.h"
+#import "UIView+PYSearchExtension.h"
 
-@implementation UIView (PYExtension)
+@implementation UIView (PYSearchExtension)
 
 - (void)setPy_x:(CGFloat)py_x
 {

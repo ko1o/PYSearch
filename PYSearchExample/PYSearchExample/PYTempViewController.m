@@ -17,7 +17,7 @@
     [super viewDidLoad];
     
     self.title = @"SearchResultViewController";
-    self.view.backgroundColor = PYRandomColor;
+    self.view.backgroundColor = PYSEARCH_RANDOM_COLOR;
 }
 
 - (void)didReceiveMemoryWarning {

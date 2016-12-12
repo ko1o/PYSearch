@@ -7,7 +7,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface UIView (PYExtension)
+@interface UIView (PYSearchExtension)
 @property (nonatomic, assign) CGFloat py_x;
 @property (nonatomic, assign) CGFloat py_y;
 @property (nonatomic, assign) CGFloat py_centerX;

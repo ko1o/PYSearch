@@ -10,8 +10,8 @@
 #import "PYSearchSuggestionViewController.h"
 
 #define PYRectangleTagMaxCol 3 // 矩阵标签时，最多列数
-#define PYTextColor PYColor(113, 113, 113)  // 文本字体颜色
-#define PYColorPolRandomColor self.colorPol[arc4random_uniform((uint32_t)self.colorPol.count)] // 随机选取颜色池中的颜色
+#define PYTextColor PYSEARCH_COLOR(113, 113, 113)  // 文本字体颜色
+#define PYSEARCH_COLORPolRandomColor self.colorPol[arc4random_uniform((uint32_t)self.colorPol.count)] // 随机选取颜色池中的颜色
 
 @interface PYSearchViewController () <UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource, PYSearchSuggestionViewDataSource>
 
@@ -144,8 +144,8 @@
         [emptyButton setImage:[UIImage imageNamed:@"PYSearch.bundle/empty"] forState:UIControlStateNormal];
         [emptyButton addTarget:self action:@selector(emptySearchHistoryDidClick) forControlEvents:UIControlEventTouchUpInside];
         [emptyButton sizeToFit];
-        emptyButton.py_width += PYMargin;
-        emptyButton.py_height += PYMargin;
+        emptyButton.py_width += PYSEARCH_MARGIN;
+        emptyButton.py_height += PYSEARCH_MARGIN;
         emptyButton.py_centerY = self.searchHistoryHeader.py_centerY;
         emptyButton.py_x = self.headerContentView.py_width - emptyButton.py_width;
         [self.headerContentView addSubview:emptyButton];
@@ -158,8 +158,8 @@
 {
     if (!_searchHistoryTagsContentView) {
         UIView *searchHistoryTagsContentView = [[UIView alloc] init];
-        searchHistoryTagsContentView.py_width = PYScreenW - PYMargin * 2;
-        searchHistoryTagsContentView.py_y = CGRectGetMaxY(self.hotSearchTagsContentView.frame) + PYMargin;
+        searchHistoryTagsContentView.py_width = PYScreenW - PYSEARCH_MARGIN * 2;
+        searchHistoryTagsContentView.py_y = CGRectGetMaxY(self.hotSearchTagsContentView.frame) + PYSEARCH_MARGIN;
         [self.headerContentView addSubview:searchHistoryTagsContentView];
         _searchHistoryTagsContentView = searchHistoryTagsContentView;
     }
@@ -249,18 +249,18 @@
     // 显示搜索建议
     self.searchSuggestionHidden = NO;
     // 搜索历史缓存路径
-    self.searchHistoriesCachePath = PYSearchHistoriesPath;
+    self.searchHistoriesCachePath = PYSEARCH_SEARCH_HISTORY_CACHE_PATH;
     // 搜索历史缓存最多条数
     self.searchHistoriesCount = 20;
     
     // 创建搜索框
     UIView *titleView = [[UIView alloc] init];
-    titleView.py_x = PYMargin * 0.5;
+    titleView.py_x = PYSEARCH_MARGIN * 0.5;
     titleView.py_y = 7;
     titleView.py_width = self.view.py_width - 64 - titleView.py_x * 2;
     titleView.py_height = 30;
     UISearchBar *searchBar = [[UISearchBar alloc] initWithFrame:titleView.bounds];
-    searchBar.py_width -= PYMargin * 1.5;
+    searchBar.py_width -= PYSEARCH_MARGIN * 1.5;
     searchBar.placeholder = PYSearchPlaceholderText;
     searchBar.backgroundImage = [UIImage imageNamed:@"PYSearch.bundle/clearImage"];
     searchBar.delegate = self;
@@ -271,8 +271,8 @@
     // 设置头部（热门搜索）
     UIView *headerView = [[UIView alloc] init];
     UIView *contentView = [[UIView alloc] init];
-    contentView.py_y = PYMargin * 2;
-    contentView.py_x = PYMargin * 1.5;
+    contentView.py_y = PYSEARCH_MARGIN * 2;
+    contentView.py_x = PYSEARCH_MARGIN * 1.5;
     contentView.py_width = PYScreenW - contentView.py_x * 2;
     [headerView addSubview:contentView];
     UILabel *titleLabel = [self setupTitleLabel:PYHotSearchText];
@@ -281,7 +281,7 @@
     // 创建热门搜索标签容器
     UIView *hotSearchTagsContentView = [[UIView alloc] init];
     hotSearchTagsContentView.py_width = contentView.py_width;
-    hotSearchTagsContentView.py_y = CGRectGetMaxY(titleLabel.frame) + PYMargin;
+    hotSearchTagsContentView.py_y = CGRectGetMaxY(titleLabel.frame) + PYSEARCH_MARGIN;
     [contentView addSubview:hotSearchTagsContentView];
     self.hotSearchTagsContentView = hotSearchTagsContentView;
     self.headerContentView = contentView;
@@ -328,7 +328,7 @@
     UIView *contentView = self.hotSearchTagsContentView;
     // 调整容器布局
     contentView.py_width = PYScreenW;
-    contentView.py_x = -PYMargin * 1.5;
+    contentView.py_x = -PYSEARCH_MARGIN * 1.5;
     contentView.py_y += 2;
     contentView.backgroundColor = [UIColor whiteColor];
     // 设置tableView背景颜色
@@ -360,7 +360,7 @@
     // 设置标签容器高度
     contentView.py_height = CGRectGetMaxY(contentView.subviews.lastObject.frame);
     // 设置tableHeaderView高度
-    self.baseSearchTableView.tableHeaderView.py_height  = self.headerContentView.py_height = CGRectGetMaxY(contentView.frame) + PYMargin * 2;
+    self.baseSearchTableView.tableHeaderView.py_height  = self.headerContentView.py_height = CGRectGetMaxY(contentView.frame) + PYSEARCH_MARGIN * 2;
     // 添加分割线
     for (int i = 0; i < PYRectangleTagMaxCol - 1; i++) { // 添加垂直分割线
         UIImageView *verticalLine = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"PYSearch.bundle/cell-content-line-vertical"]];
@@ -397,7 +397,7 @@
         // 整体标签
         UIView *rankView = [[UIView alloc] init];
         rankView.py_height = 40;
-        rankView.py_width = (PYScreenW - PYMargin * 3) * 0.5;
+        rankView.py_width = (PYScreenW - PYSEARCH_MARGIN * 3) * 0.5;
         [contentView addSubview:rankView];
         // 排名
         UILabel *rankTag = [[UILabel alloc] init];
@@ -407,7 +407,7 @@
         rankTag.clipsToBounds = YES;
         rankTag.text = [NSString stringWithFormat:@"%d", i + 1];
         [rankTag sizeToFit];
-        rankTag.py_width = rankTag.py_height += PYMargin * 0.5;
+        rankTag.py_width = rankTag.py_height += PYSEARCH_MARGIN * 0.5;
         rankTag.py_y = (rankView.py_height - rankTag.py_height) * 0.5;
         [rankView addSubview:rankTag];
         [rankTagM addObject:rankTag];
@@ -420,8 +420,8 @@
         rankTextLabel.backgroundColor = [UIColor clearColor];
         rankTextLabel.textColor = PYTextColor;
         rankTextLabel.font = [UIFont systemFontOfSize:14];
-        rankTextLabel.py_x = CGRectGetMaxX(rankTag.frame) + PYMargin;
-        rankTextLabel.py_width = (PYScreenW - PYMargin * 3) * 0.5 - rankTextLabel.py_x;
+        rankTextLabel.py_x = CGRectGetMaxX(rankTag.frame) + PYSEARCH_MARGIN;
+        rankTextLabel.py_width = (PYScreenW - PYSEARCH_MARGIN * 3) * 0.5 - rankTextLabel.py_x;
         rankTextLabel.py_height = rankView.py_height;
         [rankTextLabelsM addObject:rankTextLabel];
         [rankView addSubview:rankTextLabel];
@@ -462,13 +462,13 @@
     // 计算位置
     for (int i = 0; i < self.rankViews.count; i++) { // 每行两个
         UIView *rankView = self.rankViews[i];
-        rankView.py_x = (PYMargin + rankView.py_width) * (i % 2);
+        rankView.py_x = (PYSEARCH_MARGIN + rankView.py_width) * (i % 2);
         rankView.py_y = rankView.py_height * (i / 2);
     }
     // 设置标签容器高度
     contentView.py_height = CGRectGetMaxY(self.rankViews.lastObject.frame);
     // 设置tableHeaderView高度
-    self.baseSearchTableView.tableHeaderView.py_height  = self.headerContentView.py_height = CGRectGetMaxY(contentView.frame) + PYMargin * 2;
+    self.baseSearchTableView.tableHeaderView.py_height  = self.headerContentView.py_height = CGRectGetMaxY(contentView.frame) + PYSEARCH_MARGIN * 2;
     // 重新赋值，注意：当操作系统为iOS 9.x系列的tableHeaderView高度设置失效，需要重新设置tableHeaderView
     [self.baseSearchTableView setTableHeaderView:self.baseSearchTableView.tableHeaderView];
 }
@@ -495,9 +495,9 @@
     // 隐藏尾部清除按钮
     self.baseSearchTableView.tableFooterView = nil;
     // 添加搜索历史头部
-    self.searchHistoryHeader.py_y = self.hotSearches.count > 0 ? CGRectGetMaxY(self.hotSearchTagsContentView.frame) + PYMargin * 1.5 : 0;
-    self.emptyButton.py_y = self.searchHistoryHeader.py_y - PYMargin * 0.5;
-    self.searchHistoryTagsContentView.py_y = CGRectGetMaxY(self.emptyButton.frame) + PYMargin;
+    self.searchHistoryHeader.py_y = self.hotSearches.count > 0 ? CGRectGetMaxY(self.hotSearchTagsContentView.frame) + PYSEARCH_MARGIN * 1.5 : 0;
+    self.emptyButton.py_y = self.searchHistoryHeader.py_y - PYSEARCH_MARGIN * 0.5;
+    self.searchHistoryTagsContentView.py_y = CGRectGetMaxY(self.emptyButton.frame) + PYSEARCH_MARGIN;
     // 添加和布局标签
     self.searchHistoryTags = [self addAndLayoutTagsWithTagsContentView:self.searchHistoryTagsContentView tagTexts:[self.searchHistories copy]];
 }
@@ -527,21 +527,21 @@
         UILabel *subView = contentView.subviews[i];
         // 当搜索字数过多，宽度为contentView的宽度
         if (subView.py_width > contentView.py_width) subView.py_width = contentView.py_width;
-        if (currentX + subView.py_width + PYMargin * countRow > contentView.py_width) { // 得换行
+        if (currentX + subView.py_width + PYSEARCH_MARGIN * countRow > contentView.py_width) { // 得换行
             subView.py_x = 0;
-            subView.py_y = (currentY += subView.py_height) + PYMargin * ++countCol;
+            subView.py_y = (currentY += subView.py_height) + PYSEARCH_MARGIN * ++countCol;
             currentX = subView.py_width;
             countRow = 1;
         } else { // 不换行
-            subView.py_x = (currentX += subView.py_width) - subView.py_width + PYMargin * countRow;
-            subView.py_y = currentY + PYMargin * countCol;
+            subView.py_x = (currentX += subView.py_width) - subView.py_width + PYSEARCH_MARGIN * countRow;
+            subView.py_y = currentY + PYSEARCH_MARGIN * countCol;
             countRow ++;
         }
     }
     // 设置contentView高度
     contentView.py_height = CGRectGetMaxY(contentView.subviews.lastObject.frame);
     // 设置头部高度
-    self.baseSearchTableView.tableHeaderView.py_height = self.headerContentView.py_height = CGRectGetMaxY(contentView.frame) + PYMargin * 2;
+    self.baseSearchTableView.tableHeaderView.py_height = self.headerContentView.py_height = CGRectGetMaxY(contentView.frame) + PYSEARCH_MARGIN * 2;
     // 取消隐藏
     self.baseSearchTableView.tableHeaderView.hidden = NO;
     // 重新赋值, 注意：当操作系统为iOS 9.x系列的tableHeaderView高度设置失效，需要重新设置tableHeaderView
@@ -658,7 +658,7 @@
                 // 取消边框
                 tag.layer.borderColor = nil;
                 tag.layer.borderWidth = 0.0;
-                tag.backgroundColor = PYColorPolRandomColor;
+                tag.backgroundColor = PYSEARCH_COLORPolRandomColor;
             }
             break;
         case PYSearchHistoryStyleBorderTag: // 边框标签
@@ -666,7 +666,7 @@
                 // 设置背景色为clearColor
                 tag.backgroundColor = [UIColor clearColor];
                 // 设置边框颜色
-                tag.layer.borderColor = PYColor(223, 223, 223).CGColor;
+                tag.layer.borderColor = PYSEARCH_COLOR(223, 223, 223).CGColor;
                 // 设置边框宽度
                 tag.layer.borderWidth = 0.5;
             }
@@ -676,7 +676,7 @@
                 // 设置背景色为clearColor
                 tag.backgroundColor = [UIColor clearColor];
                 // 设置边框颜色
-                tag.layer.borderColor = PYColor(223, 223, 223).CGColor;
+                tag.layer.borderColor = PYSEARCH_COLOR(223, 223, 223).CGColor;
                 // 设置边框宽度
                 tag.layer.borderWidth = 0.5;
                 // 设置边框弧度为圆弧
@@ -700,7 +700,7 @@
                 // 取消边框
                 tag.layer.borderColor = nil;
                 tag.layer.borderWidth = 0.0;
-                tag.backgroundColor = PYColorPolRandomColor;
+                tag.backgroundColor = PYSEARCH_COLORPolRandomColor;
             }
             break;
         case PYHotSearchStyleBorderTag: // 边框标签
@@ -708,7 +708,7 @@
                 // 设置背景色为clearColor
                 tag.backgroundColor = [UIColor clearColor];
                 // 设置边框颜色
-                tag.layer.borderColor = PYColor(223, 223, 223).CGColor;
+                tag.layer.borderColor = PYSEARCH_COLOR(223, 223, 223).CGColor;
                 // 设置边框宽度
                 tag.layer.borderWidth = 0.5;
             }
@@ -718,7 +718,7 @@
                 // 设置背景色为clearColor
                 tag.backgroundColor = [UIColor clearColor];
                 // 设置边框颜色
-                tag.layer.borderColor = PYColor(223, 223, 223).CGColor;
+                tag.layer.borderColor = PYSEARCH_COLOR(223, 223, 223).CGColor;
                 // 设置边框宽度
                 tag.layer.borderWidth = 0.5;
                 // 设置边框弧度为圆弧
@@ -774,7 +774,7 @@
         // 更新
         self.searchHistoryStyle = self.searchHistoryStyle;
     }
-    PYSearchLog(@"清空历史记录");
+    PYSEARCH_LOG(@"清空历史记录");
 }
 
 /** 选中标签 */
@@ -800,7 +800,7 @@
             [self searchBarSearchButtonClicked:self.searchBar];
         }
     }
-    PYSearchLog(@"搜索 %@", label.text);
+    PYSEARCH_LOG(@"搜索 %@", label.text);
 }
 
 /** 添加标签 */
@@ -947,7 +947,7 @@
     // 移除搜索信息
     [self.searchHistories removeObject:cell.textLabel.text];
     // 保存搜索信息
-    [NSKeyedArchiver archiveRootObject:self.searchHistories toFile:PYSearchHistoriesPath];
+    [NSKeyedArchiver archiveRootObject:self.searchHistories toFile:PYSEARCH_SEARCH_HISTORY_CACHE_PATH];
     // 刷新
     [self.baseSearchTableView reloadData];
 }
@@ -987,14 +987,14 @@
         UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"PYSearch.bundle/cell-content-line"]];
         line.py_height = 0.5;
         line.alpha = 0.7;
-        line.py_x = PYMargin;
+        line.py_x = PYSEARCH_MARGIN;
         line.py_y = 43;
         line.py_width = PYScreenW;
         [cell.contentView addSubview:line];
     }
     
     // 设置数据
-    cell.imageView.image = PYSearchHistoryImage;
+    cell.imageView.image = PYSEARCH_SEARCH_HISTORY_IMAGE;
     cell.textLabel.text = self.searchHistories[indexPath.row];
     
     return cell;

@@ -5,9 +5,9 @@
 //  Copyright © 2016年 iphone5solo. All rights reserved.
 //
 
-#import "UIColor+PYExtension.h"
+#import "UIColor+PYSearchExtension.h"
 
-@implementation UIColor (PYExtension)
+@implementation UIColor (PYSearchExtension)
 
 + (instancetype)py_colorWithHexString:(NSString *)hexString
 {

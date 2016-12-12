@@ -84,7 +84,7 @@
 {
     if (searchText.length) { // 与搜索条件再搜索
         // 根据条件发送查询（这里模拟搜索）
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{ // 搜素完毕
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{ // 搜索完毕
             // 显示建议搜索结果
             NSMutableArray *searchSuggestionsM = [NSMutableArray array];
             for (int i = 0; i < arc4random_uniform(5) + 10; i++) {
