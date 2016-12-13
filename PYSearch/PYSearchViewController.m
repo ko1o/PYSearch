@@ -121,7 +121,6 @@
             }
         };
         searchSuggestionVC.view.frame = CGRectMake(0, 64, self.view.py_width, self.view.py_height);
-        searchSuggestionVC.tableView.contentInset = UIEdgeInsetsMake(-30, 0, self.keyboardHeight + 30, 0);
         searchSuggestionVC.view.backgroundColor = self.baseSearchTableView.backgroundColor;
         searchSuggestionVC.view.hidden = YES;
         // 设置数据源
@@ -594,8 +593,6 @@
 
 - (void)setSearchSuggestions:(NSArray<NSString *> *)searchSuggestions
 {
-    if (self.searchSuggestionHidden) return; // 如果隐藏，直接返回，避免刷新操作
-    
     _searchSuggestions = [searchSuggestions copy];
     // 赋值给搜索建议控制器
     self.searchSuggestionVC.searchSuggestions = [searchSuggestions copy];
@@ -758,6 +755,8 @@
     NSDictionary *info = noti.userInfo;
     self.keyboardHeight = [info[UIKeyboardFrameEndUserInfoKey] CGRectValue].size.height;
     self.keyboardshowing = YES;
+    // 调整搜索建议的内边距
+    self.searchSuggestionVC.tableView.contentInset = UIEdgeInsetsMake(-30, 0, self.keyboardHeight + 30, 0);
 }
 
 /** 点击清空历史按钮 */
@@ -860,6 +859,8 @@
             self.searchResultController.view.hidden = NO;
             self.searchResultController.view.py_y = 64;
             self.searchSuggestionVC.view.hidden = YES;
+            // 清空搜索建议
+            self.searchSuggestions = nil;
             break;
         case PYSearchResultShowModeCustom: // 自定义
             
@@ -920,6 +921,10 @@
     self.baseSearchTableView.hidden = searchText.length && !self.searchSuggestionHidden;
     // 根据输入文本显示建议搜索条件
     self.searchSuggestionVC.view.hidden = self.searchSuggestionHidden || !searchText.length;
+    if (self.searchSuggestionVC.view.hidden) { // 搜索建议隐藏
+        // 清空搜索建议
+        self.searchSuggestions = nil;
+    }
     // 放在最上层
     [self.view bringSubviewToFront:self.searchSuggestionVC.view];
     // 如果代理实现了代理方法则调用代理方法
@@ -935,6 +940,10 @@
         self.searchResultController.view.hidden = YES;
         // 根据输入文本显示建议搜索条件
         self.searchSuggestionVC.view.hidden = self.searchSuggestionHidden || !searchBar.text.length;    // 如果有搜索文本且显示搜索建议，则隐藏
+        if (self.searchSuggestionVC.view.hidden) { // 搜索建议隐藏
+            // 清空搜索建议
+            self.searchSuggestions = nil;
+        }
         self.baseSearchTableView.hidden = searchBar.text.length && !self.searchSuggestionHidden;
     }
     return YES;

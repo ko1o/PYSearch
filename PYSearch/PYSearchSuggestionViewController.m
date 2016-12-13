@@ -70,6 +70,8 @@
     if (!UIEdgeInsetsEqualToEdgeInsets(self.originalContentInset, UIEdgeInsetsZero)) { // originalContentInset非零
         self.tableView.contentInset =  self.originalContentInset;
     }
+    // 滚动到头部
+    self.tableView.contentOffset = CGPointMake(0, -self.tableView.contentInset.top);
 }
 
 
