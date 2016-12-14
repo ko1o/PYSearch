@@ -107,11 +107,10 @@
             // 设置搜索信息
             _weakSelf.searchBar.text = didSelectCell.textLabel.text;
             
-            // 缓存数据并且刷新界面
-            [_weakSelf saveSearchCacheAndRefreshView];
-            
             // 如果实现搜索建议代理方法则searchBarSearchButtonClicked失效
             if ([_weakSelf.delegate respondsToSelector:@selector(searchViewController:didSelectSearchSuggestionAtIndex:searchText:)]) {
+                // 缓存数据并且刷新界面
+                [_weakSelf saveSearchCacheAndRefreshView];
                 // 获取下标
                 NSIndexPath *indexPath = [_weakSelf.searchSuggestionVC.tableView indexPathForCell:didSelectCell];
                 [_weakSelf.delegate searchViewController:_weakSelf didSelectSearchSuggestionAtIndex:indexPath.row searchText:_weakSelf.searchBar.text];
@@ -782,18 +781,21 @@
     UILabel *label = (UILabel *)gr.view;
     self.searchBar.text = label.text;
     
-    // 缓存数据并且刷新界面
-    [self saveSearchCacheAndRefreshView];
-    
     if (label.tag == 1) { // 热门搜索标签
         // 取出下标
         if ([self.delegate respondsToSelector:@selector(searchViewController:didSelectHotSearchAtIndex:searchText:)]) {
+            // 缓存数据并且刷新界面
+            [self saveSearchCacheAndRefreshView];
+            // 调用代理方法
             [self.delegate searchViewController:self didSelectHotSearchAtIndex:[self.hotSearchTags indexOfObject:label] searchText:label.text];
         } else {
             [self searchBarSearchButtonClicked:self.searchBar];
         }
     } else { // 搜索历史标签
         if ([self.delegate respondsToSelector:@selector(searchViewController:didSelectSearchHistoryAtIndex:searchText:)]) {
+            // 缓存数据并且刷新界面
+            [self saveSearchCacheAndRefreshView];
+            // 调用代理方法
             [self.delegate searchViewController:self didSelectSearchHistoryAtIndex:[self.searchHistoryTags indexOfObject:label] searchText:label.text];
         } else {
             [self searchBarSearchButtonClicked:self.searchBar];
@@ -906,6 +908,9 @@
 #pragma mark - UISearchBarDelegate
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
 {
+    // 缓存数据并且刷新界面
+    [self saveSearchCacheAndRefreshView];
+    
     // 如果代理实现了代理方法则调用代理方法
     if ([self.delegate respondsToSelector:@selector(searchViewController:didSearchWithsearchBar:searchText:)]) {
         [self.delegate searchViewController:self didSearchWithsearchBar:searchBar searchText:searchBar.text];
@@ -1022,10 +1027,10 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     self.searchBar.text = cell.textLabel.text;
     
-    // 缓存数据并且刷新界面
-    [self saveSearchCacheAndRefreshView];
-    
     if ([self.delegate respondsToSelector:@selector(searchViewController:didSelectSearchHistoryAtIndex:searchText:)]) { // 实现代理方法则调用，则搜索历史时searchViewController:didSearchWithsearchBar:searchText:失效
+        // 缓存数据并且刷新界面
+        [self saveSearchCacheAndRefreshView];
+        // 调用代理方法
         [self.delegate searchViewController:self didSelectSearchHistoryAtIndex:indexPath.row searchText:cell.textLabel.text];
     } else {
         [self searchBarSearchButtonClicked:self.searchBar];
