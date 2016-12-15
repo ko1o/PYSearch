@@ -250,6 +250,10 @@
     self.searchHistoriesCachePath = PYSEARCH_SEARCH_HISTORY_CACHE_PATH;
     // 搜索历史缓存最多条数
     self.searchHistoriesCount = 20;
+    // 显示搜索历史
+    self.showSearchHistory = YES;
+    // 显示热门搜索
+    self.showHotSearch = YES;
     
     // 创建搜索框
     UIView *titleView = [[UIView alloc] init];
@@ -493,7 +497,7 @@
     // 隐藏尾部清除按钮
     self.baseSearchTableView.tableFooterView = nil;
     // 添加搜索历史头部
-    self.searchHistoryHeader.py_y = self.hotSearches.count > 0 ? CGRectGetMaxY(self.hotSearchTagsContentView.frame) + PYSEARCH_MARGIN * 1.5 : 0;
+    self.searchHistoryHeader.py_y = self.hotSearches.count > 0 && self.showHotSearch ? CGRectGetMaxY(self.hotSearchTagsContentView.frame) + PYSEARCH_MARGIN * 1.5 : 0;
     self.emptyButton.py_y = self.searchHistoryHeader.py_y - PYSEARCH_MARGIN * 0.5;
     self.searchHistoryTagsContentView.py_y = CGRectGetMaxY(self.emptyButton.frame) + PYSEARCH_MARGIN;
     // 添加和布局标签
@@ -548,6 +552,27 @@
 }
 
 #pragma mark - setter
+- (void)setShowHotSearch:(BOOL)showHotSearch
+{
+    _showHotSearch = showHotSearch;
+    
+    // 刷新热门搜索
+    [self setHotSearches:self.hotSearches];
+    // 刷新搜索历史
+    [self setSearchHistoryStyle:self.searchHistoryStyle];
+    
+}
+
+- (void)setShowSearchHistory:(BOOL)showSearchHistory
+{
+    _showSearchHistory = showSearchHistory;
+    
+    // 刷新热门搜索
+    [self setHotSearches:self.hotSearches];
+    // 刷新搜索历史
+    [self setSearchHistoryStyle:self.searchHistoryStyle];
+}
+
 - (void)setCancelButton:(UIBarButtonItem *)cancelButton
 {
     self.navigationItem.rightBarButtonItem = cancelButton;
@@ -613,15 +638,22 @@
 - (void)setHotSearches:(NSArray *)hotSearches
 {
     _hotSearches = hotSearches;
-    // 没有热门搜索,隐藏相关控件，直接返回
-    if (hotSearches.count == 0) {
+    // 没有热门搜索或者隐藏热门搜索，隐藏相关控件，直接返回
+    if (hotSearches.count == 0 || !self.showHotSearch) {
         self.baseSearchTableView.tableHeaderView.hidden = YES;
         self.hotSearchHeader.hidden = YES;
+        self.hotSearchTagsContentView.hidden = YES;
+        if (self.searchHistoryStyle == PYSearchHistoryStyleCell) {
+            UIView *tableHeaderView = self.baseSearchTableView.tableHeaderView;
+            tableHeaderView.py_height = 0.01;
+            [self.baseSearchTableView setTableHeaderView:tableHeaderView];
+        }
         return;
     };
     // 有热门搜索，取消相关隐藏
     self.baseSearchTableView.tableHeaderView.hidden = NO;
     self.hotSearchHeader.hidden = NO;
+    self.hotSearchTagsContentView.hidden = NO;
     // 根据hotSearchStyle设置标签
     if (self.hotSearchStyle == PYHotSearchStyleDefault
         || self.hotSearchStyle == PYHotSearchStyleColorfulTag
@@ -641,8 +673,20 @@
 {
     _searchHistoryStyle = searchHistoryStyle;
     
-    // 默认cell，直接返回
+    // 默认cell或者隐藏搜索历史，直接返回
     if (searchHistoryStyle == UISearchBarStyleDefault) return;
+    // 没有搜索历史或者隐藏搜索历史，隐藏相关控件，直接返回
+    if (!self.searchHistories.count || !self.showSearchHistory) {
+        self.searchHistoryHeader.hidden = YES;
+        self.searchHistoryTagsContentView.hidden = YES;
+        self.emptyButton.hidden = YES;
+        return;
+    };
+    // 有搜索历史搜索，取消相关隐藏
+    self.searchHistoryHeader.hidden = NO;
+    self.searchHistoryTagsContentView.hidden = NO;
+    self.emptyButton.hidden = NO;
+    
     // 创建、初始化默认标签
     [self setupSearchHistoryTags];
     // 根据标签风格设置标签
@@ -679,7 +723,6 @@
                 tag.layer.cornerRadius = tag.py_height * 0.5;
             }
             break;
-            
         default:
             break;
     }
@@ -688,6 +731,7 @@
 - (void)setHotSearchStyle:(PYHotSearchStyle)hotSearchStyle
 {
     _hotSearchStyle = hotSearchStyle;
+    
     switch (hotSearchStyle) {
         case PYHotSearchStyleColorfulTag: // 彩色标签
             for (UILabel *tag in self.hotSearchTags) {
@@ -828,24 +872,26 @@
     UISearchBar *searchBar = self.searchBar;
     // 回收键盘
     [searchBar resignFirstResponder];
-    // 先移除再刷新
-    [self.searchHistories removeObject:searchBar.text];
-    [self.searchHistories insertObject:searchBar.text atIndex:0];
-    
-    // 移除多余的缓存
-    if (self.searchHistories.count > self.searchHistoriesCount) {
-        // 移除最后一条缓存
-        [self.searchHistories removeLastObject];
-    }
-    // 保存搜索信息
-    [NSKeyedArchiver archiveRootObject:self.searchHistories toFile:self.searchHistoriesCachePath];
-    
-    // 刷新数据
-    if (self.searchHistoryStyle == PYSearchHistoryStyleCell) { // 普通风格Cell
-        [self.baseSearchTableView reloadData];
-    } else { // 搜索历史为标签
-        // 更新
-        self.searchHistoryStyle = self.searchHistoryStyle;
+    if (self.showSearchHistory) { // 只要显示搜索历史才会缓存
+        // 先移除再刷新
+        [self.searchHistories removeObject:searchBar.text];
+        [self.searchHistories insertObject:searchBar.text atIndex:0];
+        
+        // 移除多余的缓存
+        if (self.searchHistories.count > self.searchHistoriesCount) {
+            // 移除最后一条缓存
+            [self.searchHistories removeLastObject];
+        }
+        // 保存搜索信息
+        [NSKeyedArchiver archiveRootObject:self.searchHistories toFile:self.searchHistoriesCachePath];
+        
+        // 刷新数据
+        if (self.searchHistoryStyle == PYSearchHistoryStyleCell) { // 普通风格Cell
+            [self.baseSearchTableView reloadData];
+        } else { // 搜索历史为标签
+            // 更新
+            self.searchHistoryStyle = self.searchHistoryStyle;
+        }
     }
     
     // 处理搜索结果
@@ -972,9 +1018,9 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    // 没有搜索记录就隐藏
-    self.baseSearchTableView.tableFooterView.hidden = self.searchHistories.count == 0;
-    return  self.searchHistoryStyle == PYSearchHistoryStyleCell ? self.searchHistories.count : 0;
+    // 没有搜索记录就隐藏或者隐藏搜索建议
+    self.baseSearchTableView.tableFooterView.hidden = self.searchHistories.count == 0 || !self.showSearchHistory;
+    return self.showSearchHistory && self.searchHistoryStyle == PYSearchHistoryStyleCell ? self.searchHistories.count : 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -1016,7 +1062,12 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    return self.searchHistories.count && self.searchHistoryStyle == PYSearchHistoryStyleCell ? PYSearchHistoryText : nil;
+    return self.showSearchHistory && self.searchHistories.count && self.searchHistoryStyle == PYSearchHistoryStyleCell ? PYSearchHistoryText : nil;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return self.searchHistories.count && self.showSearchHistory ? 44 : 0.01;
 }
 
 #pragma mark - UITableViewDelegate

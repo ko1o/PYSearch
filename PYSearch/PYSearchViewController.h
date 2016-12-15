@@ -98,17 +98,25 @@ typedef NS_ENUM(NSInteger, PYSearchResultShowMode) { // 搜索结果显示方式
  * 该属性只有在设置hotSearchStyle为PYHotSearchStyleColorfulTag才生效
  */
 @property (nonatomic, strong) NSMutableArray<UIColor *> *colorPol;
+
 /** 热门搜索 */
 @property (nonatomic, copy) NSArray<NSString *> *hotSearches;
 /** 所有的热门标签 */
 @property (nonatomic, copy) NSArray<UILabel *> *hotSearchTags;
 /** 热门标签头部 */
 @property (nonatomic, weak) UILabel *hotSearchHeader;
+/** 是否显示热门搜索，默认为：YES */
+@property (nonatomic, assign) BOOL showHotSearch;
 
 /** 所有的搜索历史标签,只有当PYSearchHistoryStyle != PYSearchHistoryStyleCell才有值 */
 @property (nonatomic, copy) NSArray<UILabel *> *searchHistoryTags;
 /** 搜索历史标题,只有当PYSearchHistoryStyle != PYSearchHistoryStyleCell才有值 */
 @property (nonatomic, weak) UILabel *searchHistoryHeader;
+/** 
+ * 是否显示搜索历史，默认为：YES
+ * 注意：当设置为NO时，搜索记录不缓存
+ */
+@property (nonatomic, assign) BOOL showSearchHistory;
 /** 搜索历史缓存保存路径, 默认为PYSEARCH_SEARCH_HISTORY_CACHE_PATH(PYSearchConst.h文件中的宏定义) */
 @property (nonatomic, copy) NSString *searchHistoriesCachePath;
 /** 搜索历史记录缓存数量，默认为20 */
