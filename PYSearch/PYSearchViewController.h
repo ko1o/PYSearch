@@ -52,18 +52,6 @@ typedef NS_ENUM(NSInteger, PYSearchResultShowMode) { // 搜索结果显示方式
 /** 返回用户自定义搜索建议cell高度 */
 - (CGFloat)searchSuggestionView:(UITableView *)searchSuggestionView heightForRowAtIndexPath:(NSIndexPath *)indexPath;
 
-/**
- *  自定义搜索结果Cell的数据源方法
- */
-/** 返回用户自定义搜索结果Cell */
-- (UITableViewCell *)searchResultView:(UITableView *)searchResultView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
-/** 返回用户自定义搜索结果cell的rows */
-- (NSInteger)searchResultView:(UITableView *)searchResultView numberOfRowsInSection:(NSInteger)section;
-/** 返回用户自定义搜索结果cell的section */
-- (NSInteger)numberOfSectionsInSearchSearchResultView:(UITableView *)searchSuggestionView;
-/** 返回用户自定义搜索结果cell高度 */
-- (CGFloat)searchResultView:(UITableView *)searchResultView heightForRowAtIndexPath:(NSIndexPath *)indexPath;
-
 @end
 
 @protocol PYSearchViewControllerDelegate <NSObject, UITableViewDelegate>
@@ -147,7 +135,8 @@ typedef NS_ENUM(NSInteger, PYSearchResultShowMode) { // 搜索结果显示方式
 /** 搜索建议是否隐藏 默认为：NO */
 @property (nonatomic, assign) BOOL searchSuggestionHidden;
 
-/** 搜索结果控制器
+/** 
+ * 搜索结果控制器
  * 当searchResultShowMode == PYSearchResultShowModePush时，
  * 将目的控制器给该属性赋值，即Push到searchResultController控制器
  * 当searchResultShowMode == PYSearchResultShowModeEmbed时，
