@@ -1091,7 +1091,11 @@
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     // 滚动时，回收键盘
-    if (self.keyboardshowing) [self.searchBar resignFirstResponder];
+    if (self.keyboardshowing)  {
+        // 调节搜索建议内边距
+        self.searchSuggestionVC.tableView.contentInset = UIEdgeInsetsMake(-30, 0, 30, 0);
+        [self.searchBar resignFirstResponder];
+    }
 }
 
 @end
