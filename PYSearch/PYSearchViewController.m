@@ -782,13 +782,13 @@
 {
     [self.searchBar resignFirstResponder];
     
-    // dismiss ViewController
-    [self dismissViewControllerAnimated:NO completion:nil];
-    
     // 调用代理方法
     if ([self.delegate respondsToSelector:@selector(didClickCancel:)]) {
         [self.delegate didClickCancel:self];
+        return;
     }
+    // 如果用户没有实现代理方法 默认为：dismiss ViewController
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 /** 键盘显示完成（弹出） */
