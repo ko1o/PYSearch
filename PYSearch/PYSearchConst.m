@@ -1,7 +1,17 @@
+//
+//  代码地址: https://github.com/iphone5solo/PYSearch
+//  代码地址: http://www.code4app.com/thread-11175-1-1.html
+//  Created by CoderKo1o.
+//  Copyright © 2016年 iphone5solo. All rights reserved.
+//
 
-#import "PYSearchConst.h"
+#import <UIKit/UIKit.h>
 
-NSString *const PYSearchPlaceholderText = @"搜索内容";      // 搜索框的占位符 默认为 @"搜索内容"
-NSString *const PYHotSearchText = @"热门搜索";              // 热门搜索文本 默认为 @"热门搜索"
-NSString *const PYSearchHistoryText = @"搜索历史";          // 搜索历史文本 默认为 @"搜索历史"
-NSString *const PYEmptySearchHistoryText = @"清空搜索历史";  // 清空搜索历史文本 默认为 @"清空搜索历史"
+NSString *const PYSearchSearchPlaceholderText = @"PYSearchSearchPlaceholderText";
+NSString *const PYSearchHotSearchText = @"PYSearchHotSearchText";
+NSString *const PYSearchSearchHistoryText = @"PYSearchSearchHistoryText";
+NSString *const PYSearchEmptySearchHistoryText = @"PYSearchEmptySearchHistoryText";
+
+NSString *const PYSearchEmptyButtonText = @"PYSearchEmptyButtonText";
+NSString *const PYSearchEmptySearchHistoryLogText = @"PYSearchEmptySearchHistoryLogText";
+NSString *const PYSearchCancelButtonText = @"PYSearchCancelButtonText";

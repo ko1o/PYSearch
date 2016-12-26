@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6B1D94F31E100E41009C5F05 /* NSString+PYSearchExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B1D94F21E100E41009C5F05 /* NSString+PYSearchExtension.m */; };
 		6B3EB2111DC498370080DF86 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B3EB2101DC498370080DF86 /* AppDelegate.m */; };
 		6B3EB21F1DC498410080DF86 /* PYSearch.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6B3EB2131DC498410080DF86 /* PYSearch.bundle */; };
 		6B3EB2201DC498410080DF86 /* PYSearchConst.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B3EB2161DC498410080DF86 /* PYSearchConst.m */; };
@@ -41,6 +42,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		6B1D94F11E100E41009C5F05 /* NSString+PYSearchExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+PYSearchExtension.h"; sourceTree = "<group>"; };
+		6B1D94F21E100E41009C5F05 /* NSString+PYSearchExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+PYSearchExtension.m"; sourceTree = "<group>"; };
 		6B3EB20F1DC498370080DF86 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		6B3EB2101DC498370080DF86 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		6B3EB2131DC498410080DF86 /* PYSearch.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = PYSearch.bundle; sourceTree = "<group>"; };
@@ -112,6 +115,8 @@
 				6B3EB21C1DC498410080DF86 /* UIColor+PYSearchExtension.m */,
 				6B3EB21D1DC498410080DF86 /* UIView+PYSearchExtension.h */,
 				6B3EB21E1DC498410080DF86 /* UIView+PYSearchExtension.m */,
+				6B1D94F11E100E41009C5F05 /* NSString+PYSearchExtension.h */,
+				6B1D94F21E100E41009C5F05 /* NSString+PYSearchExtension.m */,
 			);
 			name = PYSearch;
 			path = ../../PYSearch;
@@ -313,6 +318,7 @@
 			files = (
 				6B3EB2201DC498410080DF86 /* PYSearchConst.m in Sources */,
 				6B3EB2241DC498410080DF86 /* UIView+PYSearchExtension.m in Sources */,
+				6B1D94F31E100E41009C5F05 /* NSString+PYSearchExtension.m in Sources */,
 				6B97179E1DC48FE800B2DAA1 /* PYSearchExampleController.m in Sources */,
 				6B3EB2211DC498410080DF86 /* PYSearchSuggestionViewController.m in Sources */,
 				6B3EB2221DC498410080DF86 /* PYSearchViewController.m in Sources */,
@@ -370,6 +376,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -414,6 +421,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
