@@ -6,6 +6,7 @@
 //  
 
 #import "NSBundle+PYSearchExtension.h"
+#import "PYSearchViewController.h"
 
 @implementation NSBundle (PYSearchExtension)
 
@@ -18,7 +19,7 @@
         searchBundle = [NSBundle bundleWithPath:[[NSBundle mainBundle] pathForResource:@"PYSearch" ofType:@"bundle"]];
         // 如果使用pod导入，并且在Podfile中配置use_frameworks!则[NSBundle mainBundle] 加载不到PYSearch.framework中的PYSearch.bundle资源文件
         if (searchBundle == nil) { // 为空说明资源文件在PYSearch.framework中
-            searchBundle = [NSBundle bundleWithPath:[[NSBundle bundleForClass:self] pathForResource:@"PYSearch" ofType:@"bundle"]];
+            searchBundle = [NSBundle bundleWithPath:[[NSBundle bundleForClass:[PYSearchViewController class]] pathForResource:@"PYSearch" ofType:@"bundle"]];
         }
     }
     return searchBundle;
