@@ -105,7 +105,7 @@
         cell.textLabel.font = [UIFont systemFontOfSize:14];
         cell.backgroundColor = [UIColor clearColor];
         // 添加分割线
-        UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"PYSearch.bundle/cell-content-line"]];
+        UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cell-content-line" inBundle:[NSBundle py_searchBundle] compatibleWithTraitCollection:nil]];
         line.py_height = 0.5;
         line.alpha = 0.7;
         line.py_x = PYSEARCH_MARGIN;

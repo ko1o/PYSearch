@@ -138,8 +138,8 @@
         UIButton *emptyButton = [[UIButton alloc] init];
         emptyButton.titleLabel.font = self.searchHistoryHeader.font;
         [emptyButton setTitleColor:PYTextColor forState:UIControlStateNormal];
-        [emptyButton setTitle:[PYSearchEmptyButtonText py_localizedString] forState:UIControlStateNormal];
-        [emptyButton setImage:[UIImage imageNamed:@"PYSearch.bundle/empty"] forState:UIControlStateNormal];
+        [emptyButton setTitle:[NSBundle py_localizedStringForKey:PYSearchEmptyButtonText] forState:UIControlStateNormal];
+        [emptyButton setImage:[UIImage imageNamed:@"empty" inBundle:[NSBundle py_searchBundle] compatibleWithTraitCollection:nil] forState:UIControlStateNormal];
         [emptyButton addTarget:self action:@selector(emptySearchHistoryDidClick) forControlEvents:UIControlEventTouchUpInside];
         [emptyButton sizeToFit];
         emptyButton.py_width += PYSEARCH_MARGIN;
@@ -167,7 +167,7 @@
 - (UILabel *)searchHistoryHeader
 {
     if (!_searchHistoryHeader) {
-        UILabel *titleLabel = [self setupTitleLabel:[PYSearchSearchHistoryText py_localizedString]];
+        UILabel *titleLabel = [self setupTitleLabel:[NSBundle py_localizedStringForKey:PYSearchSearchHistoryText]];
         [self.headerContentView addSubview:titleLabel];
         _searchHistoryHeader = titleLabel;
     }
@@ -233,7 +233,7 @@
     self.view.backgroundColor = [UIColor whiteColor];
     self.baseSearchTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardDidShowNotification object:nil];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[PYSearchCancelButtonText py_localizedString] style:UIBarButtonItemStyleDone target:self action:@selector(cancelDidClick)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[NSBundle py_localizedStringForKey:PYSearchCancelButtonText] style:UIBarButtonItemStyleDone target:self action:@selector(cancelDidClick)];
     
     /**
      * 设置一些默认设置
@@ -263,8 +263,8 @@
     titleView.py_height = 30;
     UISearchBar *searchBar = [[UISearchBar alloc] initWithFrame:titleView.bounds];
     searchBar.py_width -= PYSEARCH_MARGIN * 1.5;
-    searchBar.placeholder = [PYSearchSearchPlaceholderText py_localizedString];
-    searchBar.backgroundImage = [UIImage imageNamed:@"PYSearch.bundle/clearImage"];
+    searchBar.placeholder = [NSBundle py_localizedStringForKey:PYSearchSearchPlaceholderText];
+    searchBar.backgroundImage = [UIImage imageNamed:@"clearImage" inBundle:[NSBundle py_searchBundle] compatibleWithTraitCollection:nil];
     searchBar.delegate = self;
     [titleView addSubview:searchBar];
     self.searchBar = searchBar;
@@ -277,7 +277,7 @@
     contentView.py_x = PYSEARCH_MARGIN * 1.5;
     contentView.py_width = PYScreenW - contentView.py_x * 2;
     [headerView addSubview:contentView];
-    UILabel *titleLabel = [self setupTitleLabel:[PYSearchHotSearchText py_localizedString]];
+    UILabel *titleLabel = [self setupTitleLabel:[NSBundle py_localizedStringForKey:PYSearchHotSearchText]];
     self.hotSearchHeader = titleLabel;
     [contentView addSubview:titleLabel];
     // 创建热门搜索标签容器
@@ -296,7 +296,7 @@
     emptySearchHistoryLabel.textColor = [UIColor darkGrayColor];
     emptySearchHistoryLabel.font = [UIFont systemFontOfSize:13];
     emptySearchHistoryLabel.userInteractionEnabled = YES;
-    emptySearchHistoryLabel.text = [PYSearchEmptySearchHistoryText py_localizedString];
+    emptySearchHistoryLabel.text = [NSBundle py_localizedStringForKey:PYSearchEmptySearchHistoryText];
     emptySearchHistoryLabel.textAlignment = NSTextAlignmentCenter;
     emptySearchHistoryLabel.py_height = 30;
     [emptySearchHistoryLabel addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(emptySearchHistoryDidClick)]];
@@ -365,7 +365,7 @@
     self.baseSearchTableView.tableHeaderView.py_height  = self.headerContentView.py_height = CGRectGetMaxY(contentView.frame) + PYSEARCH_MARGIN * 2;
     // 添加分割线
     for (int i = 0; i < PYRectangleTagMaxCol - 1; i++) { // 添加垂直分割线
-        UIImageView *verticalLine = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"PYSearch.bundle/cell-content-line-vertical"]];
+        UIImageView *verticalLine = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cell-content-line-vertical" inBundle:[NSBundle py_searchBundle] compatibleWithTraitCollection:nil]];
         verticalLine.py_height = contentView.py_height;
         verticalLine.alpha = 0.7;
         verticalLine.py_x = contentView.py_width / PYRectangleTagMaxCol * (i + 1);
@@ -373,7 +373,7 @@
         [contentView addSubview:verticalLine];
     }
     for (int i = 0; i < ceil(((double)self.hotSearches.count / PYRectangleTagMaxCol)) - 1; i++) { // 添加水平分割线, ceil():向上取整函数
-        UIImageView *verticalLine = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"PYSearch.bundle/cell-content-line"]];
+        UIImageView *verticalLine = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cell-content-line" inBundle:[NSBundle py_searchBundle] compatibleWithTraitCollection:nil]];
         verticalLine.py_height = 0.5;
         verticalLine.alpha = 0.7;
         verticalLine.py_y = rectangleTagH * (i + 1);
@@ -428,7 +428,7 @@
         [rankTextLabelsM addObject:rankTextLabel];
         [rankView addSubview:rankTextLabel];
         // 添加分割线
-        UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"PYSearch.bundle/cell-content-line"]];
+        UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cell-content-line" inBundle:[NSBundle py_searchBundle] compatibleWithTraitCollection:nil]];
         line.py_height = 0.5;
         line.alpha = 0.7;
         line.py_x = -PYScreenW * 0.5;
@@ -816,7 +816,7 @@
         // 更新
         self.searchHistoryStyle = self.searchHistoryStyle;
     }
-    PYSEARCH_LOG(@"%@", [PYSearchEmptySearchHistoryLogText py_localizedString]);
+    PYSEARCH_LOG(@"%@", [NSBundle py_localizedStringForKey:PYSearchEmptySearchHistoryLogText]);
 }
 
 /** 选中标签 */
@@ -1039,13 +1039,13 @@
         UIButton *closetButton = [[UIButton alloc] init];
         // 设置图片容器大小、图片原图居中
         closetButton.py_size = CGSizeMake(cell.py_height, cell.py_height);
-        [closetButton setImage:[UIImage imageNamed:@"PYSearch.bundle/close"] forState:UIControlStateNormal];
-        UIImageView *closeView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"PYSearch.bundle/close"]];
+        [closetButton setImage:[UIImage imageNamed:@"close" inBundle:[NSBundle py_searchBundle] compatibleWithTraitCollection:nil] forState:UIControlStateNormal];
+        UIImageView *closeView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"close" inBundle:[NSBundle py_searchBundle] compatibleWithTraitCollection:nil]];
         [closetButton addTarget:self action:@selector(closeDidClick:) forControlEvents:UIControlEventTouchUpInside];
         closeView.contentMode = UIViewContentModeCenter;
         cell.accessoryView = closetButton;
         // 添加分割线
-        UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"PYSearch.bundle/cell-content-line"]];
+        UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cell-content-line" inBundle:[NSBundle py_searchBundle] compatibleWithTraitCollection:nil]];
         line.py_height = 0.5;
         line.alpha = 0.7;
         line.py_x = PYSEARCH_MARGIN;
@@ -1063,7 +1063,7 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    return self.showSearchHistory && self.searchHistories.count && self.searchHistoryStyle == PYSearchHistoryStyleCell ? [PYSearchSearchHistoryText py_localizedString] : nil;
+    return self.showSearchHistory && self.searchHistories.count && self.searchHistoryStyle == PYSearchHistoryStyleCell ? [NSBundle py_localizedStringForKey:PYSearchSearchHistoryText] : nil;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
