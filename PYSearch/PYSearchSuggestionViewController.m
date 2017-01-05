@@ -67,7 +67,7 @@
     [self.tableView reloadData];
     
     // 还原contentInset
-    if (!UIEdgeInsetsEqualToEdgeInsets(self.originalContentInset, UIEdgeInsetsZero) && !UIEdgeInsetsEqualToEdgeInsets(self.originalContentInset, UIEdgeInsetsMake(-30, 0, 30, 0))) { // originalContentInset非零 UIEdgeInsetsMake(-30, 0, 30, 0)是当键盘消失后自动调整的内边距
+    if (!UIEdgeInsetsEqualToEdgeInsets(self.originalContentInset, UIEdgeInsetsZero) && !UIEdgeInsetsEqualToEdgeInsets(self.originalContentInset, UIEdgeInsetsMake(-30, 0, 30 - 64, 0))) { // originalContentInset非零 UIEdgeInsetsMake(-30, 0, 30, 0)是当键盘消失后自动调整的内边距
         self.tableView.contentInset =  self.originalContentInset;
     }
     // 滚动到头部

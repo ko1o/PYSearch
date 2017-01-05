@@ -254,6 +254,10 @@
     self.showSearchHistory = YES;
     // 显示热门搜索
     self.showHotSearch = YES;
+    // 当搜索文本改变时，隐藏搜索结果视图
+    self.showSearchResultWhenSearchTextChanged = NO;
+    // 当搜索框聚焦时，隐藏搜索结果视图
+    self.showSearchResultWhenSearchBarRefocused = NO;
     
     // 创建搜索框
     UIView *titleView = [[UIView alloc] init];
@@ -552,6 +556,16 @@
 }
 
 #pragma mark - setter
+- (void)setShowSearchResultWhenSearchTextChanged:(BOOL)showSearchResultWhenSearchTextChanged
+{
+    _showSearchResultWhenSearchTextChanged = showSearchResultWhenSearchTextChanged;
+    
+    // 当文本改变时动态改变搜索结果即自动隐藏搜索建议
+    if (_showSearchResultWhenSearchTextChanged == YES) {
+        self.searchSuggestionHidden = YES;
+    }
+}
+
 - (void)setShowHotSearch:(BOOL)showHotSearch
 {
     _showHotSearch = showHotSearch;
@@ -895,6 +909,12 @@
     }
     
     // 处理搜索结果
+    [self handleSearchResultShow];
+}
+
+/** 处理搜索结果显示 */
+- (void)handleSearchResultShow
+{
     switch (self.searchResultShowMode) {
         case PYSearchResultShowModePush: // Push
             self.searchResultController.view.hidden = NO;
@@ -908,8 +928,6 @@
             self.searchResultController.view.py_y = 64;
             self.searchResultController.view.py_height = self.view.py_height - self.searchResultController.view.py_y;
             self.searchSuggestionVC.view.hidden = YES;
-            // 清空搜索建议
-            self.searchSuggestions = nil;
             break;
         case PYSearchResultShowModeCustom: // 自定义
             
@@ -969,6 +987,14 @@
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
 {
+    // 处理搜索结果(可用于动态修改搜索结果)
+    if (self.searchResultShowMode == PYSearchResultShowModeEmbed && self.showSearchResultWhenSearchTextChanged) { // 当搜索结果显示模式为内嵌显示并且设置当搜索文本改变时显示搜索结果才显示
+        [self handleSearchResultShow];
+        // 搜索结果显示/隐藏(如果没有搜索文本就隐藏)
+        self.searchResultController.view.hidden = searchText.length == 0;
+    } else if (self.searchResultController) { // 存在搜索控制器
+        self.searchResultController.view.hidden = YES;
+    }
     // 如果有搜索文本且显示搜索建议，则隐藏
     self.baseSearchTableView.hidden = searchText.length && !self.searchSuggestionHidden;
     // 根据输入文本显示建议搜索条件
@@ -988,8 +1014,8 @@
 - (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar
 {
     if (self.searchResultShowMode == PYSearchResultShowModeEmbed) { // 搜索结果为内嵌时
-        // 搜索结果隐藏
-        self.searchResultController.view.hidden = YES;
+        // 搜索结果隐藏(如果没有搜索文本就隐藏)
+        self.searchResultController.view.hidden = searchBar.text.length == 0 || !self.showSearchResultWhenSearchBarRefocused;
         // 根据输入文本显示建议搜索条件
         self.searchSuggestionVC.view.hidden = self.searchSuggestionHidden || !searchBar.text.length;    // 如果有搜索文本且显示搜索建议，则隐藏
         if (self.searchSuggestionVC.view.hidden) { // 搜索建议隐藏

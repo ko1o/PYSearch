@@ -67,7 +67,7 @@ typedef NS_ENUM(NSInteger, PYSearchResultShowMode) { // 搜索结果显示方式
 /** 点击搜索建议时调用，如果实现该代理方法则点击搜索建议时searchViewController:didSearchWithsearchBar:searchText:失效 */
 - (void)searchViewController:(PYSearchViewController *)searchViewController didSelectSearchSuggestionAtIndex:(NSInteger)index searchText:(NSString *)searchText;
 /** 搜索框文本变化时，显示的搜索建议通过searchViewController的searchSuggestions赋值即可 */
-- (void)searchViewController:(PYSearchViewController *)searchViewController  searchTextDidChange:(UISearchBar *)seachBar searchText:(NSString *)searchText;
+- (void)searchViewController:(PYSearchViewController *)searchViewController  searchTextDidChange:(UISearchBar *)searchBar searchText:(NSString *)searchText;
 /** 点击取消时调用，如果没有实现该代理方法，默认执行：[self dismissViewControllerAnimated:YES completion:nil]; */
 - (void)didClickCancel:(PYSearchViewController *)searchViewController;
 
@@ -143,6 +143,16 @@ typedef NS_ENUM(NSInteger, PYSearchResultShowMode) { // 搜索结果显示方式
  * 将目的控制器给该属性赋值，即将searchResultController.view添加到self.view
  */
 @property (nonatomic, strong) UIViewController *searchResultController;
+/** 
+ * 是否显示搜索结果当搜索文本改变时（默认为NO）
+ * 该属性只要当searchResultShowMode == PYSearchResultShowModeEmbed时，才会生效
+ */
+@property (nonatomic, assign) BOOL showSearchResultWhenSearchTextChanged;
+/**
+ * 是否显示搜索结果当搜索框重新聚焦(再次成为第一响应者时)（默认为NO）
+ * 该属性只要当searchResultShowMode == PYSearchResultShowModeEmbed时，才会生效
+ */
+@property (nonatomic, assign) BOOL showSearchResultWhenSearchBarRefocused;
 
 /**
  * 快速创建PYSearchViewController对象
