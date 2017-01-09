@@ -41,8 +41,6 @@
 
 /** 搜索历史标签容器，只有在PYSearchHistoryStyle值为PYSearchHistoryStyleTag才有值 */
 @property (nonatomic, weak) UIView *searchHistoryTagsContentView;
-/** 搜索历史标签的清空按钮 */
-@property (nonatomic, weak) UIButton *emptyButton;
 
 /** 基本搜索TableView(显示历史搜索和搜索记录) */
 @property (nonatomic, strong) UITableView *baseSearchTableView;
@@ -316,6 +314,7 @@
     emptySearchHistoryLabel.py_height = 30;
     [emptySearchHistoryLabel addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(emptySearchHistoryDidClick)]];
     emptySearchHistoryLabel.py_width = PYScreenW;
+    self.emptySearchHistoryLabel = emptySearchHistoryLabel;
     [footerView addSubview:emptySearchHistoryLabel];
     footerView.py_height = 30;
     self.baseSearchTableView.tableFooterView = footerView;
@@ -567,6 +566,26 @@
 }
 
 #pragma mark - setter
+- (void)setHotSearchTitle:(NSString *)hotSearchTitle
+{
+    _hotSearchTitle = [hotSearchTitle copy];
+    
+    // 设置热门标题
+    self.hotSearchHeader.text = _hotSearchTitle;
+}
+
+- (void)setSearchHistoryTitle:(NSString *)searchHistoryTitle
+{
+    _searchHistoryTitle = [searchHistoryTitle copy];
+    
+    if (self.searchHistoryStyle == PYSearchHistoryStyleCell) { // cell样式
+        // 刷新
+        [self.baseSearchTableView reloadData];
+    } else { // 其他
+        self.searchHistoryHeader.text = _searchHistoryTitle;
+    }
+}
+
 - (void)setShowSearchResultWhenSearchTextChanged:(BOOL)showSearchResultWhenSearchTextChanged
 {
     _showSearchResultWhenSearchTextChanged = showSearchResultWhenSearchTextChanged;
@@ -698,10 +717,8 @@
 {
     _searchHistoryStyle = searchHistoryStyle;
     
-    // 默认cell或者隐藏搜索历史，直接返回
-    if (searchHistoryStyle == UISearchBarStyleDefault) return;
-    // 没有搜索历史或者隐藏搜索历史，隐藏相关控件，直接返回
-    if (!self.searchHistories.count || !self.showSearchHistory) {
+    // 默认cell或者没有搜索历史或者隐藏搜索历史，隐藏相关控件，直接返回
+    if (!self.searchHistories.count || !self.showSearchHistory || searchHistoryStyle == UISearchBarStyleDefault) {
         self.searchHistoryHeader.hidden = YES;
         self.searchHistoryTagsContentView.hidden = YES;
         self.emptyButton.hidden = YES;
@@ -1100,7 +1117,7 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    return self.showSearchHistory && self.searchHistories.count && self.searchHistoryStyle == PYSearchHistoryStyleCell ? [NSBundle py_localizedStringForKey:PYSearchSearchHistoryText] : nil;
+    return self.showSearchHistory && self.searchHistories.count && self.searchHistoryStyle == PYSearchHistoryStyleCell ? (self.searchHistoryTitle.length ? self.searchHistoryTitle : [NSBundle py_localizedStringForKey:PYSearchSearchHistoryText]) : nil;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section

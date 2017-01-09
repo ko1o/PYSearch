@@ -95,11 +95,15 @@ typedef NS_ENUM(NSInteger, PYSearchResultShowMode) { // 搜索结果显示方式
 @property (nonatomic, weak) UILabel *hotSearchHeader;
 /** 是否显示热门搜索，默认为：YES */
 @property (nonatomic, assign) BOOL showHotSearch;
+/** 热门搜索标题 */
+@property (nonatomic, copy) NSString *hotSearchTitle;
 
 /** 所有的搜索历史标签,只有当PYSearchHistoryStyle != PYSearchHistoryStyleCell才有值 */
 @property (nonatomic, copy) NSArray<UILabel *> *searchHistoryTags;
 /** 搜索历史标题,只有当PYSearchHistoryStyle != PYSearchHistoryStyleCell才有值 */
 @property (nonatomic, weak) UILabel *searchHistoryHeader;
+/** 搜索历史标题 */
+@property (nonatomic, copy) NSString *searchHistoryTitle;
 /** 
  * 是否显示搜索历史，默认为：YES
  * 注意：当设置为NO时，搜索记录不缓存
@@ -109,6 +113,10 @@ typedef NS_ENUM(NSInteger, PYSearchResultShowMode) { // 搜索结果显示方式
 @property (nonatomic, copy) NSString *searchHistoriesCachePath;
 /** 搜索历史记录缓存数量，默认为20 */
 @property (nonatomic, assign) NSUInteger searchHistoriesCount;
+/** 当PYSearchHistoryStyle != PYSearchHistoryStyleCell时，搜索历史标签的清空按钮 */
+@property (nonatomic, weak) UIButton *emptyButton;
+/** 当PYSearchHistoryStyle = PYSearchHistoryStyleCell时，tableBleView底部的清空搜索历史 */
+@property (nonatomic, weak) UILabel *emptySearchHistoryLabel;
 
 /** 代理 */
 @property (nonatomic, weak) id<PYSearchViewControllerDelegate> delegate;
