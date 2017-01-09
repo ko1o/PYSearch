@@ -220,6 +220,7 @@
     [self.searchBar resignFirstResponder];
 }
 
+
 /** 控制器销毁 */
 - (void)dealloc
 {
@@ -266,13 +267,23 @@
     titleView.py_width = self.view.py_width - 64 - titleView.py_x * 2;
     titleView.py_height = 30;
     UISearchBar *searchBar = [[UISearchBar alloc] initWithFrame:titleView.bounds];
-    searchBar.py_width -= PYSEARCH_MARGIN * 1.5;
+    [titleView addSubview:searchBar];
+    self.navigationItem.titleView = titleView;
+    // 关闭自动调整
+    searchBar.translatesAutoresizingMaskIntoConstraints = NO;
+    // 为titleView添加约束来调整搜索框
+    NSLayoutConstraint *widthCons = [NSLayoutConstraint constraintWithItem:searchBar attribute:NSLayoutAttributeWidth  relatedBy:NSLayoutRelationEqual toItem:titleView attribute:NSLayoutAttributeWidth multiplier:1.0 constant:0];
+    NSLayoutConstraint *heightCons = [NSLayoutConstraint constraintWithItem:searchBar attribute:NSLayoutAttributeHeight  relatedBy:NSLayoutRelationEqual toItem:titleView attribute:NSLayoutAttributeHeight multiplier:1.0 constant:0];
+    NSLayoutConstraint *xCons = [NSLayoutConstraint constraintWithItem:searchBar attribute:NSLayoutAttributeTop  relatedBy:NSLayoutRelationEqual toItem:titleView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0];
+    NSLayoutConstraint *yCons = [NSLayoutConstraint constraintWithItem:searchBar attribute:NSLayoutAttributeLeft  relatedBy:NSLayoutRelationEqual toItem:titleView attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0];
+    [titleView addConstraint:widthCons];
+    [titleView addConstraint:heightCons];
+    [titleView addConstraint:xCons];
+    [titleView addConstraint:yCons];
     searchBar.placeholder = [NSBundle py_localizedStringForKey:PYSearchSearchPlaceholderText];
     searchBar.backgroundImage = [UIImage imageNamed:@"clearImage" inBundle:[NSBundle py_searchBundle] compatibleWithTraitCollection:nil];
     searchBar.delegate = self;
-    [titleView addSubview:searchBar];
     self.searchBar = searchBar;
-    self.navigationItem.titleView = titleView;
     
     // 设置头部（热门搜索）
     UIView *headerView = [[UIView alloc] init];
