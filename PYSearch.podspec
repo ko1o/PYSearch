@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
     s.name         = 'PYSearch'
-    s.version      = '0.5.4'
+    s.version      = '0.5.5'
     s.summary      = 'An elegant search controller which replaces the UISearchController for iOS.'
     s.homepage     = 'https://github.com/iphone5solo/PYSearch'
     s.license      = 'MIT'
