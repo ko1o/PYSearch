@@ -67,7 +67,7 @@
     return self;
 }
 
-+ (PYSearchViewController *)searchViewControllerWithHotSearches:(NSArray<NSString *> *)hotSearches searchBarPlaceholder:(NSString *)placeholder
++ (instancetype)searchViewControllerWithHotSearches:(NSArray<NSString *> *)hotSearches searchBarPlaceholder:(NSString *)placeholder
 {
     PYSearchViewController *searchVC = [[PYSearchViewController alloc] init];
     searchVC.hotSearches = hotSearches;
@@ -75,7 +75,7 @@
     return searchVC;
 }
 
-+ (PYSearchViewController *)searchViewControllerWithHotSearches:(NSArray<NSString *> *)hotSearches searchBarPlaceholder:(NSString *)placeholder didSearchBlock:(PYDidSearchBlock)block
++ (instancetype)searchViewControllerWithHotSearches:(NSArray<NSString *> *)hotSearches searchBarPlaceholder:(NSString *)placeholder didSearchBlock:(PYDidSearchBlock)block
 {
     PYSearchViewController *searchVC = [self searchViewControllerWithHotSearches:hotSearches searchBarPlaceholder:placeholder];
     searchVC.didSearchBlock = [block copy];
@@ -604,7 +604,6 @@
     [self setHotSearches:self.hotSearches];
     // 刷新搜索历史
     [self setSearchHistoryStyle:self.searchHistoryStyle];
-    
 }
 
 - (void)setShowSearchHistory:(BOOL)showSearchHistory
@@ -664,6 +663,11 @@
     _searchSuggestions = [searchSuggestions copy];
     // 赋值给搜索建议控制器
     self.searchSuggestionVC.searchSuggestions = [searchSuggestions copy];
+    
+    // 如果有搜索文本且显示搜索建议，则隐藏
+    self.baseSearchTableView.hidden = !self.searchSuggestionHidden && self.searchSuggestions.count;
+    // 根据输入文本显示建议搜索条件
+    self.searchSuggestionVC.view.hidden = self.searchSuggestionHidden || !self.searchSuggestions.count;
 }
 
 - (void)setRankTagBackgroundColorHexStrings:(NSArray<NSString *> *)rankTagBackgroundColorHexStrings
@@ -1024,9 +1028,9 @@
         self.searchResultController.view.hidden = YES;
     }
     // 如果有搜索文本且显示搜索建议，则隐藏
-    self.baseSearchTableView.hidden = searchText.length && !self.searchSuggestionHidden;
+    self.baseSearchTableView.hidden = searchText.length && !self.searchSuggestionHidden && self.searchSuggestions.count;
     // 根据输入文本显示建议搜索条件
-    self.searchSuggestionVC.view.hidden = self.searchSuggestionHidden || !searchText.length;
+    self.searchSuggestionVC.view.hidden = self.searchSuggestionHidden || !searchText.length || !self.searchSuggestions.count;
     if (self.searchSuggestionVC.view.hidden) { // 搜索建议隐藏
         // 清空搜索建议
         self.searchSuggestions = nil;
@@ -1045,13 +1049,15 @@
         // 搜索结果隐藏(如果没有搜索文本就隐藏)
         self.searchResultController.view.hidden = searchBar.text.length == 0 || !self.showSearchResultWhenSearchBarRefocused;
         // 根据输入文本显示建议搜索条件
-        self.searchSuggestionVC.view.hidden = self.searchSuggestionHidden || !searchBar.text.length;    // 如果有搜索文本且显示搜索建议，则隐藏
+        self.searchSuggestionVC.view.hidden = self.searchSuggestionHidden || !searchBar.text.length || !self.searchSuggestions.count;    // 如果有搜索文本且显示搜索建议，则隐藏
         if (self.searchSuggestionVC.view.hidden) { // 搜索建议隐藏
             // 清空搜索建议
             self.searchSuggestions = nil;
         }
-        self.baseSearchTableView.hidden = searchBar.text.length && !self.searchSuggestionHidden;
+        self.baseSearchTableView.hidden = searchBar.text.length && !self.searchSuggestionHidden && !self.searchSuggestions.count;
     }
+    // 刷新搜索建议
+    [self setSearchSuggestions:self.searchSuggestions];
     return YES;
 }
 

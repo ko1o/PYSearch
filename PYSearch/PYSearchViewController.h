@@ -75,6 +75,11 @@ typedef NS_ENUM(NSInteger, PYSearchResultShowMode) { // 搜索结果显示方式
 
 @interface PYSearchViewController : UIViewController
 
+/** 代理 */
+@property (nonatomic, weak) id<PYSearchViewControllerDelegate> delegate;
+/** 数据源 */
+@property (nonatomic, weak) id<PYSearchViewControllerDataSource> dataSource;
+
 /** 
  * 排名标签背景色对应的16进制字符串（如：@"#ffcc99"）数组(四个颜色)
  * 前三个为分别为1、2、3 第四个为后续所有标签的背景色
@@ -117,11 +122,6 @@ typedef NS_ENUM(NSInteger, PYSearchResultShowMode) { // 搜索结果显示方式
 @property (nonatomic, weak) UIButton *emptyButton;
 /** 当PYSearchHistoryStyle = PYSearchHistoryStyleCell时，tableBleView底部的清空搜索历史 */
 @property (nonatomic, weak) UILabel *emptySearchHistoryLabel;
-
-/** 代理 */
-@property (nonatomic, weak) id<PYSearchViewControllerDelegate> delegate;
-/** 数据源 */
-@property (nonatomic, weak) id<PYSearchViewControllerDataSource> dataSource;
 
 /** 热门搜索风格 （默认为：PYHotSearchStyleDefault）*/
 @property (nonatomic, assign) PYHotSearchStyle hotSearchStyle;
@@ -169,7 +169,7 @@ typedef NS_ENUM(NSInteger, PYSearchResultShowMode) { // 搜索结果显示方式
  * placeholder : searchBar占位文字
  *
  */
-+ (PYSearchViewController *)searchViewControllerWithHotSearches:(NSArray<NSString *> *)hotSearches searchBarPlaceholder:(NSString *)placeholder;
++ (instancetype)searchViewControllerWithHotSearches:(NSArray<NSString *> *)hotSearches searchBarPlaceholder:(NSString *)placeholder;
 
 /**
  * 快速创建PYSearchViewController对象
@@ -180,6 +180,6 @@ typedef NS_ENUM(NSInteger, PYSearchResultShowMode) { // 搜索结果显示方式
  * 注意 : delegate(代理)的优先级大于block(即实现了代理方法则block失效)
  *
  */
-+ (PYSearchViewController *)searchViewControllerWithHotSearches:(NSArray<NSString *> *)hotSearches searchBarPlaceholder:(NSString *)placeholder didSearchBlock:(PYDidSearchBlock)block;
++ (instancetype)searchViewControllerWithHotSearches:(NSArray<NSString *> *)hotSearches searchBarPlaceholder:(NSString *)placeholder didSearchBlock:(PYDidSearchBlock)block;
 
 @end
