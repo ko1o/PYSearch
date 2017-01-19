@@ -1,0 +1,11 @@
+/* 
+  Localizable.strings
+  PYSearchExample
+
+  Created by Sam Spencer on 1/19/17.
+  Copyright © 2017 CoderKo1o. All rights reserved.
+*/
+
+"PYExampleSearchPlaceholderText" = "Search programming language";
+"PYExampleTableSectionZeroTitle" = "Select a Search History Style (Popular Search is default)";
+"PYExampleTableSectionOneTitle" = "Select Top Search Style (Search History is default)";

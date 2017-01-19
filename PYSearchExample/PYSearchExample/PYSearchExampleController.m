@@ -19,7 +19,7 @@
     [super viewDidLoad];
     
     // set title
-    self.title = @"PYSearchExampleController";
+    self.title = @"PYSearch Example";
     self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
 }
 
@@ -54,7 +54,7 @@
     // 1.创建热门搜索
     NSArray *hotSeaches = @[@"Java", @"Python", @"Objective-C", @"Swift", @"C", @"C++", @"PHP", @"C#", @"Perl", @"Go", @"JavaScript", @"R", @"Ruby", @"MATLAB"];
     // 2. 创建控制器
-    PYSearchViewController *searchViewController = [PYSearchViewController searchViewControllerWithHotSearches:hotSeaches searchBarPlaceholder:@"搜索编程语言" didSearchBlock:^(PYSearchViewController *searchViewController, UISearchBar *searchBar, NSString *searchText) {
+    PYSearchViewController *searchViewController = [PYSearchViewController searchViewControllerWithHotSearches:hotSeaches searchBarPlaceholder:NSLocalizedString(@"PYExampleSearchPlaceholderText", @"搜索编程语言") didSearchBlock:^(PYSearchViewController *searchViewController, UISearchBar *searchBar, NSString *searchText) {
         // 开始搜索执行以下代码
         // 如：跳转到指定控制器
         [searchViewController.navigationController pushViewController:[[PYTempViewController alloc] init] animated:YES];
@@ -71,12 +71,12 @@
     searchViewController.delegate = self;
     // 5. 跳转到搜索控制器
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:searchViewController];
-    [self presentViewController:nav  animated:NO completion:nil];
+    [self presentViewController:nav animated:YES completion:nil];
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    return section ? @"选择搜索历史风格（热门搜索为默认风格）" : @"选择热门搜索风格（搜索历史为默认风格）";
+    return section ? NSLocalizedString(@"PYExampleTableSectionZeroTitle", @"选择搜索历史风格（热门搜索为默认风格)") : NSLocalizedString(@"PYExampleTableSectionZeroTitle", @"选择热门搜索风格（搜索历史为默认风格)");
 }
 
 #pragma mark - PYSearchViewControllerDelegate
