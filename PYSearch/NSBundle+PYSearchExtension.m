@@ -36,9 +36,10 @@
     if (bundle == nil) {
         // 只处理en、zh-Hans、zh-Hant三种情况，其他按照系统默认处理
         NSString *language = [NSLocale preferredLanguages].firstObject;
-        if ([language hasPrefix:@"en"]) {
-            language = @"en";
-        } else if ([language hasPrefix:@"zh"]) {
+        if ([language hasPrefix:@"en"]) language = @"en";
+        else if ([language hasPrefix:@"es"]) language = @"es";
+        else if ([language hasPrefix:@"fr"]) language = @"fr";
+        else if ([language hasPrefix:@"zh"]) {
             if ([language rangeOfString:@"Hans"].location != NSNotFound) {
                 language = @"zh-Hans"; // 简体中文
             } else { // zh-Hant\zh-HK\zh-TW

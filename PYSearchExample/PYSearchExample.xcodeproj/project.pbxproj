@@ -22,6 +22,7 @@
 		6B97178F1DC48FA800B2DAA1 /* PYSearchExampleUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B97178E1DC48FA800B2DAA1 /* PYSearchExampleUITests.m */; };
 		6B97179E1DC48FE800B2DAA1 /* PYSearchExampleController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B97179D1DC48FE800B2DAA1 /* PYSearchExampleController.m */; };
 		6B9DA6011DC8415700D07A16 /* PYTempViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B9DA6001DC8415700D07A16 /* PYTempViewController.m */; };
+		A6324EC11E3130FB00BAA226 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A6324EC31E3130FB00BAA226 /* Localizable.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -73,6 +74,15 @@
 		6B97179D1DC48FE800B2DAA1 /* PYSearchExampleController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PYSearchExampleController.m; sourceTree = "<group>"; };
 		6B9DA5FF1DC8415700D07A16 /* PYTempViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PYTempViewController.h; sourceTree = "<group>"; };
 		6B9DA6001DC8415700D07A16 /* PYTempViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PYTempViewController.m; sourceTree = "<group>"; };
+		A6324EBB1E312F1100BAA226 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		A6324EBC1E312F1600BAA226 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		A6324EBD1E312F1C00BAA226 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
+		A6324EBE1E312F2000BAA226 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
+		A6324EC21E3130FB00BAA226 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		A6324EC41E3130FE00BAA226 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		A6324EC51E3130FE00BAA226 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
+		A6324EC61E3130FF00BAA226 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		A6324EC71E31310000BAA226 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -153,8 +163,6 @@
 				6B9DA5FF1DC8415700D07A16 /* PYTempViewController.h */,
 				6B9DA6001DC8415700D07A16 /* PYTempViewController.m */,
 				6B9717751DC48FA800B2DAA1 /* Assets.xcassets */,
-				6B9717771DC48FA800B2DAA1 /* LaunchScreen.storyboard */,
-				6B97177A1DC48FA800B2DAA1 /* Info.plist */,
 				6B9717661DC48FA800B2DAA1 /* Supporting Files */,
 			);
 			path = PYSearchExample;
@@ -163,6 +171,9 @@
 		6B9717661DC48FA800B2DAA1 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				6B9717771DC48FA800B2DAA1 /* LaunchScreen.storyboard */,
+				6B97177A1DC48FA800B2DAA1 /* Info.plist */,
+				A6324EC31E3130FB00BAA226 /* Localizable.strings */,
 				6B9717671DC48FA800B2DAA1 /* main.m */,
 			);
 			name = "Supporting Files";
@@ -271,6 +282,10 @@
 			knownRegions = (
 				en,
 				Base,
+				fr,
+				es,
+				"zh-Hans",
+				"zh-Hant",
 			);
 			mainGroup = 6B97175A1DC48FA700B2DAA1;
 			productRefGroup = 6B9717641DC48FA800B2DAA1 /* Products */;
@@ -290,6 +305,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6B9717791DC48FA800B2DAA1 /* LaunchScreen.storyboard in Resources */,
+				A6324EC11E3130FB00BAA226 /* Localizable.strings in Resources */,
 				6B3EB21F1DC498410080DF86 /* PYSearch.bundle in Resources */,
 				6B9717761DC48FA800B2DAA1 /* Assets.xcassets in Resources */,
 			);
@@ -365,8 +381,24 @@
 			isa = PBXVariantGroup;
 			children = (
 				6B9717781DC48FA800B2DAA1 /* Base */,
+				A6324EBB1E312F1100BAA226 /* fr */,
+				A6324EBC1E312F1600BAA226 /* es */,
+				A6324EBD1E312F1C00BAA226 /* zh-Hans */,
+				A6324EBE1E312F2000BAA226 /* zh-Hant */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		A6324EC31E3130FB00BAA226 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A6324EC21E3130FB00BAA226 /* en */,
+				A6324EC41E3130FE00BAA226 /* fr */,
+				A6324EC51E3130FE00BAA226 /* es */,
+				A6324EC61E3130FF00BAA226 /* zh-Hans */,
+				A6324EC71E31310000BAA226 /* zh-Hant */,
+			);
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
