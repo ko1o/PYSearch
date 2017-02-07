@@ -59,12 +59,11 @@
     return self;
 }
 
-- (instancetype)initWithCoder:(NSCoder *)aDecoder
+- (void)awakeFromNib
 {
-    if (self = [super initWithCoder:aDecoder]) {
-        [self setup];
-    }
-    return self;
+    [super awakeFromNib];
+    
+    [self setup];
 }
 
 + (instancetype)searchViewControllerWithHotSearches:(NSArray<NSString *> *)hotSearches searchBarPlaceholder:(NSString *)placeholder
