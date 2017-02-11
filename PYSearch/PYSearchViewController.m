@@ -66,6 +66,40 @@
     [self setup];
 }
 
+/** 视图完全显示 */
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    // 弹出键盘
+    [self.searchBar becomeFirstResponder];
+}
+
+/** 视图即将显示 */
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    // 根据navigationBar.translucent属性调整视图
+    self.baseSearchTableView.contentInset = UIEdgeInsetsMake(64 - self.view.py_y, 0, self.view.py_y, 0);
+    self.navigationController.navigationBar.barTintColor = PYSEARCH_COLOR(249, 249, 249);
+}
+
+/** 视图即将消失 */
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    // 回收键盘
+    [self.searchBar resignFirstResponder];
+}
+
+/** 控制器销毁 */
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 + (instancetype)searchViewControllerWithHotSearches:(NSArray<NSString *> *)hotSearches searchBarPlaceholder:(NSString *)placeholder
 {
     PYSearchViewController *searchVC = [[PYSearchViewController alloc] init];
@@ -116,7 +150,7 @@
                 [_weakSelf searchBarSearchButtonClicked:_weakSelf.searchBar];
             }
         };
-        searchSuggestionVC.view.frame = CGRectMake(0, 64, self.view.py_width, self.view.py_height);
+        searchSuggestionVC.view.frame = CGRectMake(0, 64 - self.view.py_y, self.view.py_width, self.view.py_height + self.view.py_y);
         searchSuggestionVC.view.backgroundColor = self.baseSearchTableView.backgroundColor;
         searchSuggestionVC.view.hidden = YES;
         // 设置数据源
@@ -197,31 +231,6 @@
 - (UIBarButtonItem *)cancelButton
 {
     return self.navigationItem.rightBarButtonItem;
-}
-
-/** 视图完全显示 */
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-    
-    // 弹出键盘
-    [self.searchBar becomeFirstResponder];
-}
-
-/** 视图即将消失 */
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-    
-    // 回收键盘
-    [self.searchBar resignFirstResponder];
-}
-
-
-/** 控制器销毁 */
-- (void)dealloc
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 /** 初始化 */
@@ -310,12 +319,12 @@
     emptySearchHistoryLabel.userInteractionEnabled = YES;
     emptySearchHistoryLabel.text = [NSBundle py_localizedStringForKey:PYSearchEmptySearchHistoryText];
     emptySearchHistoryLabel.textAlignment = NSTextAlignmentCenter;
-    emptySearchHistoryLabel.py_height = 30;
+    emptySearchHistoryLabel.py_height = 49;
     [emptySearchHistoryLabel addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(emptySearchHistoryDidClick)]];
     emptySearchHistoryLabel.py_width = PYScreenW;
     self.emptySearchHistoryLabel = emptySearchHistoryLabel;
     [footerView addSubview:emptySearchHistoryLabel];
-    footerView.py_height = 30;
+    footerView.py_height = emptySearchHistoryLabel.py_height;
     self.baseSearchTableView.tableFooterView = footerView;
     
     // 默认没有热门搜索
@@ -1128,6 +1137,11 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
     return self.searchHistories.count && self.showSearchHistory ? 44 : 0.01;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    return 0.01;
 }
 
 #pragma mark - UITableViewDelegate
