@@ -92,6 +92,12 @@ typedef NS_ENUM(NSInteger, PYSearchResultShowMode) { // 搜索结果显示方式
  */
 @property (nonatomic, strong) NSMutableArray<UIColor *> *colorPol;
 
+/** 
+ * 是否对换热门搜索和搜索历史，默认为：NO，即热门搜索在搜索历史上方，对换后搜索历史在热门搜索上方
+ * 注意：该属性只适用于当搜索历史为标签类型才有效，即PYSearchHistoryStyle != PYSearchHistoryStyleCell
+ */
+@property (nonatomic, assign) BOOL swapHotSeachWithSearchHistory;
+
 /** 热门搜索 */
 @property (nonatomic, copy) NSArray<NSString *> *hotSearches;
 /** 所有的热门标签 */
