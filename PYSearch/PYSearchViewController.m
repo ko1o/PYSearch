@@ -81,8 +81,11 @@
     [super viewWillAppear:animated];
     
     // 根据navigationBar.translucent属性调整视图
-    self.baseSearchTableView.contentInset = UIEdgeInsetsMake(64 - self.view.py_y, 0, self.view.py_y, 0);
-    self.navigationController.navigationBar.barTintColor = PYSEARCH_COLOR(249, 249, 249);
+    if (self.navigationController.navigationBar.translucent == NO) {
+        self.baseSearchTableView.contentInset = UIEdgeInsetsMake(0, 0, self.view.py_y, 0);
+        self.searchSuggestionVC.view.frame = CGRectMake(0, 64 - self.view.py_y, self.view.py_width, self.view.py_height + self.view.py_y);
+        self.navigationController.navigationBar.barTintColor = PYSEARCH_COLOR(249, 249, 249);
+    }
 }
 
 /** 视图即将消失 */
@@ -150,7 +153,7 @@
                 [_weakSelf searchBarSearchButtonClicked:_weakSelf.searchBar];
             }
         };
-        searchSuggestionVC.view.frame = CGRectMake(0, 64 - self.view.py_y, self.view.py_width, self.view.py_height + self.view.py_y);
+        searchSuggestionVC.view.frame = CGRectMake(0, 64, PYScreenW, PYScreenH);
         searchSuggestionVC.view.backgroundColor = self.baseSearchTableView.backgroundColor;
         searchSuggestionVC.view.hidden = YES;
         // 设置数据源
