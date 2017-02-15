@@ -105,7 +105,7 @@
         cell.textLabel.font = [UIFont systemFontOfSize:14];
         cell.backgroundColor = [UIColor clearColor];
         // 添加分割线
-        UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cell-content-line" inBundle:[NSBundle py_searchBundle] compatibleWithTraitCollection:nil]];
+        UIImageView *line = [[UIImageView alloc] initWithImage: [NSBundle py_imageNamed: @"cell-content-line"]];
         line.py_height = 0.5;
         line.alpha = 0.7;
         line.py_x = PYSEARCH_MARGIN;
@@ -114,7 +114,7 @@
         [cell.contentView addSubview:line];
     }
     // 设置数据
-    cell.imageView.image = PYSEARCH_SEARCH_SUGGESTION_IMAGE;
+    cell.imageView.image = [NSBundle py_imageNamed: @"search"];
     cell.textLabel.text = self.searchSuggestions[indexPath.row];
     return cell;
 }
