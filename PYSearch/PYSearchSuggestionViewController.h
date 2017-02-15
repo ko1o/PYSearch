@@ -25,6 +25,7 @@ typedef void(^PYSearchSuggestionDidSelectCellBlock)(UITableViewCell *selectedCel
 @end
 
 @interface PYSearchSuggestionViewController : UITableViewController
+
 /** 搜索建议数据源 */
 @property (nonatomic, weak) id<PYSearchSuggestionViewDataSource> dataSource;
 /** 搜索建议 */

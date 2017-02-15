@@ -15,7 +15,8 @@
 
 /** 获取PYSearch.bundle路径 */
 + (NSBundle *)py_searchBundle;
-    
-+ (UIImage*)py_imageNamed:(NSString*)name;
+
+/** 获取PYSearch.bundle路径中的图片 */
++ (UIImage *)py_imageNamed:(NSString *)name;
 
 @end

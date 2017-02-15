@@ -9,6 +9,7 @@
 #import "PYSearchConst.h"
 
 @interface PYSearchSuggestionViewController ()
+
 /** 记录消失前的contentInset */
 @property (nonatomic, assign) UIEdgeInsets originalContentInset;
 
@@ -74,7 +75,6 @@
     self.tableView.contentOffset = CGPointMake(0, -self.tableView.contentInset.top);
 }
 
-
 #pragma mark - Table view data source
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     if ([self.dataSource respondsToSelector:@selector(numberOfSectionsInSearchSuggestionView:)]) {
@@ -105,7 +105,7 @@
         cell.textLabel.font = [UIFont systemFontOfSize:14];
         cell.backgroundColor = [UIColor clearColor];
         // 添加分割线
-        UIImageView *line = [[UIImageView alloc] initWithImage: [NSBundle py_imageNamed: @"cell-content-line"]];
+        UIImageView *line = [[UIImageView alloc] initWithImage: [NSBundle py_imageNamed:@"cell-content-line"]];
         line.py_height = 0.5;
         line.alpha = 0.7;
         line.py_x = PYSEARCH_MARGIN;
@@ -114,7 +114,7 @@
         [cell.contentView addSubview:line];
     }
     // 设置数据
-    cell.imageView.image = [NSBundle py_imageNamed: @"search"];
+    cell.imageView.image = [NSBundle py_imageNamed:@"search"];
     cell.textLabel.text = self.searchSuggestions[indexPath.row];
     return cell;
 }

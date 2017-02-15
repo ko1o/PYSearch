@@ -8,6 +8,7 @@
 #import <UIKit/UIKit.h>
 
 @interface UIColor (PYSearchExtension)
+
 /** 根据16进制字符串返回对应颜色 */
 + (instancetype)py_colorWithHexString:(NSString *)hexString;
 

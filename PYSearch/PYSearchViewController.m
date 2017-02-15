@@ -95,7 +95,9 @@
     if (self.navigationController.navigationBar.translucent == NO) {
         self.baseSearchTableView.contentInset = UIEdgeInsetsMake(0, 0, self.view.py_y, 0);
         self.searchSuggestionVC.view.frame = CGRectMake(0, 64 - self.view.py_y, self.view.py_width, self.view.py_height + self.view.py_y);
-        self.navigationController.navigationBar.barTintColor = PYSEARCH_COLOR(249, 249, 249);
+        if (!self.navigationController.navigationBar.barTintColor) { // 用户没有设置
+            self.navigationController.navigationBar.barTintColor = PYSEARCH_COLOR(249, 249, 249);
+        }
     }
 }
 
@@ -184,7 +186,7 @@
         emptyButton.titleLabel.font = self.searchHistoryHeader.font;
         [emptyButton setTitleColor:PYTextColor forState:UIControlStateNormal];
         [emptyButton setTitle:[NSBundle py_localizedStringForKey:PYSearchEmptyButtonText] forState:UIControlStateNormal];
-        [emptyButton setImage:[NSBundle py_imageNamed: @"empty"] forState:UIControlStateNormal];
+        [emptyButton setImage:[NSBundle py_imageNamed:@"empty"] forState:UIControlStateNormal];
         [emptyButton addTarget:self action:@selector(emptySearchHistoryDidClick) forControlEvents:UIControlEventTouchUpInside];
         [emptyButton sizeToFit];
         emptyButton.py_width += PYSEARCH_MARGIN;
@@ -314,7 +316,7 @@
     [titleView addConstraint:xCons];
     [titleView addConstraint:yCons];
     searchBar.placeholder = [NSBundle py_localizedStringForKey:PYSearchSearchPlaceholderText];
-    searchBar.backgroundImage = [NSBundle py_imageNamed: @"clearImage"];
+    searchBar.backgroundImage = [NSBundle py_imageNamed:@"clearImage"];
     searchBar.delegate = self;
     self.searchBar = searchBar;
     
@@ -417,7 +419,7 @@
     self.baseSearchTableView.tableHeaderView.py_height = self.headerView.py_height = MAX(CGRectGetMaxY(self.hotSearchView.frame), CGRectGetMaxY(self.searchHistoryView.frame));
     // 添加分割线
     for (int i = 0; i < PYRectangleTagMaxCol - 1; i++) { // 添加垂直分割线
-        UIImageView *verticalLine = [[UIImageView alloc] initWithImage:[NSBundle py_imageNamed: @"cell-content-line-vertical"]];
+        UIImageView *verticalLine = [[UIImageView alloc] initWithImage:[NSBundle py_imageNamed:@"cell-content-line-vertical"]];
         verticalLine.py_height = contentView.py_height;
         verticalLine.alpha = 0.7;
         verticalLine.py_x = contentView.py_width / PYRectangleTagMaxCol * (i + 1);
@@ -425,7 +427,7 @@
         [contentView addSubview:verticalLine];
     }
     for (int i = 0; i < ceil(((double)self.hotSearches.count / PYRectangleTagMaxCol)) - 1; i++) { // 添加水平分割线, ceil():向上取整函数
-        UIImageView *verticalLine = [[UIImageView alloc] initWithImage:[NSBundle py_imageNamed: @"cell-content-line"]];
+        UIImageView *verticalLine = [[UIImageView alloc] initWithImage:[NSBundle py_imageNamed:@"cell-content-line"]];
         verticalLine.py_height = 0.5;
         verticalLine.alpha = 0.7;
         verticalLine.py_y = rectangleTagH * (i + 1);
@@ -481,7 +483,7 @@
         [rankTextLabelsM addObject:rankTextLabel];
         [rankView addSubview:rankTextLabel];
         // 添加分割线
-        UIImageView *line = [[UIImageView alloc] initWithImage:[NSBundle py_imageNamed: @"cell-content-line"]];
+        UIImageView *line = [[UIImageView alloc] initWithImage:[NSBundle py_imageNamed:@"cell-content-line"]];
         line.py_height = 0.5;
         line.alpha = 0.7;
         line.py_x = -PYScreenW * 0.5;
@@ -1159,13 +1161,13 @@
         UIButton *closetButton = [[UIButton alloc] init];
         // 设置图片容器大小、图片原图居中
         closetButton.py_size = CGSizeMake(cell.py_height, cell.py_height);
-        [closetButton setImage:[NSBundle py_imageNamed: @"close"] forState:UIControlStateNormal];
-        UIImageView *closeView = [[UIImageView alloc] initWithImage:[NSBundle py_imageNamed: @"close"]];
+        [closetButton setImage:[NSBundle py_imageNamed:@"close"] forState:UIControlStateNormal];
+        UIImageView *closeView = [[UIImageView alloc] initWithImage:[NSBundle py_imageNamed:@"close"]];
         [closetButton addTarget:self action:@selector(closeDidClick:) forControlEvents:UIControlEventTouchUpInside];
         closeView.contentMode = UIViewContentModeCenter;
         cell.accessoryView = closetButton;
         // 添加分割线
-        UIImageView *line = [[UIImageView alloc] initWithImage:[NSBundle py_imageNamed: @"cell-content-line"]];
+        UIImageView *line = [[UIImageView alloc] initWithImage:[NSBundle py_imageNamed:@"cell-content-line"]];
         line.py_height = 0.5;
         line.alpha = 0.7;
         line.py_x = PYSEARCH_MARGIN;
@@ -1175,7 +1177,7 @@
     }
     
     // 设置数据
-    cell.imageView.image = [NSBundle py_imageNamed: @"search_history"];
+    cell.imageView.image = [NSBundle py_imageNamed:@"search_history"];
     cell.textLabel.text = self.searchHistories[indexPath.row];
     
     return cell;
