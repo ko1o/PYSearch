@@ -55,5 +55,12 @@
     value = [bundle localizedStringForKey:key value:value table:nil];
     return [[NSBundle mainBundle] localizedStringForKey:key value:value table:nil];
 }
+    
++ (UIImage*)py_imageNamed:(NSString*)name
+{
+    UIImage* image = [UIImage imageWithContentsOfFile: [[[NSBundle py_searchBundle] resourcePath] stringByAppendingPathComponent: [NSString stringWithFormat: @"%@.png", name]]];
+    
+    return image;
+}
 
 @end

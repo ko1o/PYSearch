@@ -33,8 +33,6 @@
 #define PYSEARCH_SCREEN_SIZE CGSizeMake(PYScreenW, PYScreenH)
 
 #define PYSEARCH_SEARCH_HISTORY_CACHE_PATH [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"PYSearchhistories.plist"] // 搜索历史存储路径
-#define PYSEARCH_SEARCH_HISTORY_IMAGE [UIImage imageNamed:@"search_history" inBundle:[NSBundle py_searchBundle] compatibleWithTraitCollection:nil] // 搜索历史Cell的图片
-#define PYSEARCH_SEARCH_SUGGESTION_IMAGE [UIImage imageNamed:@"search" inBundle:[NSBundle py_searchBundle] compatibleWithTraitCollection:nil] // 搜索建议时，Cell的图片
 
 UIKIT_EXTERN NSString *const PYSearchSearchPlaceholderText;     // 搜索框的占位符 默认为 @"搜索内容"
 UIKIT_EXTERN NSString *const PYSearchHotSearchText;             // 热门搜索文本 默认为 @"热门搜索"
