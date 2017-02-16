@@ -21,6 +21,11 @@
     // set title
     self.title = @"PYSearch Example";
     self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
+    
+    // 确保iPad中，tableView的正常显示
+    if ([self.tableView respondsToSelector:@selector(setCellLayoutMarginsFollowReadableWidth:)]) { // 为适配iPad
+        self.tableView.cellLayoutMarginsFollowReadableWidth = NO;
+    }
 }
 
 - (void)didReceiveMemoryWarning {

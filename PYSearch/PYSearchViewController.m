@@ -50,6 +50,8 @@
 @property (nonatomic, strong) UITableView *baseSearchTableView;
 /** 记录是否点击搜索建议 */
 @property (nonatomic, assign) BOOL didClickSuggestionCell;
+/** 判断设备方向 */
+@property (nonatomic, assign) UIDeviceOrientation currentOrientation;
 
 @end
 
@@ -68,6 +70,20 @@
     [super awakeFromNib];
     
     [self setup];
+}
+
+/** 子控件布局完成 */
+- (void)viewDidLayoutSubviews
+{
+    [super viewDidLayoutSubviews];
+    // 刷新布局
+    if (self.currentOrientation != [[UIDevice currentDevice] orientation]) { // 改变方向，刷新布局
+        self.hotSearches = self.hotSearches;
+        self.searchHistories = self.searchHistories;
+        
+        // 刷新当前设备方向
+        self.currentOrientation = [[UIDevice currentDevice] orientation];
+    }
 }
 
 /** 是否隐藏状态栏 */
@@ -137,6 +153,10 @@
     if (!_baseSearchTableView) {
         UITableView *baseSearchTableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
         baseSearchTableView.backgroundColor = [UIColor clearColor];
+        baseSearchTableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        if ([baseSearchTableView respondsToSelector:@selector(setCellLayoutMarginsFollowReadableWidth:)]) { // 为适配iPad
+            baseSearchTableView.cellLayoutMarginsFollowReadableWidth = NO;
+        }
         baseSearchTableView.delegate = self;
         baseSearchTableView.dataSource = self;
         [self.view addSubview:baseSearchTableView];
@@ -193,6 +213,7 @@
         emptyButton.py_height += PYSEARCH_MARGIN;
         emptyButton.py_centerY = self.searchHistoryHeader.py_centerY;
         emptyButton.py_x = self.searchHistoryView.py_width - emptyButton.py_width;
+        emptyButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
         [self.searchHistoryView addSubview:emptyButton];
         _emptyButton = emptyButton;
     }
@@ -204,6 +225,7 @@
     if (!_searchHistoryTagsContentView) {
         UIView *searchHistoryTagsContentView = [[UIView alloc] init];
         searchHistoryTagsContentView.py_width = self.searchHistoryView.py_width;
+        searchHistoryTagsContentView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         searchHistoryTagsContentView.py_y = CGRectGetMaxY(self.hotSearchTagsContentView.frame) + PYSEARCH_MARGIN;
         [self.searchHistoryView addSubview:searchHistoryTagsContentView];
         _searchHistoryTagsContentView = searchHistoryTagsContentView;
@@ -225,9 +247,10 @@
 {
     if (!_searchHistoryView) {
         UIView *searchHistoryView = [[UIView alloc] init];
-        searchHistoryView.py_width = self.hotSearchView.py_width;
         searchHistoryView.py_x = self.hotSearchView.py_x;
         searchHistoryView.py_y = self.hotSearchView.py_y;
+        searchHistoryView.py_width = self.headerView.py_width - searchHistoryView.py_x * 2;
+        searchHistoryView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         [self.headerView addSubview:searchHistoryView];
         _searchHistoryView = searchHistoryView;
     }
@@ -303,6 +326,7 @@
     titleView.py_height = 30;
     UISearchBar *searchBar = [[UISearchBar alloc] initWithFrame:titleView.bounds];
     [titleView addSubview:searchBar];
+    titleView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     self.navigationItem.titleView = titleView;
     // 关闭自动调整
     searchBar.translatesAutoresizingMaskIntoConstraints = NO;
@@ -322,10 +346,13 @@
     
     // 设置头部（热门搜索）
     UIView *headerView = [[UIView alloc] init];
+    headerView.py_width = PYScreenW;
+    headerView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     // hotSearchView
     UIView *hotSearchView = [[UIView alloc] init];
     hotSearchView.py_x = PYSEARCH_MARGIN * 1.5;
-    hotSearchView.py_width = PYScreenW - hotSearchView.py_x * 2;
+    hotSearchView.py_width = headerView.py_width - hotSearchView.py_x * 2;
+    hotSearchView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     UILabel *titleLabel = [self setupTitleLabel:[NSBundle py_localizedStringForKey:PYSearchHotSearchText]];
     self.hotSearchHeader = titleLabel;
     [hotSearchView addSubview:titleLabel];
@@ -333,6 +360,7 @@
     UIView *hotSearchTagsContentView = [[UIView alloc] init];
     hotSearchTagsContentView.py_width = hotSearchView.py_width;
     hotSearchTagsContentView.py_y = CGRectGetMaxY(titleLabel.frame) + PYSEARCH_MARGIN;
+    hotSearchTagsContentView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     [hotSearchView addSubview:hotSearchTagsContentView];
     [headerView addSubview:hotSearchView];
     self.hotSearchTagsContentView = hotSearchTagsContentView;
@@ -351,7 +379,8 @@
     emptySearchHistoryLabel.textAlignment = NSTextAlignmentCenter;
     emptySearchHistoryLabel.py_height = 49;
     [emptySearchHistoryLabel addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(emptySearchHistoryDidClick)]];
-    emptySearchHistoryLabel.py_width = PYScreenW;
+    emptySearchHistoryLabel.py_width = footerView.py_width;
+    emptySearchHistoryLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     self.emptySearchHistoryLabel = emptySearchHistoryLabel;
     [footerView addSubview:emptySearchHistoryLabel];
     footerView.py_height = emptySearchHistoryLabel.py_height;
@@ -381,7 +410,7 @@
     // 获取标签容器
     UIView *contentView = self.hotSearchTagsContentView;
     // 调整容器布局
-    contentView.py_width = PYScreenW;
+    contentView.py_width = PYSEARCH_REALY_SCREEN_WIDTH;
     contentView.py_x = -PYSEARCH_MARGIN * 1.5;
     contentView.py_y += 2;
     contentView.backgroundColor = [UIColor whiteColor];
@@ -454,7 +483,8 @@
         // 整体标签
         UIView *rankView = [[UIView alloc] init];
         rankView.py_height = 40;
-        rankView.py_width = (PYScreenW - PYSEARCH_MARGIN * 3) * 0.5;
+        rankView.py_width = (self.baseSearchTableView.py_width - PYSEARCH_MARGIN * 3) * 0.5;
+        rankView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         [contentView addSubview:rankView];
         // 排名
         UILabel *rankTag = [[UILabel alloc] init];
@@ -478,7 +508,8 @@
         rankTextLabel.textColor = PYTextColor;
         rankTextLabel.font = [UIFont systemFontOfSize:14];
         rankTextLabel.py_x = CGRectGetMaxX(rankTag.frame) + PYSEARCH_MARGIN;
-        rankTextLabel.py_width = (PYScreenW - PYSEARCH_MARGIN * 3) * 0.5 - rankTextLabel.py_x;
+        rankTextLabel.py_width = (self.baseSearchTableView.py_width - PYSEARCH_MARGIN * 3) * 0.5 - rankTextLabel.py_x;
+        rankTextLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         rankTextLabel.py_height = rankView.py_height;
         [rankTextLabelsM addObject:rankTextLabel];
         [rankView addSubview:rankTextLabel];
@@ -488,7 +519,8 @@
         line.alpha = 0.7;
         line.py_x = -PYScreenW * 0.5;
         line.py_y = rankView.py_height - 1;
-        line.py_width = PYScreenW;
+        line.py_width = self.baseSearchTableView.py_width;
+        line.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         [rankView addSubview:line];
         [rankViewM addObject:rankView];
         
@@ -1172,7 +1204,8 @@
         line.alpha = 0.7;
         line.py_x = PYSEARCH_MARGIN;
         line.py_y = 43;
-        line.py_width = PYScreenW;
+        line.py_width = tableView.py_width;
+        line.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         [cell.contentView addSubview:line];
     }
     

@@ -31,7 +31,10 @@
     
     // 取消分割线
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    
+    // 确保iPad中，tableView的正常显示
+    if ([self.tableView respondsToSelector:@selector(setCellLayoutMarginsFollowReadableWidth:)]) { // 为适配iPad
+        self.tableView.cellLayoutMarginsFollowReadableWidth = NO;
+    }
     // 监听键盘
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboradFrameDidChange:) name:UIKeyboardDidShowNotification object:nil];
 }

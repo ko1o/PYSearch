@@ -58,7 +58,11 @@
     
 + (UIImage *)py_imageNamed:(NSString *)name
 {
-    return [UIImage imageWithContentsOfFile:[[[NSBundle py_searchBundle] resourcePath] stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", name]]];
+    // 判断分辨率，设置图片名称
+    CGFloat scale = [[UIScreen mainScreen] scale];
+    name = scale == 3.0 ? [NSString stringWithFormat:@"%@@3x.png", name] : [NSString stringWithFormat:@"%@@2x.png", name];
+    UIImage *image = [UIImage imageWithContentsOfFile:[[[NSBundle py_searchBundle] resourcePath] stringByAppendingPathComponent:name]];
+    return image;
 }
 
 @end
