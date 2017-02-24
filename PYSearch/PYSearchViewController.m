@@ -640,7 +640,7 @@
         self.searchHistoryView.py_y = self.hotSearches.count > 0 && self.showHotSearch ? CGRectGetMaxY(self.hotSearchView.frame) : 0;
     } else { // 改变布局，搜索历史在热门搜索上方
         self.searchHistoryView.py_y = PYSEARCH_MARGIN * 2;
-        self.hotSearchView.py_y = CGRectGetMaxY(self.searchHistoryView.frame);
+        self.hotSearchView.py_y = self.searchHistories.count > 0 && self.showSearchHistory ? CGRectGetMaxY(self.searchHistoryView.frame) : PYSEARCH_MARGIN * 2;
     }
     self.baseSearchTableView.tableHeaderView.py_height = self.headerView.py_height = MAX(CGRectGetMaxY(self.hotSearchView.frame), CGRectGetMaxY(self.searchHistoryView.frame));
     // 取消隐藏
@@ -955,6 +955,9 @@
     } else {
         // 更新
         self.searchHistoryStyle = self.searchHistoryStyle;
+    }
+    if (self.swapHotSeachWithSearchHistory == YES) { // 刷新热门搜索
+        self.hotSearches = self.hotSearches;
     }
     PYSEARCH_LOG(@"%@", [NSBundle py_localizedStringForKey:PYSearchEmptySearchHistoryLogText]);
 }
