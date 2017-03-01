@@ -463,7 +463,7 @@
         verticalLine.py_width = contentView.py_width;
         [contentView addSubview:verticalLine];
     }
-    
+    [self layoutForDemand];
     // 重新赋值，注意：当操作系统为iOS 9.x系列的tableHeaderView高度设置失效，需要重新设置tableHeaderView
     [self.baseSearchTableView setTableHeaderView:self.baseSearchTableView.tableHeaderView];
 }
@@ -559,6 +559,7 @@
     // 设置tableHeaderView高度
     self.hotSearchView.py_height = CGRectGetMaxY(contentView.frame) + PYSEARCH_MARGIN * 2;
     self.baseSearchTableView.tableHeaderView.py_height = self.headerView.py_height = MAX(CGRectGetMaxY(self.hotSearchView.frame), CGRectGetMaxY(self.searchHistoryView.frame));
+    [self layoutForDemand];
     // 重新赋值，注意：当操作系统为iOS 9.x系列的tableHeaderView高度设置失效，需要重新设置tableHeaderView
     [self.baseSearchTableView setTableHeaderView:self.baseSearchTableView.tableHeaderView];
 }
@@ -634,7 +635,17 @@
     } else if (self.searchHistoryTagsContentView == contentView) { // 搜索历史标签
         self.searchHistoryView.py_height = CGRectGetMaxY(contentView.frame) + PYSEARCH_MARGIN * 2;
     }
-    // 根据布局要求调整位置
+    [self layoutForDemand];
+    self.baseSearchTableView.tableHeaderView.py_height = self.headerView.py_height = MAX(CGRectGetMaxY(self.hotSearchView.frame), CGRectGetMaxY(self.searchHistoryView.frame));
+    // 取消隐藏
+    self.baseSearchTableView.tableHeaderView.hidden = NO;
+    // 重新赋值, 注意：当操作系统为iOS 9.x系列的tableHeaderView高度设置失效，需要重新设置tableHeaderView
+    [self.baseSearchTableView setTableHeaderView:self.baseSearchTableView.tableHeaderView];
+    return [tagsM copy];
+}
+
+/** 根据布局要求调整位置 */
+- (void)layoutForDemand {
     if (self.swapHotSeachWithSearchHistory == NO) { // 默认布局，热门搜索在搜索历史上方
         self.hotSearchView.py_y = PYSEARCH_MARGIN * 2;
         self.searchHistoryView.py_y = self.hotSearches.count > 0 && self.showHotSearch ? CGRectGetMaxY(self.hotSearchView.frame) : 0;
@@ -642,12 +653,6 @@
         self.searchHistoryView.py_y = PYSEARCH_MARGIN * 2;
         self.hotSearchView.py_y = self.searchHistories.count > 0 && self.showSearchHistory ? CGRectGetMaxY(self.searchHistoryView.frame) : PYSEARCH_MARGIN * 2;
     }
-    self.baseSearchTableView.tableHeaderView.py_height = self.headerView.py_height = MAX(CGRectGetMaxY(self.hotSearchView.frame), CGRectGetMaxY(self.searchHistoryView.frame));
-    // 取消隐藏
-    self.baseSearchTableView.tableHeaderView.hidden = NO;
-    // 重新赋值, 注意：当操作系统为iOS 9.x系列的tableHeaderView高度设置失效，需要重新设置tableHeaderView
-    [self.baseSearchTableView setTableHeaderView:self.baseSearchTableView.tableHeaderView];
-    return [tagsM copy];
 }
 
 #pragma mark - setter
