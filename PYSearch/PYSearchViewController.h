@@ -37,7 +37,7 @@ typedef NS_ENUM(NSInteger, PYSearchResultShowMode) { // 搜索结果显示方式
     PYSearchResultShowModeDefault = PYSearchResultShowModeCustom // 默认为用户自定义（自己处理）
 };
 
-@protocol PYSearchViewControllerDataSource <NSObject, UITableViewDataSource>
+@protocol PYSearchViewControllerDataSource <NSObject>
 
 @optional
 /**
