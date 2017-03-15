@@ -317,6 +317,8 @@
     self.showSearchResultWhenSearchTextChanged = NO;
     // 当搜索框聚焦时，隐藏搜索结果视图
     self.showSearchResultWhenSearchBarRefocused = NO;
+    // 移除所有搜索框的空格
+    self.removeSpaceOnSearchString = YES;
     
     // 创建搜索框
     UIView *titleView = [[UIView alloc] init];
@@ -635,6 +637,7 @@
     } else if (self.searchHistoryTagsContentView == contentView) { // 搜索历史标签
         self.searchHistoryView.py_height = CGRectGetMaxY(contentView.frame) + PYSEARCH_MARGIN * 2;
     }
+    // 调整布局
     [self layoutForDemand];
     self.baseSearchTableView.tableHeaderView.py_height = self.headerView.py_height = MAX(CGRectGetMaxY(self.hotSearchView.frame), CGRectGetMaxY(self.searchHistoryView.frame));
     // 取消隐藏
@@ -648,9 +651,9 @@
 - (void)layoutForDemand {
     if (self.swapHotSeachWithSearchHistory == NO) { // 默认布局，热门搜索在搜索历史上方
         self.hotSearchView.py_y = PYSEARCH_MARGIN * 2;
-        self.searchHistoryView.py_y = self.hotSearches.count > 0 && self.showHotSearch ? CGRectGetMaxY(self.hotSearchView.frame) : 0;
+        self.searchHistoryView.py_y = self.hotSearches.count > 0 && self.showHotSearch ? CGRectGetMaxY(self.hotSearchView.frame) : PYSEARCH_MARGIN * 1.5;
     } else { // 改变布局，搜索历史在热门搜索上方
-        self.searchHistoryView.py_y = PYSEARCH_MARGIN * 2;
+        self.searchHistoryView.py_y = PYSEARCH_MARGIN * 1.5;
         self.hotSearchView.py_y = self.searchHistories.count > 0 && self.showSearchHistory ? CGRectGetMaxY(self.searchHistoryView.frame) : PYSEARCH_MARGIN * 2;
     }
 }
@@ -787,12 +790,11 @@
     _hotSearches = hotSearches;
     // 没有热门搜索或者隐藏热门搜索，隐藏相关控件，直接返回
     if (hotSearches.count == 0 || !self.showHotSearch) {
-        self.baseSearchTableView.tableHeaderView.hidden = YES;
         self.hotSearchHeader.hidden = YES;
         self.hotSearchTagsContentView.hidden = YES;
         if (self.searchHistoryStyle == PYSearchHistoryStyleCell) {
             UIView *tableHeaderView = self.baseSearchTableView.tableHeaderView;
-            tableHeaderView.py_height = 0.01;
+            tableHeaderView.py_height = PYSEARCH_MARGIN * 1.5;
             [self.baseSearchTableView setTableHeaderView:tableHeaderView];
         }
         return;
@@ -1020,10 +1022,14 @@
     UISearchBar *searchBar = self.searchBar;
     // 回收键盘
     [searchBar resignFirstResponder];
-    if (self.showSearchHistory) { // 只要显示搜索历史才会缓存
+    NSString *searchText = searchBar.text;
+    if (self.removeSpaceOnSearchString) { // 移除搜索词中的空格
+       searchText = [searchBar.text stringByReplacingOccurrencesOfString:@" " withString:@""];
+    }
+    if (self.showSearchHistory && searchText.length > 0) { // 只要显示搜索历史且不为空串才会缓存
         // 先移除再刷新
-        [self.searchHistories removeObject:searchBar.text];
-        [self.searchHistories insertObject:searchBar.text atIndex:0];
+        [self.searchHistories removeObject:searchText];
+        [self.searchHistories insertObject:searchText atIndex:0];
         
         // 移除多余的缓存
         if (self.searchHistories.count > self.searchHistoriesCount) {
@@ -1262,7 +1268,7 @@
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     // 滚动时，回收键盘
-    if (self.keyboardshowing)  {
+    if (self.keyboardshowing) {
         // 调节搜索建议内边距
         self.searchSuggestionVC.tableView.contentInset = UIEdgeInsetsMake(-30, 0, 30, 0);
         [self.searchBar resignFirstResponder];

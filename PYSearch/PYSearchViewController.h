@@ -37,7 +37,7 @@ typedef NS_ENUM(NSInteger, PYSearchResultShowMode) { // 搜索结果显示方式
     PYSearchResultShowModeDefault = PYSearchResultShowModeCustom // 默认为用户自定义（自己处理）
 };
 
-@protocol PYSearchViewControllerDataSource <NSObject, UITableViewDataSource>
+@protocol PYSearchViewControllerDataSource <NSObject>
 
 @optional
 /**
@@ -125,6 +125,8 @@ typedef NS_ENUM(NSInteger, PYSearchResultShowMode) { // 搜索结果显示方式
 @property (nonatomic, copy) NSString *searchHistoriesCachePath;
 /** 搜索历史记录缓存数量，默认为20 */
 @property (nonatomic, assign) NSUInteger searchHistoriesCount;
+/** 是否去除搜索词中的空格，默认为YES */
+@property (nonatomic, assign) BOOL removeSpaceOnSearchString;
 /** 当PYSearchHistoryStyle != PYSearchHistoryStyleCell时，搜索历史标签的清空按钮 */
 @property (nonatomic, weak) UIButton *emptyButton;
 /** 当PYSearchHistoryStyle = PYSearchHistoryStyleCell时，tableBleView底部的清空搜索历史 */
