@@ -826,12 +826,14 @@
     if (!self.searchHistories.count || !self.showSearchHistory || searchHistoryStyle == UISearchBarStyleDefault) {
         self.searchHistoryHeader.hidden = YES;
         self.searchHistoryTagsContentView.hidden = YES;
+        self.searchHistoryView.hidden = YES;
         self.emptyButton.hidden = YES;
         return;
     };
     // 有搜索历史搜索，取消相关隐藏
     self.searchHistoryHeader.hidden = NO;
     self.searchHistoryTagsContentView.hidden = NO;
+    self.searchHistoryView.hidden = NO;
     self.emptyButton.hidden = NO;
     
     // 创建、初始化默认标签
