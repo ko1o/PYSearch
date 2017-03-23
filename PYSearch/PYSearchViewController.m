@@ -1178,7 +1178,7 @@
     // 移除搜索信息
     [self.searchHistories removeObject:cell.textLabel.text];
     // 保存搜索信息
-    [NSKeyedArchiver archiveRootObject:self.searchHistories toFile:PYSEARCH_SEARCH_HISTORY_CACHE_PATH];
+    [NSKeyedArchiver archiveRootObject:self.searchHistories toFile:self.searchHistoriesCachePath];
     // 刷新
     [self.baseSearchTableView reloadData];
 }
