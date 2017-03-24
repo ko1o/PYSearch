@@ -6,6 +6,7 @@
 //  最主要的搜索控制器
 
 #import <UIKit/UIKit.h>
+#import "PYSearchConst.h"
 
 @class PYSearchViewController, PYSearchSuggestionViewController;
 
@@ -66,7 +67,10 @@ typedef NS_ENUM(NSInteger, PYSearchResultShowMode) { // 搜索结果显示方式
     searchViewController:didSearchWithsearchBar:searchText:失效 */
 - (void)searchViewController:(PYSearchViewController *)searchViewController didSelectSearchHistoryAtIndex:(NSInteger)index searchText:(NSString *)searchText;
 /** 点击搜索建议时调用，如果实现该代理方法则点击搜索建议时searchViewController:didSearchWithsearchBar:searchText:失效 */
-- (void)searchViewController:(PYSearchViewController *)searchViewController didSelectSearchSuggestionAtIndex:(NSInteger)index searchText:(NSString *)searchText;
+- (void)searchViewController:(PYSearchViewController *)searchViewController didSelectSearchSuggestionAtIndex:(NSInteger)index searchText:(NSString *)searchText PYSEARCH_DEPRECATED("使用searchViewController:didSelectSearchSuggestionAtIndexPath:searchText:");
+/** 点击搜索建议时调用，如果实现该代理方法则点击搜索建议时searchViewController:didSearchWithsearchBar:searchText:和searchViewController:didSelectSearchSuggestionAtIndex:searchText:失效
+    为了保证能够缓存选中的自定义搜索记录，需要设置searchBar.text = "自定义的搜索文本" */
+- (void)searchViewController:(PYSearchViewController *)searchViewController didSelectSearchSuggestionAtIndexPath:(NSIndexPath *)indexPath searchBar:(UISearchBar *)searchBar;
 /** 搜索框文本变化时，显示的搜索建议通过searchViewController的searchSuggestions赋值即可 */
 - (void)searchViewController:(PYSearchViewController *)searchViewController searchTextDidChange:(UISearchBar *)searchBar searchText:(NSString *)searchText;
 /** 点击取消时调用，如果没有实现该代理方法，默认执行：[self dismissViewControllerAnimated:YES completion:nil]; */
@@ -147,7 +151,11 @@ typedef NS_ENUM(NSInteger, PYSearchResultShowMode) { // 搜索结果显示方式
 
 /** 搜索时调用此Block */
 @property (nonatomic, copy) PYDidSearchBlock didSearchBlock;
-/** 搜索建议,注意：给此属性赋值时，确保searchSuggestionHidden值为NO，否则赋值失效 */
+/**
+ * 搜索建议
+ * 注意：给此属性赋值时，确保searchSuggestionHidden值为NO，否则赋值失效
+ * 注意：当自定义搜索建议cell，searchSuggestions赋值失效，该属性始终为nil
+ */
 @property (nonatomic, copy) NSArray<NSString *> *searchSuggestions;
 /** 搜索建议是否隐藏 默认为：NO */
 @property (nonatomic, assign) BOOL searchSuggestionHidden;

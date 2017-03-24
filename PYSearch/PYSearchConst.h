@@ -23,6 +23,9 @@
 #define PYSEARCH_COLOR(r,g,b) [UIColor colorWithRed:(r/255.0) green:(g/255.0) blue:(b/255.0) alpha:1.0]
 #define PYSEARCH_RANDOM_COLOR  PYSEARCH_COLOR(arc4random_uniform(256),arc4random_uniform(256),arc4random_uniform(256))
 
+// 过期提醒
+#define PYSEARCH_DEPRECATED(instead) NS_DEPRECATED(2_0, 2_0, 2_0, 2_0, instead)
+
 // 屏幕宽高
 // 屏幕宽高(注意：由于不同iOS系统下，设备横竖屏时屏幕的高度和宽度有的是变化的有的是不变的)
 #define PYSEARCH_REALY_SCREEN_WIDTH [UIScreen mainScreen].bounds.size.width

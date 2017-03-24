@@ -173,12 +173,20 @@
         searchSuggestionVC.didSelectCellBlock = ^(UITableViewCell *didSelectCell) {
             // 设置搜索信息
             _weakSelf.searchBar.text = didSelectCell.textLabel.text;
+            // 获取下标
+            NSIndexPath *indexPath = [_weakSelf.searchSuggestionVC.tableView indexPathForCell:didSelectCell];
             
             // 如果实现搜索建议代理方法则searchBarSearchButtonClicked失效
-            if ([_weakSelf.delegate respondsToSelector:@selector(searchViewController:didSelectSearchSuggestionAtIndex:searchText:)]) {
-                // 获取下标
-                NSIndexPath *indexPath = [_weakSelf.searchSuggestionVC.tableView indexPathForCell:didSelectCell];
+            if ([_weakSelf.delegate respondsToSelector:@selector(searchViewController:didSelectSearchSuggestionAtIndexPath:searchBar:)]) {
+                [_weakSelf.delegate searchViewController:_weakSelf didSelectSearchSuggestionAtIndexPath:indexPath searchBar:_weakSelf.searchBar];
+                // 缓存数据并且刷新界面
+                [_weakSelf saveSearchCacheAndRefreshView];
+            } else if ([_weakSelf.delegate respondsToSelector:@selector(searchViewController:didSelectSearchSuggestionAtIndex:searchText:)]) {
+                // 如果实现搜索建议代理方法则searchBarSearchButtonClicked失效
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
                 [_weakSelf.delegate searchViewController:_weakSelf didSelectSearchSuggestionAtIndex:indexPath.row searchText:_weakSelf.searchBar.text];
+#pragma clang diagnostic pop
                 // 缓存数据并且刷新界面
                 [_weakSelf saveSearchCacheAndRefreshView];
             } else {
@@ -762,14 +770,21 @@
 
 - (void)setSearchSuggestions:(NSArray<NSString *> *)searchSuggestions
 {
+    // 自定义搜索建议，直接返回
+    if ([self.dataSource respondsToSelector:@selector(searchSuggestionView:cellForRowAtIndexPath:)]) {
+        // 清空该属性，搜索建议为自定义
+        _searchSuggestions = nil;
+        return;
+    }
+    
     _searchSuggestions = [searchSuggestions copy];
     // 赋值给搜索建议控制器
     self.searchSuggestionVC.searchSuggestions = [searchSuggestions copy];
     
     // 如果有搜索文本且显示搜索建议，则隐藏
-    self.baseSearchTableView.hidden = !self.searchSuggestionHidden && self.searchSuggestions.count;
+    self.baseSearchTableView.hidden = !self.searchSuggestionHidden && [self.searchSuggestionVC.tableView numberOfRowsInSection:0];
     // 根据输入文本显示建议搜索条件
-    self.searchSuggestionVC.view.hidden = self.searchSuggestionHidden || !self.searchSuggestions.count;
+    self.searchSuggestionVC.view.hidden = self.searchSuggestionHidden || ![self.searchSuggestionVC.tableView numberOfRowsInSection:0];
 }
 
 - (void)setRankTagBackgroundColorHexStrings:(NSArray<NSString *> *)rankTagBackgroundColorHexStrings
@@ -1064,12 +1079,16 @@
             break;
         case PYSearchResultShowModeEmbed: // 内嵌
             // 添加搜索结果的视图
-            [self.view addSubview:self.searchResultController.view];
-            [self addChildViewController:self.searchResultController];
-            self.searchResultController.view.hidden = NO;
-            self.searchResultController.view.py_y = self.navigationController.navigationBar.translucent == NO ? 0 : 64;
-            self.searchResultController.view.py_height = self.view.py_height - self.searchResultController.view.py_y;
-            self.searchSuggestionVC.view.hidden = YES;
+            if (self.searchDisplayController) {
+                [self.view addSubview:self.searchResultController.view];
+                [self addChildViewController:self.searchResultController];
+                self.searchResultController.view.hidden = NO;
+                self.searchResultController.view.py_y = self.navigationController.navigationBar.translucent == NO ? 0 : 64;
+                self.searchResultController.view.py_height = self.view.py_height - self.searchResultController.view.py_y;
+                self.searchSuggestionVC.view.hidden = YES;
+            } else {
+                PYSEARCH_LOG(@"PYSearchDebug： searchResultController cannot be nil when searchResultShowMode is PYSearchResultShowModeEmbed.");
+            }
             break;
         case PYSearchResultShowModeCustom: // 自定义
             
@@ -1140,9 +1159,9 @@
         self.searchResultController.view.hidden = YES;
     }
     // 如果有搜索文本且显示搜索建议，则隐藏
-    self.baseSearchTableView.hidden = searchText.length && !self.searchSuggestionHidden && self.searchSuggestions.count;
+    self.baseSearchTableView.hidden = searchText.length && !self.searchSuggestionHidden && [self.searchSuggestionVC.tableView numberOfRowsInSection:0];
     // 根据输入文本显示建议搜索条件
-    self.searchSuggestionVC.view.hidden = self.searchSuggestionHidden || !searchText.length || !self.searchSuggestions.count;
+    self.searchSuggestionVC.view.hidden = self.searchSuggestionHidden || !searchText.length || ![self.searchSuggestionVC.tableView numberOfRowsInSection:0];
     if (self.searchSuggestionVC.view.hidden) { // 搜索建议隐藏
         // 清空搜索建议
         self.searchSuggestions = nil;
@@ -1161,12 +1180,12 @@
         // 搜索结果隐藏(如果没有搜索文本就隐藏)
         self.searchResultController.view.hidden = searchBar.text.length == 0 || !self.showSearchResultWhenSearchBarRefocused;
         // 根据输入文本显示建议搜索条件
-        self.searchSuggestionVC.view.hidden = self.searchSuggestionHidden || !searchBar.text.length || !self.searchSuggestions.count;    // 如果有搜索文本且显示搜索建议，则隐藏
+        self.searchSuggestionVC.view.hidden = self.searchSuggestionHidden || !searchBar.text.length || ![self.searchSuggestionVC.tableView numberOfRowsInSection:0];    // 如果有搜索文本且显示搜索建议，则隐藏
         if (self.searchSuggestionVC.view.hidden) { // 搜索建议隐藏
             // 清空搜索建议
             self.searchSuggestions = nil;
         }
-        self.baseSearchTableView.hidden = searchBar.text.length && !self.searchSuggestionHidden && !self.searchSuggestions.count;
+        self.baseSearchTableView.hidden = searchBar.text.length && !self.searchSuggestionHidden && ![self.searchSuggestionVC.tableView numberOfRowsInSection:0];
     }
     // 刷新搜索建议
     [self setSearchSuggestions:self.searchSuggestions];
@@ -1256,7 +1275,7 @@
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     self.searchBar.text = cell.textLabel.text;
-    
+        
     if ([self.delegate respondsToSelector:@selector(searchViewController:didSelectSearchHistoryAtIndex:searchText:)]) { // 实现代理方法则调用，则点击搜索历史时searchViewController:didSearchWithsearchBar:searchText:失效
         // 调用代理方法
         [self.delegate searchViewController:self didSelectSearchHistoryAtIndex:indexPath.row searchText:cell.textLabel.text];
