@@ -1067,7 +1067,7 @@
             [self.view addSubview:self.searchResultController.view];
             [self addChildViewController:self.searchResultController];
             self.searchResultController.view.hidden = NO;
-            self.searchResultController.view.py_y = 64;
+            self.searchResultController.view.py_y = self.navigationController.navigationBar.translucent == NO ? 0 : 64;
             self.searchResultController.view.py_height = self.view.py_height - self.searchResultController.view.py_y;
             self.searchSuggestionVC.view.hidden = YES;
             break;
