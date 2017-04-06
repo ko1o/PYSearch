@@ -197,6 +197,7 @@
         searchSuggestionVC.view.frame = CGRectMake(0, 64, PYScreenW, PYScreenH);
         searchSuggestionVC.view.backgroundColor = self.baseSearchTableView.backgroundColor;
         searchSuggestionVC.view.hidden = YES;
+        _searchSuggestionView = (UITableView *)searchSuggestionVC.view;
         // 设置数据源
         searchSuggestionVC.dataSource = self;
         [self.view addSubview:searchSuggestionVC.view];
@@ -1079,7 +1080,7 @@
             break;
         case PYSearchResultShowModeEmbed: // 内嵌
             // 添加搜索结果的视图
-            if (self.searchDisplayController) {
+            if (self.searchResultController) {
                 [self.view addSubview:self.searchResultController.view];
                 [self addChildViewController:self.searchResultController];
                 self.searchResultController.view.hidden = NO;

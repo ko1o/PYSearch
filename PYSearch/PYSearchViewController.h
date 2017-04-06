@@ -148,6 +148,8 @@ typedef NS_ENUM(NSInteger, PYSearchResultShowMode) { // 搜索结果显示方式
 @property (nonatomic, strong) UIColor *searchBarBackgroundColor;
 /** 取消按钮 */
 @property (nonatomic, weak) UIBarButtonItem *cancelButton;
+/** 搜索建议的tableView */
+@property (nonatomic, weak, readonly) UITableView *searchSuggestionView;
 
 /** 搜索时调用此Block */
 @property (nonatomic, copy) PYDidSearchBlock didSearchBlock;
