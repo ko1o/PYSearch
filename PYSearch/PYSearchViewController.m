@@ -194,7 +194,7 @@
                 [_weakSelf searchBarSearchButtonClicked:_weakSelf.searchBar];
             }
         };
-        searchSuggestionVC.view.frame = CGRectMake(0, 64, PYScreenW, PYScreenH);
+        searchSuggestionVC.view.frame = CGRectMake(0, 0, PYScreenW, PYScreenH);
         searchSuggestionVC.view.backgroundColor = self.baseSearchTableView.backgroundColor;
         searchSuggestionVC.view.hidden = YES;
         _searchSuggestionView = (UITableView *)searchSuggestionVC.view;
@@ -790,15 +790,15 @@
 
 - (void)setRankTagBackgroundColorHexStrings:(NSArray<NSString *> *)rankTagBackgroundColorHexStrings
 {
-    if (rankTagBackgroundColorHexStrings.count < 4) { // 不符合要求，使用基本设置
-        NSArray *colorStrings = @[@"#f14230", @"#ff8000", @"#ffcc01", @"#ebebeb"];
-        _rankTagBackgroundColorHexStrings = colorStrings;
-    } else { // 取前四个
-        _rankTagBackgroundColorHexStrings = @[rankTagBackgroundColorHexStrings[0], rankTagBackgroundColorHexStrings[1], rankTagBackgroundColorHexStrings[2], rankTagBackgroundColorHexStrings[3]];
-    }
-    
-    // 刷新
-    self.hotSearches = self.hotSearches;
+//    if (rankTagBackgroundColorHexStrings.count < 4) { // 不符合要求，使用基本设置
+//        NSArray *colorStrings = @[@"#f14230", @"#ff8000", @"#ffcc01", @"#ebebeb"];
+//        _rankTagBackgroundColorHexStrings = colorStrings;
+//    } else { // 取前四个
+//        _rankTagBackgroundColorHexStrings = @[rankTagBackgroundColorHexStrings[0], rankTagBackgroundColorHexStrings[1], rankTagBackgroundColorHexStrings[2], rankTagBackgroundColorHexStrings[3]];
+//    }
+//    
+//    // 刷新
+//    self.hotSearches = self.hotSearches;
 }
 
 - (void)setHotSearches:(NSArray *)hotSearches
