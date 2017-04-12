@@ -1,22 +1,35 @@
 //
-//  代码地址: https://github.com/iphone5solo/PYSearch
-//  代码地址: http://www.code4app.com/thread-11175-1-1.html
+//  GitHub: https://github.com/iphone5solo/PYSearch
 //  Created by CoderKo1o.
-//  Copyright © 2016年 iphone5solo. All rights reserved.
-//  NSBundle 分类
+//  Copyright © 2016 iphone5solo. All rights reserved.
+//
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
 @interface NSBundle (PYSearchExtension)
 
-/** 获取本地化字符串 */
+/**
+ Get the localized string
+
+ @param key     key for localized string
+ @return a localized string
+ */
 + (NSString *)py_localizedStringForKey:(NSString *)key;
 
-/** 获取PYSearch.bundle路径 */
+/**
+ Get the path of `PYSearch.bundle`.
+
+ @return path of the `PYSearch.bundle`
+ */
 + (NSBundle *)py_searchBundle;
 
-/** 获取PYSearch.bundle路径中的图片 */
+/**
+ Get the image in the `PYSearch.bundle` path
+
+ @param name name of image
+ @return a image
+ */
 + (UIImage *)py_imageNamed:(NSString *)name;
 
 @end

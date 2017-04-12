@@ -1,204 +1,380 @@
-// 
-//  代码地址: https://github.com/iphone5solo/PYSearch
-//  代码地址: http://www.code4app.com/thread-11175-1-1.html
+//
+//  GitHub: https://github.com/iphone5solo/PYSearch
 //  Created by CoderKo1o.
-//  Copyright © 2016年 iphone5solo. All rights reserved.
-//  最主要的搜索控制器
+//  Copyright © 2016 iphone5solo. All rights reserved.
+//
 
 #import <UIKit/UIKit.h>
 #import "PYSearchConst.h"
 
 @class PYSearchViewController, PYSearchSuggestionViewController;
 
-typedef void(^PYDidSearchBlock)(PYSearchViewController *searchViewController, UISearchBar *searchBar, NSString *searchText); // 开始搜索时调用的block
+typedef void(^PYDidSearchBlock)(PYSearchViewController *searchViewController, UISearchBar *searchBar, NSString *searchText);
 
-typedef NS_ENUM(NSInteger, PYHotSearchStyle)  { // 热门搜索标签风格
-    PYHotSearchStyleNormalTag,      // 普通标签(不带边框)
-    PYHotSearchStyleColorfulTag,    // 彩色标签（不带边框，背景色为随机彩色）
-    PYHotSearchStyleBorderTag,      // 带有边框的标签,此时标签背景色为clearColor
-    PYHotSearchStyleARCBorderTag,   // 带有圆弧边框的标签,此时标签背景色为clearColor
-    PYHotSearchStyleRankTag,        // 带有排名标签
-    PYHotSearchStyleRectangleTag,   // 矩形标签,此时标签背景色为clearColor
-    PYHotSearchStyleDefault = PYHotSearchStyleNormalTag // 默认为普通标签
+/**
+ style of popular search
+ */
+typedef NS_ENUM(NSInteger, PYHotSearchStyle)  {
+    PYHotSearchStyleNormalTag,      // normal tag without border
+    PYHotSearchStyleColorfulTag,    // colorful tag without border, color of background is randrom and can be custom by `colorPol`
+    PYHotSearchStyleBorderTag,      // border tag, color of background is `clearColor`
+    PYHotSearchStyleARCBorderTag,   // broder tag with ARC, color of background is `clearColor`
+    PYHotSearchStyleRankTag,        // rank tag, color of background can be custom by `rankTagBackgroundColorHexStrings`
+    PYHotSearchStyleRectangleTag,   // rectangle tag, color of background is `clearColor`
+    PYHotSearchStyleDefault = PYHotSearchStyleNormalTag // default is `PYHotSearchStyleNormalTag`
 };
 
-typedef NS_ENUM(NSInteger, PYSearchHistoryStyle) {  // 搜索历史风格
-    PYSearchHistoryStyleCell,           // UITableViewCell 风格
-    PYSearchHistoryStyleNormalTag,      // PYHotSearchStyleNormalTag 标签风格
-    PYSearchHistoryStyleColorfulTag,    // 彩色标签（不带边框，背景色为随机彩色）
-    PYSearchHistoryStyleBorderTag,      // 带有边框的标签,此时标签背景色为clearColor
-    PYSearchHistoryStyleARCBorderTag,   // 带有圆弧边框的标签,此时标签背景色为clearColor
-    PYSearchHistoryStyleDefault = PYSearchHistoryStyleCell // 默认为 PYSearchHistoryStyleCell
+/**
+ style of search history
+ */
+typedef NS_ENUM(NSInteger, PYSearchHistoryStyle) {
+    PYSearchHistoryStyleCell,           // style of UITableViewCell
+    PYSearchHistoryStyleNormalTag,      // style of PYHotSearchStyleNormalTag
+    PYSearchHistoryStyleColorfulTag,    // style of PYHotSearchStyleColorfulTag
+    PYSearchHistoryStyleBorderTag,      // style of PYHotSearchStyleBorderTag
+    PYSearchHistoryStyleARCBorderTag,   // style of PYHotSearchStyleARCBorderTag
+    PYSearchHistoryStyleDefault = PYSearchHistoryStyleCell // default is `PYSearchHistoryStyleCell`
 };
 
-typedef NS_ENUM(NSInteger, PYSearchResultShowMode) { // 搜索结果显示方式
-    PYSearchResultShowModeCustom,   // 通过自定义显示
-    PYSearchResultShowModePush,     // 通过Push控制器显示
-    PYSearchResultShowModeEmbed,    // 通过内嵌控制器View显示
-    PYSearchResultShowModeDefault = PYSearchResultShowModeCustom // 默认为用户自定义（自己处理）
+/**
+ mode of search result view controller display
+ */
+typedef NS_ENUM(NSInteger, PYSearchResultShowMode) {
+    PYSearchResultShowModeCustom,   // custom, can be push or pop and so on.
+    PYSearchResultShowModePush,     // push, dispaly the view of search result by push
+    PYSearchResultShowModeEmbed,    // embed, dispaly the view of search result by embed
+    PYSearchResultShowModeDefault = PYSearchResultShowModeCustom // defualt is `PYSearchResultShowModeCustom`
 };
 
+/**
+ The protocol of data source, you can custom the suggestion view by implement these methods the data scource.
+ */
 @protocol PYSearchViewControllerDataSource <NSObject>
 
 @optional
+
 /**
- *  自定义搜索建议Cell的数据源方法
+ Return a `UITableViewCell` object.
+
+ @param searchSuggestionView    view which display search suggestions
+ @param indexPath               indexPath of row
+ @return a `UITableViewCell` object
  */
-/** 返回用户自定义搜索建议Cell */
 - (UITableViewCell *)searchSuggestionView:(UITableView *)searchSuggestionView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
-/** 返回用户自定义搜索建议cell的rows */
+
+/**
+ Return number of rows in section.
+
+ @param searchSuggestionView    view which display search suggestions
+ @param section                 index of section
+ @return number of rows in section
+ */
 - (NSInteger)searchSuggestionView:(UITableView *)searchSuggestionView numberOfRowsInSection:(NSInteger)section;
-/** 返回用户自定义搜索建议cell的section */
+
+/**
+ Return number of sections in search suggestion view.
+
+ @param searchSuggestionView    view which display search suggestions
+ @return number of sections
+ */
 - (NSInteger)numberOfSectionsInSearchSuggestionView:(UITableView *)searchSuggestionView;
-/** 返回用户自定义搜索建议cell高度 */
+
+/**
+ Return height for row.
+
+ @param searchSuggestionView    view which display search suggestions
+ @param indexPath               indexPath of row
+ @return height of row
+ */
 - (CGFloat)searchSuggestionView:(UITableView *)searchSuggestionView heightForRowAtIndexPath:(NSIndexPath *)indexPath;
 
 @end
 
+
+/**
+ The protocol of delegate
+ */
 @protocol PYSearchViewControllerDelegate <NSObject, UITableViewDelegate>
 
 @optional
 
-/** 点击(开始)搜索时调用 */
-- (void)searchViewController:(PYSearchViewController *)searchViewController didSearchWithsearchBar:(UISearchBar *)searchBar searchText:(NSString *)searchText;
-/** 点击热门搜索时调用，如果实现该代理方法则点击热门搜索时searchViewController:didSearchWithsearchBar:searchText:失效*/
-- (void)searchViewController:(PYSearchViewController *)searchViewController didSelectHotSearchAtIndex:(NSInteger)index searchText:(NSString *)searchText;
-/** 点击搜索历史时调用，如果实现该代理方法则点击搜索历史时
-    searchViewController:didSearchWithsearchBar:searchText:失效 */
-- (void)searchViewController:(PYSearchViewController *)searchViewController didSelectSearchHistoryAtIndex:(NSInteger)index searchText:(NSString *)searchText;
-/** 点击搜索建议时调用，如果实现该代理方法则点击搜索建议时searchViewController:didSearchWithsearchBar:searchText:失效 */
-- (void)searchViewController:(PYSearchViewController *)searchViewController didSelectSearchSuggestionAtIndex:(NSInteger)index searchText:(NSString *)searchText PYSEARCH_DEPRECATED("使用searchViewController:didSelectSearchSuggestionAtIndexPath:searchText:");
-/** 点击搜索建议时调用，如果实现该代理方法则点击搜索建议时searchViewController:didSearchWithsearchBar:searchText:和searchViewController:didSelectSearchSuggestionAtIndex:searchText:失效
-    为了保证能够缓存选中的自定义搜索记录，需要设置searchBar.text = "自定义的搜索文本" */
-- (void)searchViewController:(PYSearchViewController *)searchViewController didSelectSearchSuggestionAtIndexPath:(NSIndexPath *)indexPath searchBar:(UISearchBar *)searchBar;
-/** 搜索框文本变化时，显示的搜索建议通过searchViewController的searchSuggestions赋值即可 */
-- (void)searchViewController:(PYSearchViewController *)searchViewController searchTextDidChange:(UISearchBar *)searchBar searchText:(NSString *)searchText;
-/** 点击取消时调用，如果没有实现该代理方法，默认执行：[self dismissViewControllerAnimated:YES completion:nil]; */
+/**
+ Called when search begain.
+
+ @param searchViewController    search view controller
+ @param searchBar               search bar
+ @param searchText              text for search
+ */
+- (void)searchViewController:(PYSearchViewController *)searchViewController
+      didSearchWithSearchBar:(UISearchBar *)searchBar
+                  searchText:(NSString *)searchText;
+
+/**
+ Called when popular search is selected.
+
+ @param searchViewController    search view controller
+ @param index                   index of tag
+ @param searchText              text for search
+ 
+ Note: `searchViewController:didSearchWithSearchBar:searchText:` will not be called when this method is implemented.
+ */
+- (void)searchViewController:(PYSearchViewController *)searchViewController
+   didSelectHotSearchAtIndex:(NSInteger)index
+                  searchText:(NSString *)searchText;
+
+/**
+ Called when search history is selected.
+
+ @param searchViewController    search view controller
+ @param index                   index of tag or row
+ @param searchText              text for search
+ 
+ Note: `searchViewController:didSearchWithSearchBar:searchText:` will not be called when this method is implemented.
+ */
+- (void)searchViewController:(PYSearchViewController *)searchViewController
+didSelectSearchHistoryAtIndex:(NSInteger)index
+                  searchText:(NSString *)searchText;
+
+/**
+ Called when search suggestion is selected.
+
+ @param searchViewController    search view controller
+ @param index                   index of row
+ @param searchText              text for search
+
+ Note: `searchViewController:didSearchWithSearchBar:searchText:` will not be called when this method is implemented.
+ */
+- (void)searchViewController:(PYSearchViewController *)searchViewController
+didSelectSearchSuggestionAtIndex:(NSInteger)index
+                  searchText:(NSString *)searchText PYSEARCH_DEPRECATED("Use searchViewController:didSelectSearchSuggestionAtIndexPath:searchText:");
+
+/**
+ Called when search suggestion is selected, the method support more custom of search suggestion view.
+
+ @param searchViewController    search view controller
+ @param indexPath               indexPath of row
+ @param searchBar               search bar
+ 
+ Note: `searchViewController:didSearchWithSearchBar:searchText:` and `searchViewController:didSelectSearchSuggestionAtIndex:searchText:` will not be called when this method is implemented.
+ Suggestion: To ensure that can cache selected custom search suggestion records, you need to set `searchBar.text` = "custom search text".
+ */
+- (void)searchViewController:(PYSearchViewController *)searchViewController didSelectSearchSuggestionAtIndexPath:(NSIndexPath *)indexPath
+                   searchBar:(UISearchBar *)searchBar;
+
+/**
+ Called when search text did change, you can reload data of suggestion view thought this method.
+
+ @param searchViewController    search view controller
+ @param searchBar               search bar
+ @param searchText              text for search
+ */
+- (void)searchViewController:(PYSearchViewController *)searchViewController
+         searchTextDidChange:(UISearchBar *)searchBar
+                  searchText:(NSString *)searchText;
+
+/**
+ Called when cancel item did press, default execute `[self dismissViewControllerAnimated:YES completion:nil]`.
+
+ @param searchViewController search view controller
+ */
 - (void)didClickCancel:(PYSearchViewController *)searchViewController;
 
 @end
 
 @interface PYSearchViewController : UIViewController
 
-/** 代理 */
+/**
+ The delegate
+ */
 @property (nonatomic, weak) id<PYSearchViewControllerDelegate> delegate;
-/** 数据源 */
+
+/**
+ The data source
+ */
 @property (nonatomic, weak) id<PYSearchViewControllerDataSource> dataSource;
 
-/** 
- * 排名标签背景色对应的16进制字符串（如：@"#ffcc99"）数组(四个颜色)
- * 前三个为分别为1、2、3 第四个为后续所有标签的背景色
- * 该属性只有在设置hotSearchStyle为PYHotSearchStyleColorfulTag才生效
+/**
+ Ranking the background color of the corresponding hexadecimal string (eg: @"#ffcc99") array (just four colors) when `hotSearchStyle` is `PYHotSearchStyleRankTag`.
  */
 @property (nonatomic, strong) NSArray<NSString *> *rankTagBackgroundColorHexStrings;
-/** 
- * web安全色池,存储的是UIColor数组，用于设置标签的背景色
- * 该属性只有在设置hotSearchStyle为PYHotSearchStyleColorfulTag才生效
+
+/**
+ The pool of color which are use in colorful tag when `hotSearchStyle` is `PYHotSearchStyleColorfulTag`.
  */
 @property (nonatomic, strong) NSMutableArray<UIColor *> *colorPol;
 
-/** 
- * 是否对换热门搜索和搜索历史，默认为：NO，即热门搜索在搜索历史上方，对换后搜索历史在热门搜索上方
- * 注意：该属性只适用于当搜索历史为标签类型才有效，即PYSearchHistoryStyle != PYSearchHistoryStyleCell
+/**
+ Whether swap the popular search and search history location, default is NO.
+ 
+ Note: It is‘t effective when `searchHistoryStyle` is `PYSearchHistoryStyleCell`.
  */
 @property (nonatomic, assign) BOOL swapHotSeachWithSearchHistory;
 
-/** 热门搜索 */
+/**
+ The element of popular search
+ */
 @property (nonatomic, copy) NSArray<NSString *> *hotSearches;
-/** 所有的热门标签 */
+
+/**
+ The tags of popular search
+ */
 @property (nonatomic, copy) NSArray<UILabel *> *hotSearchTags;
-/** 热门标签头部 */
+
+/**
+ The label of popular search header
+ */
 @property (nonatomic, weak) UILabel *hotSearchHeader;
-/** 是否显示热门搜索，默认为：YES */
+
+/**
+ Whether show popular search, default is YES.
+ */
 @property (nonatomic, assign) BOOL showHotSearch;
-/** 热门搜索标题 */
+
+/**
+ The title of popular search
+ */
 @property (nonatomic, copy) NSString *hotSearchTitle;
 
-/** 所有的搜索历史标签,只有当PYSearchHistoryStyle != PYSearchHistoryStyleCell才有值 */
+/**
+ The tags of search history
+ */
 @property (nonatomic, copy) NSArray<UILabel *> *searchHistoryTags;
-/** 搜索历史标题,只有当PYSearchHistoryStyle != PYSearchHistoryStyleCell才有值 */
+
+/**
+ The label of search history header
+ */
 @property (nonatomic, weak) UILabel *searchHistoryHeader;
-/** 搜索历史标题 */
+
+/**
+ The title of search history
+ */
 @property (nonatomic, copy) NSString *searchHistoryTitle;
-/** 
- * 是否显示搜索历史，默认为：YES
- * 注意：当设置为NO时，搜索记录不缓存
+
+/**
+ Whether show search history, default is YES.
+ 
+ Note: search record is not cache when it is NO.
  */
 @property (nonatomic, assign) BOOL showSearchHistory;
-/** 搜索历史缓存保存路径, 默认为PYSEARCH_SEARCH_HISTORY_CACHE_PATH(PYSearchConst.h文件中的宏定义) */
+
+/**
+ The path of cache search record, default is `PYSEARCH_SEARCH_HISTORY_CACHE_PATH`.
+ */
 @property (nonatomic, copy) NSString *searchHistoriesCachePath;
-/** 搜索历史记录缓存数量，默认为20 */
+
+/**
+ The number of cache search record, default is 20.
+ */
 @property (nonatomic, assign) NSUInteger searchHistoriesCount;
-/** 是否去除搜索词中的空格，默认为YES */
+
+/**
+ Whether remove the space of search string, default is YES.
+ */
 @property (nonatomic, assign) BOOL removeSpaceOnSearchString;
-/** 当PYSearchHistoryStyle != PYSearchHistoryStyleCell时，搜索历史标签的清空按钮 */
+
+/**
+ The button of empty search record when `searchHistoryStyle` is’t `PYSearchHistoryStyleCell`.
+ */
 @property (nonatomic, weak) UIButton *emptyButton;
-/** 当PYSearchHistoryStyle = PYSearchHistoryStyleCell时，tableBleView底部的清空搜索历史 */
+
+/**
+ The label od empty search record when `searchHistoryStyle` is `PYSearchHistoryStyleCell`.
+ */
 @property (nonatomic, weak) UILabel *emptySearchHistoryLabel;
 
-/** 热门搜索风格 （默认为：PYHotSearchStyleDefault）*/
+/**
+ The style of popular search, default is `PYHotSearchStyleNormalTag`.
+ */
 @property (nonatomic, assign) PYHotSearchStyle hotSearchStyle;
-/** 搜索历史风格 （默认为：PYSearchHistoryStyleDefault）*/
+
+/**
+ The style of search histrory, default is `PYSearchHistoryStyleCell`.
+ */
 @property (nonatomic, assign) PYSearchHistoryStyle searchHistoryStyle;
-/** 显示搜索结果模式（默认为自定义：PYSearchResultShowModeDefault） */
+
+/**
+ The mode of display search result view controller, default is `PYSearchResultShowModeCustom`.
+ */
 @property (nonatomic, assign) PYSearchResultShowMode searchResultShowMode;
-/** 搜索栏 */
+
+/**
+ The search bar
+ */
 @property (nonatomic, weak) UISearchBar *searchBar;
-/** 搜索栏的背景色 */
+
+/**
+ The background color of search bar.
+ */
 @property (nonatomic, strong) UIColor *searchBarBackgroundColor;
-/** 取消按钮 */
+
+/**
+ The barButtonItem of cancel
+ */
 @property (nonatomic, weak) UIBarButtonItem *cancelButton;
-/** 搜索建议的tableView */
+
+/**
+ The search suggestion view
+ */
 @property (nonatomic, weak, readonly) UITableView *searchSuggestionView;
 
-/** 搜索时调用此Block */
-@property (nonatomic, copy) PYDidSearchBlock didSearchBlock;
 /**
- * 搜索建议
- * 注意：给此属性赋值时，确保searchSuggestionHidden值为NO，否则赋值失效
- * 注意：当自定义搜索建议cell，searchSuggestions赋值失效，该属性始终为nil
+ The block which invoked when search begain.
+ */
+@property (nonatomic, copy) PYDidSearchBlock didSearchBlock;
+
+/**
+ The element of search suggestions
+ 
+ Note: it is't effective when `searchSuggestionHidden` is NO or cell of suggestion view is custom.
  */
 @property (nonatomic, copy) NSArray<NSString *> *searchSuggestions;
-/** 搜索建议是否隐藏 默认为：NO */
+
+/**
+ Whether hidden search suggstion view, default is NO.
+ */
 @property (nonatomic, assign) BOOL searchSuggestionHidden;
 
-/** 
- * 搜索结果控制器
- * 当searchResultShowMode == PYSearchResultShowModePush时，
- * 将目的控制器给该属性赋值，即Push到searchResultController控制器
- * 当searchResultShowMode == PYSearchResultShowModeEmbed时，
- * 将目的控制器给该属性赋值，即将searchResultController.view添加到self.view
+/**
+ The view controller of search result.
  */
 @property (nonatomic, strong) UIViewController *searchResultController;
-/** 
- * 是否显示搜索结果当搜索文本改变时（默认为NO）
- * 该属性只要当searchResultShowMode == PYSearchResultShowModeEmbed时，才会生效
+
+/**
+ Whether show search result view when search text did change, default is NO.
+ 
+ Note: it is effective only when `searchResultShowMode` is `PYSearchResultShowModeEmbed`.
  */
 @property (nonatomic, assign) BOOL showSearchResultWhenSearchTextChanged;
+
 /**
- * 是否显示搜索结果当搜索框重新聚焦(再次成为第一响应者时)（默认为NO）
- * 该属性只要当searchResultShowMode == PYSearchResultShowModeEmbed时，才会生效
+ Whether show search result view when search bar become first responder again.
+ 
+ Note: it is effective only when `searchResultShowMode` is `PYSearchResultShowModeEmbed`.
  */
 @property (nonatomic, assign) BOOL showSearchResultWhenSearchBarRefocused;
 
 /**
- * 快速创建PYSearchViewController对象
- *
- * hotSearches : 热门搜索数组
- * placeholder : searchBar占位文字
- *
+ Creates an instance of searchViewContoller with popular searches and search bar's placeholder.
+
+ @param hotSearches     popular searchs
+ @param placeholder     placeholder of search bar
+ @return new instance of `PYSearchViewController` class
  */
-+ (instancetype)searchViewControllerWithHotSearches:(NSArray<NSString *> *)hotSearches searchBarPlaceholder:(NSString *)placeholder;
++ (instancetype)searchViewControllerWithHotSearches:(NSArray<NSString *> *)hotSearches
+                               searchBarPlaceholder:(NSString *)placeholder;
 
 /**
- * 快速创建PYSearchViewController对象
- *
- * hotSearches : 热门搜索数组
- * placeholder : searchBar占位文字
- * block: 点击（开始）搜索时调用block
- * 注意 : delegate(代理)的优先级大于block(即实现了代理方法则block失效)
- *
+ Creates an instance of searchViewContoller with popular searches, search bar's placeholder and the block which invoked when search begain.
+
+ @param hotSearches     popular searchs
+ @param placeholder     placeholder of search bar
+ @param block           block which invoked when search begain
+ @return new instance of `PYSearchViewController` class
+ 
+ Note: The `delegate` has a priority greater than the `block`, `block` is't effective when `searchViewController:didSearchWithSearchBar:searchText:` is implemented.
  */
-+ (instancetype)searchViewControllerWithHotSearches:(NSArray<NSString *> *)hotSearches searchBarPlaceholder:(NSString *)placeholder didSearchBlock:(PYDidSearchBlock)block;
++ (instancetype)searchViewControllerWithHotSearches:(NSArray<NSString *> *)hotSearches
+                               searchBarPlaceholder:(NSString *)placeholder
+                                     didSearchBlock:(PYDidSearchBlock)block;
 
 @end

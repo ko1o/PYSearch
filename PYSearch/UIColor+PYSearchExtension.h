@@ -1,18 +1,28 @@
-// 
-//  代码地址: https://github.com/iphone5solo/PYSearch
-//  代码地址: http://www.code4app.com/thread-11175-1-1.html
+//
+//  GitHub: https://github.com/iphone5solo/PYSearch
 //  Created by CoderKo1o.
-//  Copyright © 2016年 iphone5solo. All rights reserved.
-//  UIColor 分类
+//  Copyright © 2016 iphone5solo. All rights reserved.
+//
 
 #import <UIKit/UIKit.h>
 
 @interface UIColor (PYSearchExtension)
 
-/** 根据16进制字符串返回对应颜色 */
+/**
+ Returns the corresponding color according to the hexadecimal string.
+
+ @param hexString   hexadecimal string(eg:@"#ccff88")
+ @return new instance of `UIColor` class
+ */
 + (instancetype)py_colorWithHexString:(NSString *)hexString;
 
-/** 根据16进制字符串返回对应颜色 带透明参数 */
+/**
+  Returns the corresponding color according to the hexadecimal string and alpha.
+
+ @param hexString   hexadecimal string(eg:@"#ccff88")
+ @param alpha       alpha
+ @return new instance of `UIColor` class
+ */
 + (instancetype)py_colorWithHexString:(NSString *)hexString alpha:(CGFloat)alpha;
 
 @end
