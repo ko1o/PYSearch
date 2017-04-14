@@ -12,13 +12,13 @@
 + (NSBundle *)py_searchBundle
 {
     static NSBundle *searchBundle = nil;
-    if (searchBundle == nil) {
+    if (nil == searchBundle) {
         //Default use `[NSBundle mainBundle]`.
         searchBundle = [NSBundle bundleWithPath:[[NSBundle mainBundle] pathForResource:@"PYSearch" ofType:@"bundle"]];
         /**
          If you use pod import and configure `use_frameworks` in Podfile, [NSBundle mainBundle] does not load the `PYSearch.fundle` resource file in `PYSearch.framework`. 
          */
-        if (searchBundle == nil) { // Empty description resource file in `PYSearch.framework`.
+        if (nil == searchBundle) { // Empty description resource file in `PYSearch.framework`.
             searchBundle = [NSBundle bundleWithPath:[[NSBundle bundleForClass:[PYSearchViewController class]] pathForResource:@"PYSearch" ofType:@"bundle"]];
         }
     }
@@ -33,7 +33,7 @@
 + (NSString *)py_localizedStringForKey:(NSString *)key value:(NSString *)value
 {
     static NSBundle *bundle = nil;
-    if (bundle == nil) {
+    if (nil == bundle) {
         NSString *language = [NSLocale preferredLanguages].firstObject;
         if ([language hasPrefix:@"en"]) language = @"en";
         else if ([language hasPrefix:@"es"]) language = @"es";
@@ -58,7 +58,7 @@
 + (UIImage *)py_imageNamed:(NSString *)name
 {
     CGFloat scale = [[UIScreen mainScreen] scale];
-    name = scale == 3.0 ? [NSString stringWithFormat:@"%@@3x.png", name] : [NSString stringWithFormat:@"%@@2x.png", name];
+    name = 3.0 == scale ? [NSString stringWithFormat:@"%@@3x.png", name] : [NSString stringWithFormat:@"%@@2x.png", name];
     UIImage *image = [UIImage imageWithContentsOfFile:[[[NSBundle py_searchBundle] resourcePath] stringByAppendingPathComponent:name]];
     return image;
 }

@@ -136,7 +136,7 @@
     [super viewWillAppear:animated];
     
     // Adjust the view according to the `navigationBar.translucent`
-    if (self.navigationController.navigationBar.translucent == NO) {
+    if (NO == self.navigationController.navigationBar.translucent) {
         self.baseSearchTableView.contentInset = UIEdgeInsetsMake(0, 0, self.view.py_y, 0);
         self.searchSuggestionVC.view.frame = CGRectMake(0, 64 - self.view.py_y, self.view.py_width, self.view.py_height + self.view.py_y);
         if (!self.navigationController.navigationBar.barTintColor) {
@@ -619,7 +619,7 @@
 }
 
 - (void)layoutForDemand {
-    if (self.swapHotSeachWithSearchHistory == NO) {
+    if (NO == self.swapHotSeachWithSearchHistory) {
         self.hotSearchView.py_y = PYSEARCH_MARGIN * 2;
         self.searchHistoryView.py_y = self.hotSearches.count > 0 && self.showHotSearch ? CGRectGetMaxY(self.hotSearchView.frame) : PYSEARCH_MARGIN * 1.5;
     } else { // swap popular search whith search history
@@ -648,7 +648,7 @@
 {
     _searchHistoryTitle = [searchHistoryTitle copy];
     
-    if (self.searchHistoryStyle == PYSearchHistoryStyleCell) {
+    if (PYSearchHistoryStyleCell == self.searchHistoryStyle) {
         [self.baseSearchTableView reloadData];
     } else {
         self.searchHistoryHeader.text = _searchHistoryTitle;
@@ -659,7 +659,7 @@
 {
     _showSearchResultWhenSearchTextChanged = showSearchResultWhenSearchTextChanged;
     
-    if (_showSearchResultWhenSearchTextChanged == YES) {
+    if (YES == _showSearchResultWhenSearchTextChanged) {
         self.searchSuggestionHidden = YES;
     }
 }
@@ -690,7 +690,7 @@
     _searchHistoriesCachePath = [searchHistoriesCachePath copy];
     
     self.searchHistories = nil;
-    if (self.searchHistoryStyle == PYSearchHistoryStyleCell) {
+    if (PYSearchHistoryStyleCell == self.searchHistoryStyle) {
         [self.baseSearchTableView reloadData];
     } else {
         [self setSearchHistoryStyle:self.searchHistoryStyle];
@@ -749,10 +749,10 @@
 - (void)setHotSearches:(NSArray *)hotSearches
 {
     _hotSearches = hotSearches;
-    if (hotSearches.count == 0 || !self.showHotSearch) {
+    if (0 == hotSearches.count || !self.showHotSearch) {
         self.hotSearchHeader.hidden = YES;
         self.hotSearchTagsContentView.hidden = YES;
-        if (self.searchHistoryStyle == PYSearchHistoryStyleCell) {
+        if (PYSearchHistoryStyleCell == self.searchHistoryStyle) {
             UIView *tableHeaderView = self.baseSearchTableView.tableHeaderView;
             tableHeaderView.py_height = PYSEARCH_MARGIN * 1.5;
             [self.baseSearchTableView setTableHeaderView:tableHeaderView];
@@ -763,14 +763,14 @@
     self.baseSearchTableView.tableHeaderView.hidden = NO;
     self.hotSearchHeader.hidden = NO;
     self.hotSearchTagsContentView.hidden = NO;
-    if (self.hotSearchStyle == PYHotSearchStyleDefault
-        || self.hotSearchStyle == PYHotSearchStyleColorfulTag
-        || self.hotSearchStyle == PYHotSearchStyleBorderTag
-        || self.hotSearchStyle == PYHotSearchStyleARCBorderTag) {
+    if (PYHotSearchStyleDefault == self.hotSearchStyle
+        || PYHotSearchStyleColorfulTag == self.hotSearchStyle
+        || PYHotSearchStyleBorderTag == self.hotSearchStyle
+        || PYHotSearchStyleARCBorderTag == self.hotSearchStyle) {
         [self setupHotSearchNormalTags];
-    } else if (self.hotSearchStyle == PYHotSearchStyleRankTag) {
+    } else if (PYHotSearchStyleRankTag == self.hotSearchStyle) {
         [self setupHotSearchRankTags];
-    } else if (self.hotSearchStyle == PYHotSearchStyleRectangleTag) {
+    } else if (PYHotSearchStyleRectangleTag == self.hotSearchStyle) {
         [self setupHotSearchRectangleTags];
     }
     [self setSearchHistoryStyle:self.searchHistoryStyle];
@@ -780,7 +780,7 @@
 {
     _searchHistoryStyle = searchHistoryStyle;
     
-    if (!self.searchHistories.count || !self.showSearchHistory || searchHistoryStyle == UISearchBarStyleDefault) {
+    if (!self.searchHistories.count || !self.showSearchHistory || UISearchBarStyleDefault == searchHistoryStyle) {
         self.searchHistoryHeader.hidden = YES;
         self.searchHistoryTagsContentView.hidden = YES;
         self.searchHistoryView.hidden = YES;
@@ -889,12 +889,12 @@
 {
     [self.searchHistories removeAllObjects];
     [NSKeyedArchiver archiveRootObject:self.searchHistories toFile:self.searchHistoriesCachePath];
-    if (self.searchHistoryStyle == PYSearchHistoryStyleCell) {
+    if (PYSearchHistoryStyleCell == self.searchHistoryStyle) {
         [self.baseSearchTableView reloadData];
     } else {
         self.searchHistoryStyle = self.searchHistoryStyle;
     }
-    if (self.swapHotSeachWithSearchHistory == YES) {
+    if (YES == self.swapHotSeachWithSearchHistory) {
         self.hotSearches = self.hotSearches;
     }
     PYSEARCH_LOG(@"%@", [NSBundle py_localizedStringForKey:PYSearchEmptySearchHistoryLogText]);
@@ -904,8 +904,8 @@
 {
     UILabel *label = (UILabel *)gr.view;
     self.searchBar.text = label.text;
-    
-    if (label.tag == 1) {
+    // popular search tagLabel's tag is 1, search history tagLabel's tag is 0.
+    if (1 == label.tag) {
         if ([self.delegate respondsToSelector:@selector(searchViewController:didSelectHotSearchAtIndex:searchText:)]) {
             [self.delegate searchViewController:self didSelectHotSearchAtIndex:[self.hotSearchTags indexOfObject:label] searchText:label.text];
             [self saveSearchCacheAndRefreshView];
@@ -957,7 +957,7 @@
         }
         [NSKeyedArchiver archiveRootObject:self.searchHistories toFile:self.searchHistoriesCachePath];
         
-        if (self.searchHistoryStyle == PYSearchHistoryStyleCell) {
+        if (PYSearchHistoryStyleCell == self.searchHistoryStyle) {
             [self.baseSearchTableView reloadData];
         } else {
             self.searchHistoryStyle = self.searchHistoryStyle;
@@ -979,7 +979,7 @@
                 [self.view addSubview:self.searchResultController.view];
                 [self addChildViewController:self.searchResultController];
                 self.searchResultController.view.hidden = NO;
-                self.searchResultController.view.py_y = self.navigationController.navigationBar.translucent == NO ? 0 : 64;
+                self.searchResultController.view.py_y = NO == self.navigationController.navigationBar.translucent ? 0 : 64;
                 self.searchResultController.view.py_height = self.view.py_height - self.searchResultController.view.py_y;
                 self.searchSuggestionVC.view.hidden = YES;
             } else {
@@ -1006,7 +1006,10 @@
 - (NSInteger)searchSuggestionView:(UITableView *)searchSuggestionView numberOfRowsInSection:(NSInteger)section
 {
     if ([self.dataSource respondsToSelector:@selector(searchSuggestionView:numberOfRowsInSection:)]) {
-        return [self.dataSource searchSuggestionView:searchSuggestionView numberOfRowsInSection:section];
+        NSInteger numberOfRow = [self.dataSource searchSuggestionView:searchSuggestionView numberOfRowsInSection:section];
+        searchSuggestionView.hidden = self.searchSuggestionHidden || !self.searchBar.text.length || 0 == numberOfRow;
+        self.baseSearchTableView.hidden = !searchSuggestionView.hidden;
+        return numberOfRow;
     }
     return self.searchSuggestions.count;
 }
@@ -1041,9 +1044,9 @@
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
 {
-    if (self.searchResultShowMode == PYSearchResultShowModeEmbed && self.showSearchResultWhenSearchTextChanged) {
+    if (PYSearchResultShowModeEmbed == self.searchResultShowMode && self.showSearchResultWhenSearchTextChanged) {
         [self handleSearchResultShow];
-        self.searchResultController.view.hidden = searchText.length == 0;
+        self.searchResultController.view.hidden = 0 == searchText.length;
     } else if (self.searchResultController) {
         self.searchResultController.view.hidden = YES;
     }
@@ -1060,8 +1063,8 @@
 
 - (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar
 {
-    if (self.searchResultShowMode == PYSearchResultShowModeEmbed) {
-        self.searchResultController.view.hidden = searchBar.text.length == 0 || !self.showSearchResultWhenSearchBarRefocused;
+    if (PYSearchResultShowModeEmbed == self.searchResultShowMode) {
+        self.searchResultController.view.hidden = 0 == searchBar.text.length || !self.showSearchResultWhenSearchBarRefocused;
         self.searchSuggestionVC.view.hidden = self.searchSuggestionHidden || !searchBar.text.length || ![self.searchSuggestionVC.tableView numberOfRowsInSection:0];
         if (self.searchSuggestionVC.view.hidden) {
             self.searchSuggestions = nil;
@@ -1086,8 +1089,8 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    self.baseSearchTableView.tableFooterView.hidden = self.searchHistories.count == 0 || !self.showSearchHistory;
-    return self.showSearchHistory && self.searchHistoryStyle == PYSearchHistoryStyleCell ? self.searchHistories.count : 0;
+    self.baseSearchTableView.tableFooterView.hidden = 0 == self.searchHistories.count || !self.showSearchHistory;
+    return self.showSearchHistory && PYSearchHistoryStyleCell == self.searchHistoryStyle ? self.searchHistories.count : 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -1126,12 +1129,12 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    return self.showSearchHistory && self.searchHistories.count && self.searchHistoryStyle == PYSearchHistoryStyleCell ? (self.searchHistoryTitle.length ? self.searchHistoryTitle : [NSBundle py_localizedStringForKey:PYSearchSearchHistoryText]) : nil;
+    return self.showSearchHistory && self.searchHistories.count && PYSearchHistoryStyleCell == self.searchHistoryStyle ? (self.searchHistoryTitle.length ? self.searchHistoryTitle : [NSBundle py_localizedStringForKey:PYSearchSearchHistoryText]) : nil;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return self.searchHistories.count && self.showSearchHistory && self.searchHistoryStyle == PYSearchHistoryStyleCell ? 25 : 0.01;
+    return self.searchHistories.count && self.showSearchHistory && PYSearchHistoryStyleCell == self.searchHistoryStyle ? 25 : 0.01;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
