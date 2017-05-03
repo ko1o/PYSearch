@@ -40,7 +40,7 @@
   * [Styles](#Styles)
   
 * Usage
-  * [How to use](#How to use)
+  * [How to use](#Howtouse)
   * [Details (See the example program PYSearchExample for details)](#Details)
   * [Custom](#Custom)
   
