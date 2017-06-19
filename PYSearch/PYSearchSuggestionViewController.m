@@ -9,7 +9,10 @@
 
 @interface PYSearchSuggestionViewController ()
 
-@property (nonatomic, assign) UIEdgeInsets originalContentInset;
+@property (nonatomic, assign) UIEdgeInsets originalContentInsetWhenKeyboardShow;
+@property (nonatomic, assign) UIEdgeInsets originalContentInsetWhenKeyboardHidden;
+
+@property (nonatomic, assign) BOOL keyboardDidShow;
 
 @end
 
@@ -30,7 +33,8 @@
     if ([self.tableView respondsToSelector:@selector(setCellLayoutMarginsFollowReadableWidth:)]) { // For the adapter iPad
         self.tableView.cellLayoutMarginsFollowReadableWidth = NO;
     }
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboradFrameDidChange:) name:UIKeyboardDidShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboradFrameDidShow:) name:UIKeyboardDidShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboradFrameDidHidden:) name:UIKeyboardDidHideNotification object:nil];
 }
 
 - (void)dealloc
@@ -42,11 +46,23 @@
 {
     [super viewWillDisappear:animated];
     
-    self.originalContentInset = self.tableView.contentInset;
+    if (self.keyboardDidShow) {
+        self.originalContentInsetWhenKeyboardShow = self.tableView.contentInset;
+    } else {
+        self.originalContentInsetWhenKeyboardHidden = self.tableView.contentInset;
+    }
 }
 
-- (void)keyboradFrameDidChange:(NSNotification *)notification
+- (void)keyboradFrameDidShow:(NSNotification *)notification
 {
+    self.keyboardDidShow = YES;
+    [self setSearchSuggestions:_searchSuggestions];
+}
+
+- (void)keyboradFrameDidHidden:(NSNotification *)notification
+{
+    self.keyboardDidShow = NO;
+    self.originalContentInsetWhenKeyboardHidden = UIEdgeInsetsMake(-30, 0, 30, 0);
     [self setSearchSuggestions:_searchSuggestions];
 }
 
@@ -57,8 +73,14 @@
     
     [self.tableView reloadData];
     
-    if (!UIEdgeInsetsEqualToEdgeInsets(self.originalContentInset, UIEdgeInsetsZero) && !UIEdgeInsetsEqualToEdgeInsets(self.originalContentInset, UIEdgeInsetsMake(-30, 0, 30 - 64, 0))) {
-        self.tableView.contentInset =  self.originalContentInset;
+    /**
+     * Adjust the searchSugesstionView when the keyboard changes.
+     * more information can see : https://github.com/iphone5solo/PYSearch/issues/61
+     */
+    if (self.keyboardDidShow && !UIEdgeInsetsEqualToEdgeInsets(self.originalContentInsetWhenKeyboardShow, UIEdgeInsetsZero) && !UIEdgeInsetsEqualToEdgeInsets(self.originalContentInsetWhenKeyboardShow, UIEdgeInsetsMake(-30, 0, 30 - 64, 0))) {
+        self.tableView.contentInset =  self.originalContentInsetWhenKeyboardShow;
+    } else if (!self.keyboardDidShow && !UIEdgeInsetsEqualToEdgeInsets(self.originalContentInsetWhenKeyboardHidden, UIEdgeInsetsZero) && !UIEdgeInsetsEqualToEdgeInsets(self.originalContentInsetWhenKeyboardHidden, UIEdgeInsetsMake(-30, 0, 30 - 64, 0))) {
+        self.tableView.contentInset =  self.originalContentInsetWhenKeyboardHidden;
     }
     self.tableView.contentOffset = CGPointMake(0, -self.tableView.contentInset.top);
 }
