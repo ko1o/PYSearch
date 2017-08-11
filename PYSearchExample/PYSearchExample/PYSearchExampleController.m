@@ -94,6 +94,8 @@
         // Refresh and display the search suggustions
         searchViewController.searchSuggestions = searchSuggestionsM;
         
+    } else {
+        searchViewController.searchSuggestions = nil;
     }
 }
 @end
