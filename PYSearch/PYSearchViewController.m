@@ -117,8 +117,7 @@
         self.searchHistories = self.searchHistories;
         self.currentOrientation = [[UIDevice currentDevice] orientation];
     }
-    
-    self.navigationItem.titleView.py_x = PYSEARCH_MARGIN * 2;
+    self.navigationItem.titleView.py_x = [[[UIDevice currentDevice] systemVersion] intValue] >= 11.0 ? PYSEARCH_MARGIN * 0.5 : PYSEARCH_MARGIN * 2.0;
     self.navigationItem.titleView.py_y = self.view.py_width > self.view.py_height ? 3 : 7;
     self.navigationItem.titleView.py_width = self.view.py_width - 44 - self.navigationItem.titleView.py_x * 2;
     self.navigationItem.titleView.py_height = self.view.py_width > self.view.py_height ? 24 : 30;
