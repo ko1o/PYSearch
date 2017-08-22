@@ -264,7 +264,6 @@
 				TargetAttributes = {
 					6B9717621DC48FA800B2DAA1 = {
 						CreatedOnToolsVersion = 7.3;
-						DevelopmentTeam = V3PE7F2848;
 					};
 					6B97177E1DC48FA800B2DAA1 = {
 						CreatedOnToolsVersion = 7.3;
@@ -493,7 +492,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = V3PE7F2848;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = PYSearchExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -507,7 +506,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = V3PE7F2848;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = PYSearchExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
