@@ -117,10 +117,23 @@
         self.searchHistories = self.searchHistories;
         self.currentOrientation = [[UIDevice currentDevice] orientation];
     }
-    self.navigationItem.titleView.py_x = [[[UIDevice currentDevice] systemVersion] intValue] >= 11.0 ? PYSEARCH_MARGIN * 0.5 : PYSEARCH_MARGIN * 2.0;
-    self.navigationItem.titleView.py_y = self.view.py_width > self.view.py_height ? 3 : 7;
-    self.navigationItem.titleView.py_width = self.view.py_width - 44 - self.navigationItem.titleView.py_x * 2;
-    self.navigationItem.titleView.py_height = self.view.py_width > self.view.py_height ? 24 : 30;
+    
+    UIButton *cancelButton = self.navigationItem.rightBarButtonItem.customView;
+    [cancelButton sizeToFit];
+    cancelButton.py_width += 5;
+    // Adapt the search bar layout problem in the navigation bar on iOS 11
+    // More details : https://github.com/iphone5solo/PYSearch/issues/108
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 11.0) { // iOS 11
+        _searchBar.py_width = self.view.py_width - cancelButton.py_width - PYSEARCH_MARGIN * 3 - 8;
+        _searchBar.py_height = self.view.py_width > self.view.py_height ? 24 : 30;
+        _searchTextField.frame = _searchBar.bounds;
+    } else {
+        UIView *titleView = self.navigationItem.titleView;
+        titleView.py_x = PYSEARCH_MARGIN * 1.5;
+        titleView.py_y = self.view.py_width > self.view.py_height ? 3 : 7;
+        titleView.py_width = self.view.py_width - cancelButton.py_width - titleView.py_x * 2 - 3;
+        titleView.py_height = self.view.py_width > self.view.py_height ? 24 : 30;
+    }
 }
 
 - (BOOL)prefersStatusBarHidden
@@ -154,6 +167,7 @@
     [super viewWillDisappear:animated];
     
     [self.searchBar resignFirstResponder];
+    
 }
 
 - (void)dealloc
@@ -318,9 +332,14 @@
 {
     self.view.backgroundColor = [UIColor whiteColor];
     self.baseSearchTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.navigationController.navigationBar.backIndicatorImage = nil;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardDidShowNotification object:nil];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[NSBundle py_localizedStringForKey:PYSearchCancelButtonText] style:UIBarButtonItemStyleDone target:self action:@selector(cancelDidClick)];
-    
+    UIButton *cancleButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    cancleButton.titleLabel.font = [UIFont boldSystemFontOfSize:16];
+    [cancleButton setTitle:[NSBundle py_localizedStringForKey:PYSearchCancelButtonText] forState:UIControlStateNormal];
+    [cancleButton addTarget:self action:@selector(cancelDidClick)  forControlEvents:UIControlEventTouchUpInside];
+    [cancleButton sizeToFit];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:cancleButton];
     /**
      * Initialize settings
      */
@@ -339,11 +358,28 @@
     UIView *titleView = [[UIView alloc] init];
     UISearchBar *searchBar = [[UISearchBar alloc] initWithFrame:titleView.bounds];
     [titleView addSubview:searchBar];
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 11.0) { // iOS 11
+        [NSLayoutConstraint activateConstraints:@[
+                                                  [searchBar.topAnchor constraintEqualToAnchor:titleView.topAnchor],
+                                                  [searchBar.leftAnchor constraintEqualToAnchor:titleView.leftAnchor],
+                                                  [searchBar.rightAnchor constraintEqualToAnchor:titleView.rightAnchor constant:-PYSEARCH_MARGIN],
+                                                  [searchBar.bottomAnchor constraintEqualToAnchor:titleView.bottomAnchor]
+                                                  ]];
+    } else {
+        searchBar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    }
     self.navigationItem.titleView = titleView;
-    searchBar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     searchBar.placeholder = [NSBundle py_localizedStringForKey:PYSearchSearchPlaceholderText];
     searchBar.backgroundImage = [NSBundle py_imageNamed:@"clearImage"];
     searchBar.delegate = self;
+    for (UIView *subView in [[searchBar.subviews lastObject] subviews]) {
+        if ([[subView class] isSubclassOfClass:[UITextField class]]) {
+            UITextField *textField = (UITextField *)subView;
+            textField.font = [UIFont systemFontOfSize:16];
+            _searchTextField = textField;
+            break;
+        }
+    }
     self.searchBar = searchBar;
     
     UIView *headerView = [[UIView alloc] init];
@@ -699,14 +735,7 @@
 - (void)setSearchBarBackgroundColor:(UIColor *)searchBarBackgroundColor
 {
     _searchBarBackgroundColor = searchBarBackgroundColor;
-    
-    for (UIView *subView in [[self.searchBar.subviews lastObject] subviews]) {
-        if ([[subView class] isSubclassOfClass:[UITextField class]]) {
-            UITextField *textField = (UITextField *)subView;
-            textField.backgroundColor = searchBarBackgroundColor;
-            break;
-        }
-    }
+    _searchTextField.backgroundColor = searchBarBackgroundColor;
 }
 
 - (void)setSearchSuggestions:(NSArray<NSString *> *)searchSuggestions
