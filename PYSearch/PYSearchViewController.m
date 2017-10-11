@@ -155,7 +155,7 @@
     // Adjust the view according to the `navigationBar.translucent`
     if (NO == self.navigationController.navigationBar.translucent) {
         self.baseSearchTableView.contentInset = UIEdgeInsetsMake(0, 0, self.view.py_y, 0);
-        self.searchSuggestionVC.view.frame = CGRectMake(0, 64 - self.view.py_y, self.view.py_width, self.view.py_height + self.view.py_y);
+        self.searchSuggestionVC.view.frame = CGRectMake(0, CGRectGetMaxY(self.navigationController.navigationBar.frame) - self.view.py_y, self.view.py_width, self.view.py_height + self.view.py_y);
         if (!self.navigationController.navigationBar.barTintColor) {
             self.navigationController.navigationBar.barTintColor = PYSEARCH_COLOR(249, 249, 249);
         }
@@ -167,7 +167,6 @@
     [super viewWillDisappear:animated];
     
     [self.searchBar resignFirstResponder];
-    
 }
 
 - (void)dealloc
@@ -231,7 +230,7 @@
                 [_swSelf searchBarSearchButtonClicked:_swSelf.searchBar];
             }
         };
-        searchSuggestionVC.view.frame = CGRectMake(0, 64, PYScreenW, PYScreenH);
+        searchSuggestionVC.view.frame = CGRectMake(0, CGRectGetMaxY(self.navigationController.navigationBar.frame), PYScreenW, PYScreenH);
         searchSuggestionVC.view.backgroundColor = self.baseSearchTableView.backgroundColor;
         searchSuggestionVC.view.hidden = YES;
         _searchSuggestionView = (UITableView *)searchSuggestionVC.view;
@@ -998,7 +997,7 @@
                 [self.view addSubview:self.searchResultController.view];
                 [self addChildViewController:self.searchResultController];
                 self.searchResultController.view.hidden = NO;
-                self.searchResultController.view.py_y = NO == self.navigationController.navigationBar.translucent ? 0 : 64;
+                self.searchResultController.view.py_y = NO == self.navigationController.navigationBar.translucent ? 0 : CGRectGetMaxY(self.navigationController.navigationBar.frame);
                 self.searchResultController.view.py_height = self.view.py_height - self.searchResultController.view.py_y;
                 self.searchSuggestionVC.view.hidden = YES;
             } else {
