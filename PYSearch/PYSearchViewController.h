@@ -303,6 +303,11 @@ didSelectSearchSuggestionAtIndex:(NSInteger)index
 @property (nonatomic, weak) UISearchBar *searchBar;
 
 /**
+ The text field of search bar
+ */
+@property (nonatomic, weak) UITextField *searchTextField;
+
+/**
  The background color of search bar.
  */
 @property (nonatomic, strong) UIColor *searchBarBackgroundColor;
