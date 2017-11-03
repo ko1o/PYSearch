@@ -119,8 +119,16 @@
     }
     
     UIButton *cancelButton = self.navigationItem.rightBarButtonItem.customView;
+    CGFloat buttonWidth = cancelButton.py_width;
+    CGFloat buttonHeight = cancelButton.py_height;
     [cancelButton sizeToFit];
-    cancelButton.py_width += 5;
+    if (buttonWidth >= cancelButton.py_width) {
+        cancelButton.py_width = buttonWidth;
+        cancelButton.py_width += 5;
+    }
+    if (buttonHeight >= cancelButton.py_height) {
+        cancelButton.py_height = buttonHeight;
+    }
     // Adapt the search bar layout problem in the navigation bar on iOS 11
     // More details : https://github.com/iphone5solo/PYSearch/issues/108
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 11.0) { // iOS 11
