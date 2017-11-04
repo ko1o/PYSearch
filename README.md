@@ -7,6 +7,14 @@
 
 - 🔍 An elegant search controller for iOS.
 
+## QQ chat room
+ <img src="https://github.com/iphone5solo/learngit/raw/master/imagesForPYSearch/QQChatRoomForPYSearch.jpg" width="200">
+
+## Enjoy coffee ☕️
+
+<img src="https://github.com/iphone5solo/learngit/raw/master/imagesForPYSearch/AliPay.jpg" width="200">
+<img src="https://github.com/iphone5solo/learngit/raw/master/imagesForPYSearch/WeChatPay.jpg" width="200">   
+
 ## Features
 - [x] Support a variety of hot search style
 - [x] Support a variety of search history style
@@ -58,7 +66,7 @@
 #### Search history style
 <img src="https://github.com/iphone5solo/learngit/raw/master/imagesForPYSearch/searchHistoryStyle01.png" width="375"> <img src="https://github.com/iphone5solo/learngit/raw/master/imagesForPYSearch/searchHistoryStyle02.png" width="375"><br><img src="https://github.com/iphone5solo/learngit/raw/master/imagesForPYSearch/searchHistoryStyle03.png" width="375"> <img src="https://github.com/iphone5solo/learngit/raw/master/imagesForPYSearch/searchHistoryStyle04.png" width="375"><br><img src="https://github.com/iphone5solo/learngit/raw/master/imagesForPYSearch/searchHistoryStyle05.png" width="375">
 
-## <a id="How to use"></a>How to use
+## <a id="Howtouse"></a>How to use
 * Use CocoaPods:
   - `pod "PYSearch"`
   - Import the main file：`#import <PYSearch.h>`
