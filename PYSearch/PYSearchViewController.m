@@ -124,7 +124,6 @@
     [cancelButton sizeToFit];
     if (buttonWidth >= cancelButton.py_width) {
         cancelButton.py_width = buttonWidth;
-        cancelButton.py_width += 5;
     }
     if (buttonHeight >= cancelButton.py_height) {
         cancelButton.py_height = buttonHeight;
