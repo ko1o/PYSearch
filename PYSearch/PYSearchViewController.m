@@ -119,18 +119,18 @@
     }
     
     UIButton *cancelButton = self.navigationItem.rightBarButtonItem.customView;
-    CGFloat buttonWidth = cancelButton.py_width;
-    CGFloat buttonHeight = cancelButton.py_height;
-    [cancelButton sizeToFit];
-    if (buttonWidth >= cancelButton.py_width) {
-        cancelButton.py_width = buttonWidth;
-    }
-    if (buttonHeight >= cancelButton.py_height) {
-        cancelButton.py_height = buttonHeight;
-    }
     // Adapt the search bar layout problem in the navigation bar on iOS 11
     // More details : https://github.com/iphone5solo/PYSearch/issues/108
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 11.0) { // iOS 11
+        UINavigationBar *navBar = self.navigationController.navigationBar;
+        navBar.layoutMargins = UIEdgeInsetsZero;
+        CGFloat space = 8;
+        for (UIView *subview in navBar.subviews) {
+            if ([NSStringFromClass(subview.class) containsString:@"ContentView"]) {
+                subview.layoutMargins = UIEdgeInsetsMake(0, space, 0, space); // Fix cancel button width is modified
+                break;
+            }
+        }
         _searchBar.py_width = self.view.py_width - cancelButton.py_width - PYSEARCH_MARGIN * 3 - 8;
         _searchBar.py_height = self.view.py_width > self.view.py_height ? 24 : 30;
         _searchTextField.frame = _searchBar.bounds;
