@@ -158,7 +158,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
+    [self.navigationController setNavigationBarHidden:NO];
     // Adjust the view according to the `navigationBar.translucent`
     if (NO == self.navigationController.navigationBar.translucent) {
         self.baseSearchTableView.contentInset = UIEdgeInsetsMake(0, 0, self.view.py_y, 0);
@@ -341,8 +341,9 @@
     self.navigationController.navigationBar.backIndicatorImage = nil;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardDidShowNotification object:nil];
     UIButton *cancleButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    cancleButton.titleLabel.font = [UIFont boldSystemFontOfSize:16];
+    cancleButton.titleLabel.font = [UIFont systemFontOfSize:15];
     [cancleButton setTitle:[NSBundle py_localizedStringForKey:PYSearchCancelButtonText] forState:UIControlStateNormal];
+    [cancleButton setTitleColor:UIColorFromRGB(0x393939) forState:UIControlStateNormal];
     [cancleButton addTarget:self action:@selector(cancelDidClick)  forControlEvents:UIControlEventTouchUpInside];
     [cancleButton sizeToFit];
     cancleButton.py_width += PYSEARCH_MARGIN;
@@ -897,8 +898,8 @@
         [self.delegate didClickCancel:self];
         return;
     }
-    
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self.navigationController popViewControllerAnimated:self];
+//    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)keyboardDidShow:(NSNotification *)noti
