@@ -20,7 +20,7 @@
 
 + (instancetype)searchSuggestionViewControllerWithDidSelectCellBlock:(PYSearchSuggestionDidSelectCellBlock)didSelectCellBlock
 {
-    PYSearchSuggestionViewController *searchSuggestionVC = [[PYSearchSuggestionViewController alloc] init];
+    PYSearchSuggestionViewController *searchSuggestionVC = [[self alloc] init];
     searchSuggestionVC.didSelectCellBlock = didSelectCellBlock;
     searchSuggestionVC.automaticallyAdjustsScrollViewInsets = NO;
     return searchSuggestionVC;

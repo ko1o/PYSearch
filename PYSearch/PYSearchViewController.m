@@ -193,7 +193,7 @@
 
 + (instancetype)searchViewControllerWithHotSearches:(NSArray<NSString *> *)hotSearches searchBarPlaceholder:(NSString *)placeholder
 {
-    PYSearchViewController *searchVC = [[PYSearchViewController alloc] init];
+    PYSearchViewController *searchVC = [[self alloc] init];
     searchVC.hotSearches = hotSearches;
     searchVC.searchBar.placeholder = placeholder;
     return searchVC;
