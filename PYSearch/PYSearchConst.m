@@ -14,3 +14,4 @@ NSString *const PYSearchEmptySearchHistoryText = @"PYSearchEmptySearchHistoryTex
 NSString *const PYSearchEmptyButtonText = @"PYSearchEmptyButtonText";
 NSString *const PYSearchEmptySearchHistoryLogText = @"PYSearchEmptySearchHistoryLogText";
 NSString *const PYSearchCancelButtonText = @"PYSearchCancelButtonText";
+NSString *const PYSearchBackButtonText = @"PYSearchBackButtonText";

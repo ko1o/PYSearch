@@ -38,3 +38,4 @@ UIKIT_EXTERN NSString *const PYSearchEmptySearchHistoryText;
 UIKIT_EXTERN NSString *const PYSearchEmptyButtonText;
 UIKIT_EXTERN NSString *const PYSearchEmptySearchHistoryLogText;
 UIKIT_EXTERN NSString *const PYSearchCancelButtonText;
+UIKIT_EXTERN NSString *const PYSearchBackButtonText;

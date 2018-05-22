@@ -45,6 +45,15 @@ typedef NS_ENUM(NSInteger, PYSearchResultShowMode) {
     PYSearchResultShowModeEmbed,    // embed, dispaly the view of search result by embed
     PYSearchResultShowModeDefault = PYSearchResultShowModeCustom // defualt is `PYSearchResultShowModeCustom`
 };
+/**
+ mode of search view controller display
+ */
+typedef NS_ENUM(NSInteger, PYSearchViewControllerShowMode) {
+    PYSearchViewControllerShowModeModal,    // modal, dispaly the view of searchViewController by modal
+    PYSearchViewControllerShowModePush,   // push, dispaly the view of searchViewController by push
+    PYSearchViewControllerShowDefault = PYSearchViewControllerShowModeModal // defualt is `PYSearchViewControllerShowModeModal`
+};
+
 
 /**
  The protocol of data source, you can custom the suggestion view by implement these methods the data scource.
@@ -179,6 +188,13 @@ didSelectSearchSuggestionAtIndex:(NSInteger)index
  */
 - (void)didClickCancel:(PYSearchViewController *)searchViewController;
 
+/**
+ Called when back item did press, default execute `[self.navigationController popViewControllerAnimated:YES]`.
+ 
+ @param searchViewController search view controller
+ */
+- (void)didClickBack:(PYSearchViewController *)searchViewController;
+
 @end
 
 @interface PYSearchViewController : UIViewController
@@ -298,6 +314,11 @@ didSelectSearchSuggestionAtIndex:(NSInteger)index
 @property (nonatomic, assign) PYSearchResultShowMode searchResultShowMode;
 
 /**
+ The mode of display search view controller, default is `PYSearchViewControllerShowModeModal`.
+ */
+@property (nonatomic, assign) PYSearchViewControllerShowMode searchViewControllerShowMode;
+
+/**
  The search bar
  */
 @property (nonatomic, weak) UISearchBar *searchBar;
@@ -315,7 +336,22 @@ didSelectSearchSuggestionAtIndex:(NSInteger)index
 /**
  The barButtonItem of cancel
  */
-@property (nonatomic, weak) UIBarButtonItem *cancelButton;
+@property (nonatomic, strong) UIBarButtonItem *cancelBarButtonItem;
+
+/**
+ The customView of cancelBarButtonItem
+ */
+@property (nonatomic, weak) UIButton *cancelButton;
+
+/**
+ The barButtonItem of back
+ */
+@property (nonatomic, strong) UIBarButtonItem *backBarButtonItem;
+
+/**
+ The customView of backBarButtonItem
+ */
+@property (nonatomic, weak) UIButton *backButton;
 
 /**
  The search suggestion view

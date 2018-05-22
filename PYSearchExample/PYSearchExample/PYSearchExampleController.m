@@ -70,9 +70,15 @@
     }
     // 4. Set delegate
     searchViewController.delegate = self;
-    // 5. Present a navigation controller
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:searchViewController];
-    [self presentViewController:nav animated:YES completion:nil];
+    // 5. Present(Modal) or push search view controller
+    // Present(Modal)
+//    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:searchViewController];
+//    [self presentViewController:nav animated:YES completion:nil];
+    // Push
+    // Set mode of show search view controller, default is `PYSearchViewControllerShowModeModal`
+    searchViewController.searchViewControllerShowMode = PYSearchViewControllerShowModePush;
+//    // Push search view controller
+    [self.navigationController pushViewController:searchViewController animated:YES];
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section

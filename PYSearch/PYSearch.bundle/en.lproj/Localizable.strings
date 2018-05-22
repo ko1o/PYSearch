@@ -6,3 +6,4 @@
 "PYSearchEmptyButtonText" = "Clear";
 "PYSearchEmptySearchHistoryLogText" = "Clear the search history";
 "PYSearchCancelButtonText" = "Cancel";
+"PYSearchBackButtonText" = "Back";

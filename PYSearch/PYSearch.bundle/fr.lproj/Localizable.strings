@@ -6,3 +6,5 @@
 "PYSearchEmptyButtonText" = "Effacer";
 "PYSearchEmptySearchHistoryLogText" = "Effacer l'historique des recherches";
 "PYSearchCancelButtonText" = "Annuler";
+"PYSearchBackButtonText" = "Retour à";
+

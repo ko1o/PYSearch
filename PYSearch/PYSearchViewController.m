@@ -122,22 +122,33 @@
         self.searchHistories = self.searchHistories;
         self.currentOrientation = [[UIDevice currentDevice] orientation];
     }
+
+    CGFloat adaptWidth = 0.0;
+    if (self.searchViewControllerShowMode == PYSearchViewControllerShowModePush) {
+        UIButton *backButton = self.navigationItem.leftBarButtonItem.customView;
+        adaptWidth = backButton.py_width;
+        
+    } else if (self.searchViewControllerShowMode == PYSearchViewControllerShowModeModal) {
+        UIButton *cancelButton = self.navigationItem.rightBarButtonItem.customView;
+        self.cancelButtonWidth = cancelButton.py_width > self.cancelButtonWidth ? cancelButton.py_width : self.cancelButtonWidth;
+        adaptWidth = self.cancelButtonWidth;
+    }
     
-    UIButton *cancelButton = self.navigationItem.rightBarButtonItem.customView;
-    self.cancelButtonWidth = cancelButton.py_width > self.cancelButtonWidth ? cancelButton.py_width : self.cancelButtonWidth;
     // Adapt the search bar layout problem in the navigation bar on iOS 11
     // More details : https://github.com/iphone5solo/PYSearch/issues/108
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 11.0) { // iOS 11
         UINavigationBar *navBar = self.navigationController.navigationBar;
-        navBar.layoutMargins = UIEdgeInsetsZero;
-        CGFloat space = 8;
-        for (UIView *subview in navBar.subviews) {
-            if ([NSStringFromClass(subview.class) containsString:@"ContentView"]) {
-                subview.layoutMargins = UIEdgeInsetsMake(0, space, 0, space); // Fix cancel button width is modified
-                break;
+        if (self.navigationItem.rightBarButtonItem) { // Cancel button
+            CGFloat space = 8;
+            navBar.layoutMargins = UIEdgeInsetsZero;
+            for (UIView *subview in navBar.subviews) {
+                if ([NSStringFromClass(subview.class) containsString:@"ContentView"]) {
+                    subview.layoutMargins = UIEdgeInsetsMake(0, space, 0, space); // Fix cancel button width is modified
+                    break;
+                }
             }
         }
-        _searchBar.py_width = self.view.py_width - self.cancelButtonWidth - PYSEARCH_MARGIN * 3 - 8;
+        _searchBar.py_width = self.view.py_width - adaptWidth - PYSEARCH_MARGIN * 3 - 8;
         _searchBar.py_height = self.view.py_width > self.view.py_height ? 24 : 30;
         _searchTextField.frame = _searchBar.bounds;
     } else {
@@ -339,11 +350,6 @@
     return _colorPol;
 }
 
-- (UIBarButtonItem *)cancelButton
-{
-    return self.navigationItem.rightBarButtonItem;
-}
-
 - (void)setup
 {
     self.view.backgroundColor = [UIColor whiteColor];
@@ -356,13 +362,28 @@
     [cancleButton addTarget:self action:@selector(cancelDidClick)  forControlEvents:UIControlEventTouchUpInside];
     [cancleButton sizeToFit];
     cancleButton.py_width += PYSEARCH_MARGIN;
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:cancleButton];
+    self.cancelButton = cancleButton;
+    self.cancelBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:cancleButton];
+    UIButton *backButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    backButton.titleLabel.font = [UIFont boldSystemFontOfSize:16];
+    [backButton setTitle:[NSBundle py_localizedStringForKey:PYSearchBackButtonText] forState:UIControlStateNormal];
+    [backButton setImage:[NSBundle py_imageNamed:@"back"] forState:UIControlStateNormal];
+    [backButton addTarget:self action:@selector(backDidClick)  forControlEvents:UIControlEventTouchUpInside];
+    [backButton sizeToFit];
+    
+    backButton.contentEdgeInsets = UIEdgeInsetsMake(0, -35, 0, -15);
+    backButton.imageEdgeInsets = UIEdgeInsetsMake(0, 5, 0, 0);
+    backButton.py_width -= PYSEARCH_MARGIN;
+    self.backButton = backButton;
+    self.backBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
+    
     /**
      * Initialize settings
      */
     self.hotSearchStyle = PYHotSearchStyleDefault;
     self.searchHistoryStyle = PYHotSearchStyleDefault;
     self.searchResultShowMode = PYSearchResultShowModeDefault;
+    self.searchViewControllerShowMode = PYSearchViewControllerShowDefault;
     self.searchSuggestionHidden = NO;
     self.searchHistoriesCachePath = PYSEARCH_SEARCH_HISTORY_CACHE_PATH;
     self.searchHistoriesCount = 20;
@@ -723,9 +744,16 @@
     [self setSearchHistoryStyle:self.searchHistoryStyle];
 }
 
-- (void)setCancelButton:(UIBarButtonItem *)cancelButton
+- (void)setCancelBarButtonItem:(UIBarButtonItem *)cancelBarButtonItem
 {
-    self.navigationItem.rightBarButtonItem = cancelButton;
+    _cancelBarButtonItem = cancelBarButtonItem;
+    self.navigationItem.rightBarButtonItem = cancelBarButtonItem;
+}
+
+- (void)setCancelButton:(UIButton *)cancelButton
+{
+    _cancelButton = cancelButton;
+    self.navigationItem.rightBarButtonItem.customView = cancelButton;
 }
 
 - (void)setSearchHistoriesCachePath:(NSString *)searchHistoriesCachePath
@@ -899,6 +927,19 @@
     }
 }
 
+- (void)setSearchViewControllerShowMode:(PYSearchViewControllerShowMode)searchViewControllerShowMode
+{
+    _searchViewControllerShowMode = searchViewControllerShowMode;
+    if (_searchViewControllerShowMode == PYSearchViewControllerShowModeModal) { // modal
+        self.navigationItem.rightBarButtonItem = _cancelBarButtonItem;
+        self.navigationItem.leftBarButtonItem = nil;
+    } else if (_searchViewControllerShowMode == PYSearchViewControllerShowModePush) { // push
+        self.navigationItem.hidesBackButton = YES;
+        self.navigationItem.leftBarButtonItem = _backBarButtonItem;
+        self.navigationItem.rightBarButtonItem = nil;
+    }
+}
+
 - (void)cancelDidClick
 {
     [self.searchBar resignFirstResponder];
@@ -909,6 +950,18 @@
     }
     
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)backDidClick
+{
+    [self.searchBar resignFirstResponder];
+    
+    if ([self.delegate respondsToSelector:@selector(didClickBack:)]) {
+        [self.delegate didClickBack:self];
+        return;
+    }
+    
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)keyboardDidShow:(NSNotification *)noti
