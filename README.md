@@ -1,8 +1,13 @@
-![original 1 colour small](https://user-images.githubusercontent.com/37614260/40647006-fd53eb1c-6354-11e8-84fa-5adf4c2d2051.png)
 
-[![Build Status](https://travis-ci.org/iphone5solo/PYSearch.svg?branch=master)](https://travis-ci.org/iphone5solo/PYSearch)
+<img src="https://github.com/iphone5solo/learngit/raw/master/imagesForPYSearch/logo.png" height="200">
+
+<br/><br/>
+[![Apps Using](https://img.shields.io/badge/Apps%20Using-%3E%203,000-00BFFF.svg?style=plastic)](https://cocoapods.org/pods/PYSearch)
+[![Total Downloads](https://img.shields.io/badge/Total%20Downloads-%3E%2060,000-00BFFF.svg?style=plastic)](https://cocoapods.org/pods/PYSearch)
+<br>
+[![Build Status](https://travis-ci.org/ko1o/PYSearch.svg?branch=master)](https://travis-ci.org/ko1o/PYSearch)
 [![Pod Version](http://img.shields.io/cocoapods/v/PYSearch.svg?style=flat)](http://cocoadocs.org/docsets/PYSearch/)
-[![Pod Platform](http://img.shields.io/cocoapods/p/PYSearch.svg?style=flat)](http://cocoadocs.org/docsets/PYSearch/)
+[![Pod Platform](https://img.shields.io/badge/platform-iOS%207%2B-blue.svg?style=flat)](http://cocoadocs.org/docsets/PYSearch/)
 [![Pod License](http://img.shields.io/cocoapods/l/PYSearch.svg?style=flat)](https://opensource.org/licenses/MIT)
 
 - 🔍 An elegant search controller for iOS.
@@ -14,6 +19,7 @@
 - [x] Support a variety of hot search style
 - [x] Support a variety of search history style
 - [x] Support a variety of search results display mode
+- [x] Support a variety of search view controller display mode
 - [x] Support search suggestions
 - [x] Support search history (record) cache
 - [x] Support callback using delegate or block completion search
