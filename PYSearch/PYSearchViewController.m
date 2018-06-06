@@ -168,8 +168,11 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
-    [self.searchBar becomeFirstResponder];
+    if (NULL == self.searchResultController.parentViewController) {
+        [self.searchBar becomeFirstResponder];
+    } else if (YES == self.showKeyboardWhenReturnSearchResult) {
+        [self.searchBar becomeFirstResponder];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -391,6 +394,7 @@
     self.showHotSearch = YES;
     self.showSearchResultWhenSearchTextChanged = NO;
     self.showSearchResultWhenSearchBarRefocused = NO;
+    self.showKeyboardWhenReturnSearchResult = YES;
     self.removeSpaceOnSearchString = YES;
     
     UIView *titleView = [[UIView alloc] init];
