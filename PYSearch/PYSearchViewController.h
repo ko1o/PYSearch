@@ -334,6 +334,11 @@ didSelectSearchSuggestionAtIndex:(NSInteger)index
 @property (nonatomic, strong) UIColor *searchBarBackgroundColor;
 
 /**
+ The cornerRadius of `_UISearchBarSearchFieldBackgroundView` which from `self.searchTextField.subviews`, default is 0.0.
+ */
+@property (nonatomic, assign) CGFloat searchBarCornerRadius;
+
+/**
  The barButtonItem of cancel
  */
 @property (nonatomic, strong) UIBarButtonItem *cancelBarButtonItem;
