@@ -127,7 +127,6 @@
     if (self.searchViewControllerShowMode == PYSearchViewControllerShowModePush) {
         UIButton *backButton = self.navigationItem.leftBarButtonItem.customView;
         adaptWidth = backButton.py_width;
-        
     } else if (self.searchViewControllerShowMode == PYSearchViewControllerShowModeModal) {
         UIButton *cancelButton = self.navigationItem.rightBarButtonItem.customView;
         self.cancelButtonWidth = cancelButton.py_width > self.cancelButtonWidth ? cancelButton.py_width : self.cancelButtonWidth;
@@ -148,7 +147,7 @@
                 }
             }
         }
-        _searchBar.py_width = self.view.py_width - adaptWidth - PYSEARCH_MARGIN * 3 - 8;
+        _searchBar.py_width = self.view.py_width - adaptWidth - PYSEARCH_MARGIN * 4;
         _searchBar.py_height = self.view.py_width > self.view.py_height ? 24 : 30;
         _searchTextField.frame = _searchBar.bounds;
     } else {
