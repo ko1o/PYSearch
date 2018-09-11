@@ -168,9 +168,13 @@
 {
     [super viewDidAppear:animated];
     if (NULL == self.searchResultController.parentViewController) {
-        [self.searchBar becomeFirstResponder];
+        [UIView performWithoutAnimation:^{
+            [self.searchBar becomeFirstResponder];
+        }];
     } else if (YES == self.showKeyboardWhenReturnSearchResult) {
-        [self.searchBar becomeFirstResponder];
+        [UIView performWithoutAnimation:^{
+            [self.searchBar becomeFirstResponder];
+        }];
     }
 }
 
