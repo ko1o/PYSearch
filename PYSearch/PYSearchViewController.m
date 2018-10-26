@@ -164,22 +164,6 @@
     return NO;
 }
 
-- (void)makeSearchBarFirstResponder {
-    [UIView performWithoutAnimation:^{
-        [self.searchBar becomeFirstResponder];
-    }];
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-    if (NULL == self.searchResultController.parentViewController) {
-        [self makeSearchBarFirstResponder];
-    } else if (YES == self.showKeyboardWhenReturnSearchResult) {
-        [self makeSearchBarFirstResponder];
-    }
-}
-
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -195,6 +179,12 @@
         if (!self.navigationController.navigationBar.barTintColor) {
             self.navigationController.navigationBar.barTintColor = PYSEARCH_COLOR(249, 249, 249);
         }
+    }
+    
+    if (NULL == self.searchResultController.parentViewController) {
+        [self.searchBar becomeFirstResponder];
+    } else if (YES == self.showKeyboardWhenReturnSearchResult) {
+        [self.searchBar becomeFirstResponder];
     }
 }
 
