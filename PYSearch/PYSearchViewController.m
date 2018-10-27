@@ -12,7 +12,9 @@
 #define PYTextColor PYSEARCH_COLOR(113, 113, 113)
 #define PYSEARCH_COLORPolRandomColor self.colorPol[arc4random_uniform((uint32_t)self.colorPol.count)]
 
-@interface PYSearchViewController () <UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource, PYSearchSuggestionViewDataSource>
+@interface PYSearchViewController () <UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource, PYSearchSuggestionViewDataSource, UIGestureRecognizerDelegate> {
+    id <UIGestureRecognizerDelegate> _previousInteractivePopGestureRecognizerDelegate;
+}
 
 /**
  The header view of search view
@@ -202,6 +204,13 @@
     } else if (YES == self.showKeyboardWhenReturnSearchResult) {
         [self.searchBar becomeFirstResponder];
     }
+    // 修复滑动返回功能
+    if (_searchViewControllerShowMode == PYSearchViewControllerShowModePush) {
+        if (self.navigationController.viewControllers.count > 1) {
+            _previousInteractivePopGestureRecognizerDelegate = self.navigationController.interactivePopGestureRecognizer.delegate;
+            self.navigationController.interactivePopGestureRecognizer.delegate = self;
+        }
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -209,6 +218,10 @@
     [super viewWillDisappear:animated];
     
     [self.searchBar resignFirstResponder];
+    
+    if (_searchViewControllerShowMode == PYSearchViewControllerShowModePush) {
+        self.navigationController.interactivePopGestureRecognizer.delegate = _previousInteractivePopGestureRecognizerDelegate;
+    }
 }
 
 - (void)dealloc
@@ -1289,6 +1302,18 @@
         self.searchSuggestionVC.tableView.contentInset = UIEdgeInsetsMake(-30, 0, 30, 0);
         [self.searchBar resignFirstResponder];
     }
+}
+
+#pragma mark - UIGestureRecognizerDelegate
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer*)gestureRecognizer
+{
+    return self.navigationController.childViewControllers.count > 1;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer*)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer*)otherGestureRecognizer
+{
+    return self.navigationController.viewControllers.count > 1;
 }
 
 @end
