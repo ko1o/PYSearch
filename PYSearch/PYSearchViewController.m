@@ -12,7 +12,9 @@
 #define PYTextColor PYSEARCH_COLOR(113, 113, 113)
 #define PYSEARCH_COLORPolRandomColor self.colorPol[arc4random_uniform((uint32_t)self.colorPol.count)]
 
-@interface PYSearchViewController () <UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource, PYSearchSuggestionViewDataSource>
+@interface PYSearchViewController () <UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource, PYSearchSuggestionViewDataSource, UIGestureRecognizerDelegate> {
+    id <UIGestureRecognizerDelegate> _previousInteractivePopGestureRecognizerDelegate;
+}
 
 /**
  The header view of search view
@@ -109,7 +111,7 @@
 - (void)awakeFromNib
 {
     [super awakeFromNib];
-    
+
     [self setup];
 }
 
@@ -124,39 +126,72 @@
     }
 
     CGFloat adaptWidth = 0.0;
+    UISearchBar *searchBar = self.searchBar;
+    UITextField *searchField = self.searchTextField;
+    UIView *titleView = self.navigationItem.titleView;
+    UIButton *backButton = self.navigationItem.leftBarButtonItem.customView;
+    UIButton *cancelButton = self.navigationItem.rightBarButtonItem.customView;
+    UIEdgeInsets backButtonLayoutMargins = UIEdgeInsetsZero;
+    UIEdgeInsets cancelButtonLayoutMargins = UIEdgeInsetsZero;
+    UIEdgeInsets navigationBarLayoutMargins = UIEdgeInsetsZero;
+    UINavigationBar *navigationBar = self.navigationController.navigationBar;
+
+    if (@available(iOS 8.0, *)) {
+        backButton.layoutMargins = UIEdgeInsetsMake(8, 0, 8, 8);
+        backButtonLayoutMargins = backButton.layoutMargins;
+        cancelButton.layoutMargins = UIEdgeInsetsMake(8, 8, 8, 0);
+        cancelButtonLayoutMargins = cancelButton.layoutMargins;
+        navigationBarLayoutMargins = navigationBar.layoutMargins;
+    }
+
     if (self.searchViewControllerShowMode == PYSearchViewControllerShowModePush) {
         UIButton *backButton = self.navigationItem.leftBarButtonItem.customView;
-        adaptWidth = backButton.py_width;
-    } else if (self.searchViewControllerShowMode == PYSearchViewControllerShowModeModal) {
-        UIButton *cancelButton = self.navigationItem.rightBarButtonItem.customView;
-        self.cancelButtonWidth = cancelButton.py_width > self.cancelButtonWidth ? cancelButton.py_width : self.cancelButtonWidth;
-        adaptWidth = self.cancelButtonWidth;
+        UIImageView *imageView = backButton.imageView;
+        UIView *titleLabel = backButton.titleLabel;
+
+        [backButton sizeToFit];
+        [imageView sizeToFit];
+        [titleLabel sizeToFit];
+
+        backButton.py_height = navigationBar.py_height;
+        backButton.py_width = titleLabel.py_width + imageView.py_width / 2.0 + backButtonLayoutMargins.left + backButtonLayoutMargins.right;
+        adaptWidth = backButton.py_width + 8;
+    } else { // Default is PYSearchViewControllerShowModeModal
+        [cancelButton sizeToFit];
+        [cancelButton.titleLabel sizeToFit];
+        self.cancelButtonWidth = cancelButton.py_width + cancelButtonLayoutMargins.left + cancelButtonLayoutMargins.right;
+        adaptWidth = self.cancelButtonWidth + 8;
     }
-    
+
+    adaptWidth = adaptWidth + navigationBarLayoutMargins.left + navigationBarLayoutMargins.right;
     // Adapt the search bar layout problem in the navigation bar on iOS 11
     // More details : https://github.com/iphone5solo/PYSearch/issues/108
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 11.0) { // iOS 11
-        UINavigationBar *navBar = self.navigationController.navigationBar;
-        if (self.navigationItem.rightBarButtonItem) { // Cancel button
-            CGFloat space = 8;
-            navBar.layoutMargins = UIEdgeInsetsZero;
-            for (UIView *subview in navBar.subviews) {
-                if ([NSStringFromClass(subview.class) containsString:@"ContentView"]) {
-                    subview.layoutMargins = UIEdgeInsetsMake(0, space, 0, space); // Fix cancel button width is modified
-                    break;
-                }
+    if (@available(iOS 11.0, *)) { // iOS 11
+        if (self.searchViewControllerShowMode == PYSearchViewControllerShowModeModal) {
+            if (navigationBarLayoutMargins.left > PYSEARCH_MARGIN) {
+                searchBar.py_x = 0;
+            } else {
+                searchBar.py_x = PYSEARCH_MARGIN - navigationBarLayoutMargins.left;
             }
         }
-        _searchBar.py_width = self.view.py_width - adaptWidth - PYSEARCH_MARGIN * 4;
-        _searchBar.py_height = self.view.py_width > self.view.py_height ? 24 : 30;
-        _searchTextField.frame = _searchBar.bounds;
+        searchBar.py_height = self.view.py_width > self.view.py_height ? 24 : 30;
+        searchBar.py_width = self.view.py_width - adaptWidth - PYSEARCH_MARGIN;
+        searchField.frame = searchBar.bounds;
+        cancelButton.py_width = self.cancelButtonWidth;
     } else {
-        UIView *titleView = self.navigationItem.titleView;
-        titleView.py_x = PYSEARCH_MARGIN * 1.5;
-        titleView.py_y = self.view.py_width > self.view.py_height ? 3 : 7;
-        titleView.py_width = self.view.py_width - self.cancelButtonWidth - titleView.py_x * 2 - 3;
+        titleView.py_y = self.view.py_width > self.view.py_height ? 4 : 7;
         titleView.py_height = self.view.py_width > self.view.py_height ? 24 : 30;
+        if (self.searchViewControllerShowMode == PYSearchViewControllerShowModePush) {
+            titleView.py_width = self.view.py_width - adaptWidth - PYSEARCH_MARGIN;
+        } else {
+            titleView.py_x = PYSEARCH_MARGIN * 1.5;
+            titleView.py_width = self.view.py_width - self.cancelButtonWidth - titleView.py_x * 2 - 3;
+        }
     }
+}
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    [self viewDidLayoutSubviews];
 }
 
 - (BOOL)prefersStatusBarHidden
@@ -164,30 +199,14 @@
     return NO;
 }
 
-- (void)makeSearchBarFirstResponder {
-    [UIView performWithoutAnimation:^{
-        [self.searchBar becomeFirstResponder];
-    }];
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-    if (NULL == self.searchResultController.parentViewController) {
-        [self makeSearchBarFirstResponder];
-    } else if (YES == self.showKeyboardWhenReturnSearchResult) {
-        [self makeSearchBarFirstResponder];
-    }
-}
-
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
+
     if (self.cancelButtonWidth == 0) { // Just adapt iOS 11.2
         [self viewDidLayoutSubviews];
     }
-    
+
     // Adjust the view according to the `navigationBar.translucent`
     if (NO == self.navigationController.navigationBar.translucent) {
         self.baseSearchTableView.contentInset = UIEdgeInsetsMake(0, 0, self.view.py_y, 0);
@@ -196,13 +215,30 @@
             self.navigationController.navigationBar.barTintColor = PYSEARCH_COLOR(249, 249, 249);
         }
     }
+
+    if (NULL == self.searchResultController.parentViewController) {
+        [self.searchBar becomeFirstResponder];
+    } else if (YES == self.showKeyboardWhenReturnSearchResult) {
+        [self.searchBar becomeFirstResponder];
+    }
+    // 修复滑动返回功能
+    if (_searchViewControllerShowMode == PYSearchViewControllerShowModePush) {
+        if (self.navigationController.viewControllers.count > 1) {
+            _previousInteractivePopGestureRecognizerDelegate = self.navigationController.interactivePopGestureRecognizer.delegate;
+            self.navigationController.interactivePopGestureRecognizer.delegate = self;
+        }
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    
+
     [self.searchBar resignFirstResponder];
+
+    if (_searchViewControllerShowMode == PYSearchViewControllerShowModePush) {
+        self.navigationController.interactivePopGestureRecognizer.delegate = _previousInteractivePopGestureRecognizerDelegate;
+    }
 }
 
 - (void)dealloc
@@ -252,7 +288,7 @@
             __strong typeof(_weakSelf) _swSelf = _weakSelf;
             _swSelf.searchBar.text = didSelectCell.textLabel.text;
             NSIndexPath *indexPath = [_swSelf.searchSuggestionVC.tableView indexPathForCell:didSelectCell];
-            
+
             if ([_swSelf.delegate respondsToSelector:@selector(searchViewController:didSelectSearchSuggestionAtIndexPath:searchBar:)]) {
                 [_swSelf.delegate searchViewController:_swSelf didSelectSearchSuggestionAtIndexPath:indexPath searchBar:_swSelf.searchBar];
                 [_swSelf saveSearchCacheAndRefreshView];
@@ -365,26 +401,31 @@
     self.navigationController.navigationBar.backIndicatorImage = nil;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardDidShowNotification object:nil];
     UIButton *cancleButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    cancleButton.titleLabel.font = [UIFont boldSystemFontOfSize:16];
+    cancleButton.titleLabel.font = [UIFont systemFontOfSize:17];
     [cancleButton setTitle:[NSBundle py_localizedStringForKey:PYSearchCancelButtonText] forState:UIControlStateNormal];
     [cancleButton addTarget:self action:@selector(cancelDidClick)  forControlEvents:UIControlEventTouchUpInside];
+    cancleButton.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+    cancleButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
     [cancleButton sizeToFit];
     cancleButton.py_width += PYSEARCH_MARGIN;
     self.cancelButton = cancleButton;
     self.cancelBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:cancleButton];
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    backButton.titleLabel.font = [UIFont boldSystemFontOfSize:16];
+    UIImage *backImage = [NSBundle py_imageNamed:@"back"];
+    backButton.titleLabel.font = [UIFont systemFontOfSize:17];
     [backButton setTitle:[NSBundle py_localizedStringForKey:PYSearchBackButtonText] forState:UIControlStateNormal];
-    [backButton setImage:[NSBundle py_imageNamed:@"back"] forState:UIControlStateNormal];
+    [backButton setImage:backImage forState:UIControlStateNormal];
     [backButton addTarget:self action:@selector(backDidClick)  forControlEvents:UIControlEventTouchUpInside];
+    backButton.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+    backButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    [backButton.imageView sizeToFit];
+    backButton.contentEdgeInsets = UIEdgeInsetsMake(0, -ceil(backImage.size.width / 2.0), 0, 0);
+    backButton.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 0);
     [backButton sizeToFit];
-    
-    backButton.contentEdgeInsets = UIEdgeInsetsMake(0, -35, 0, -15);
-    backButton.imageEdgeInsets = UIEdgeInsetsMake(0, 5, 0, 0);
-    backButton.py_width -= PYSEARCH_MARGIN;
+    backButton.py_width += 3;
     self.backButton = backButton;
     self.backBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
-    
+
     /**
      * Initialize settings
      */
@@ -402,7 +443,7 @@
     self.showKeyboardWhenReturnSearchResult = YES;
     self.removeSpaceOnSearchString = YES;
     self.searchBarCornerRadius = 0.0;
-    
+
     UIView *titleView = [[UIView alloc] init];
     UISearchBar *searchBar = [[UISearchBar alloc] initWithFrame:titleView.bounds];
     [titleView addSubview:searchBar];
@@ -410,7 +451,7 @@
         [NSLayoutConstraint activateConstraints:@[
                                                   [searchBar.topAnchor constraintEqualToAnchor:titleView.topAnchor],
                                                   [searchBar.leftAnchor constraintEqualToAnchor:titleView.leftAnchor],
-                                                  [searchBar.rightAnchor constraintEqualToAnchor:titleView.rightAnchor constant:-PYSEARCH_MARGIN],
+                                                  [searchBar.rightAnchor constraintEqualToAnchor:titleView.rightAnchor],
                                                   [searchBar.bottomAnchor constraintEqualToAnchor:titleView.bottomAnchor]
                                                   ]];
     } else {
@@ -429,7 +470,7 @@
         }
     }
     self.searchBar = searchBar;
-    
+
     UIView *headerView = [[UIView alloc] init];
     headerView.py_width = PYScreenW;
     headerView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
@@ -450,7 +491,7 @@
     self.hotSearchView = hotSearchView;
     self.headerView = headerView;
     self.baseSearchTableView.tableHeaderView = headerView;
-    
+
     UIView *footerView = [[UIView alloc] init];
     footerView.py_width = PYScreenW;
     UILabel *emptySearchHistoryLabel = [[UILabel alloc] init];
@@ -467,7 +508,7 @@
     [footerView addSubview:emptySearchHistoryLabel];
     footerView.py_height = emptySearchHistoryLabel.py_height;
     self.baseSearchTableView.tableFooterView = footerView;
-    
+
     self.hotSearches = nil;
 }
 
@@ -494,7 +535,7 @@
     self.baseSearchTableView.backgroundColor = [UIColor py_colorWithHexString:@"#efefef"];
     // remove all subviews in hotSearchTagsContentView
     [self.hotSearchTagsContentView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-  
+
     CGFloat rectangleTagH = 40;
     for (int i = 0; i < self.hotSearches.count; i++) {
         UILabel *rectangleTagLabel = [[UILabel alloc] init];
@@ -512,10 +553,10 @@
         [contentView addSubview:rectangleTagLabel];
     }
     contentView.py_height = CGRectGetMaxY(contentView.subviews.lastObject.frame);
-    
+
     self.hotSearchView.py_height = CGRectGetMaxY(contentView.frame) + PYSEARCH_MARGIN * 2;
     self.baseSearchTableView.tableHeaderView.py_height = self.headerView.py_height = MAX(CGRectGetMaxY(self.hotSearchView.frame), CGRectGetMaxY(self.searchHistoryView.frame));
-    
+
     for (int i = 0; i < PYRectangleTagMaxCol - 1; i++) {
         UIImageView *verticalLine = [[UIImageView alloc] initWithImage:[NSBundle py_imageNamed:@"cell-content-line-vertical"]];
         verticalLine.py_height = contentView.py_height;
@@ -524,7 +565,7 @@
         verticalLine.py_width = 0.5;
         [contentView addSubview:verticalLine];
     }
-    
+
     for (int i = 0; i < ceil(((double)self.hotSearches.count / PYRectangleTagMaxCol)) - 1; i++) {
         UIImageView *verticalLine = [[UIImageView alloc] initWithImage:[NSBundle py_imageNamed:@"cell-content-line"]];
         verticalLine.py_height = 0.5;
@@ -542,7 +583,7 @@
 {
     UIView *contentView = self.hotSearchTagsContentView;
     [self.hotSearchTagsContentView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    
+
     NSMutableArray *rankTextLabelsM = [NSMutableArray array];
     NSMutableArray *rankTagM = [NSMutableArray array];
     NSMutableArray *rankViewM = [NSMutableArray array];
@@ -579,7 +620,7 @@
         rankTextLabel.py_height = rankView.py_height;
         [rankTextLabelsM addObject:rankTextLabel];
         [rankView addSubview:rankTextLabel];
-        
+
         UIImageView *line = [[UIImageView alloc] initWithImage:[NSBundle py_imageNamed:@"cell-content-line"]];
         line.py_height = 0.5;
         line.alpha = 0.7;
@@ -589,7 +630,7 @@
         line.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         [rankView addSubview:line];
         [rankViewM addObject:rankView];
-        
+
         // set tag's background color and text color
         switch (i) {
             case 0: // NO.1
@@ -613,18 +654,18 @@
     self.rankTextLabels = rankTextLabelsM;
     self.rankTags = rankTagM;
     self.rankViews = rankViewM;
-    
+
     for (int i = 0; i < self.rankViews.count; i++) { // default is two column
         UIView *rankView = self.rankViews[i];
         rankView.py_x = (PYSEARCH_MARGIN + rankView.py_width) * (i % 2);
         rankView.py_y = rankView.py_height * (i / 2);
     }
-    
+
     contentView.py_height = CGRectGetMaxY(self.rankViews.lastObject.frame);
     self.hotSearchView.py_height = CGRectGetMaxY(contentView.frame) + PYSEARCH_MARGIN * 2;
     self.baseSearchTableView.tableHeaderView.py_height = self.headerView.py_height = MAX(CGRectGetMaxY(self.hotSearchView.frame), CGRectGetMaxY(self.searchHistoryView.frame));
     [self layoutForDemand];
-    
+
     // Note：When the operating system for the iOS 9.x series tableHeaderView height settings are invalid, you need to reset the tableHeaderView
     [self.baseSearchTableView setTableHeaderView:self.baseSearchTableView.tableHeaderView];
 }
@@ -654,12 +695,12 @@
         [contentView addSubview:label];
         [tagsM addObject:label];
     }
-    
+
     CGFloat currentX = 0;
     CGFloat currentY = 0;
     CGFloat countRow = 0;
     CGFloat countCol = 0;
-    
+
     for (int i = 0; i < contentView.subviews.count; i++) {
         UILabel *subView = contentView.subviews[i];
         // When the number of search words is too large, the width is width of the contentView
@@ -675,18 +716,18 @@
             countRow ++;
         }
     }
-    
+
     contentView.py_height = CGRectGetMaxY(contentView.subviews.lastObject.frame);
     if (self.hotSearchTagsContentView == contentView) { // popular search tag
         self.hotSearchView.py_height = CGRectGetMaxY(contentView.frame) + PYSEARCH_MARGIN * 2;
     } else if (self.searchHistoryTagsContentView == contentView) { // search history tag
         self.searchHistoryView.py_height = CGRectGetMaxY(contentView.frame) + PYSEARCH_MARGIN * 2;
     }
-    
+
     [self layoutForDemand];
     self.baseSearchTableView.tableHeaderView.py_height = self.headerView.py_height = MAX(CGRectGetMaxY(self.hotSearchView.frame), CGRectGetMaxY(self.searchHistoryView.frame));
     self.baseSearchTableView.tableHeaderView.hidden = NO;
-    
+
     // Note：When the operating system for the iOS 9.x series tableHeaderView height settings are invalid, you need to reset the tableHeaderView
     [self.baseSearchTableView setTableHeaderView:self.baseSearchTableView.tableHeaderView];
     return [tagsM copy];
@@ -706,7 +747,7 @@
 - (void)setSearchBarCornerRadius:(CGFloat)searchBarCornerRadius
 {
     _searchBarCornerRadius = searchBarCornerRadius;
-    
+
     for (UIView *subView in self.searchTextField.subviews) {
         if ([NSStringFromClass([subView class]) isEqualToString:@"_UISearchBarSearchFieldBackgroundView"]) {
             subView.layer.cornerRadius = searchBarCornerRadius;
@@ -719,7 +760,7 @@
 - (void)setSwapHotSeachWithSearchHistory:(BOOL)swapHotSeachWithSearchHistory
 {
     _swapHotSeachWithSearchHistory = swapHotSeachWithSearchHistory;
-    
+
     self.hotSearches = self.hotSearches;
     self.searchHistories = self.searchHistories;
 }
@@ -727,14 +768,14 @@
 - (void)setHotSearchTitle:(NSString *)hotSearchTitle
 {
     _hotSearchTitle = [hotSearchTitle copy];
-    
+
     self.hotSearchHeader.text = _hotSearchTitle;
 }
 
 - (void)setSearchHistoryTitle:(NSString *)searchHistoryTitle
 {
     _searchHistoryTitle = [searchHistoryTitle copy];
-    
+
     if (PYSearchHistoryStyleCell == self.searchHistoryStyle) {
         [self.baseSearchTableView reloadData];
     } else {
@@ -745,7 +786,7 @@
 - (void)setShowSearchResultWhenSearchTextChanged:(BOOL)showSearchResultWhenSearchTextChanged
 {
     _showSearchResultWhenSearchTextChanged = showSearchResultWhenSearchTextChanged;
-    
+
     if (YES == _showSearchResultWhenSearchTextChanged) {
         self.searchSuggestionHidden = YES;
     }
@@ -754,7 +795,7 @@
 - (void)setShowHotSearch:(BOOL)showHotSearch
 {
     _showHotSearch = showHotSearch;
-    
+
     [self setHotSearches:self.hotSearches];
     [self setSearchHistoryStyle:self.searchHistoryStyle];
 }
@@ -762,7 +803,7 @@
 - (void)setShowSearchHistory:(BOOL)showSearchHistory
 {
     _showSearchHistory = showSearchHistory;
-    
+
     [self setHotSearches:self.hotSearches];
     [self setSearchHistoryStyle:self.searchHistoryStyle];
 }
@@ -782,7 +823,7 @@
 - (void)setSearchHistoriesCachePath:(NSString *)searchHistoriesCachePath
 {
     _searchHistoriesCachePath = [searchHistoriesCachePath copy];
-    
+
     self.searchHistories = nil;
     if (PYSearchHistoryStyleCell == self.searchHistoryStyle) {
         [self.baseSearchTableView reloadData];
@@ -813,10 +854,10 @@
         _searchSuggestions = nil;
         return;
     }
-    
+
     _searchSuggestions = [searchSuggestions copy];
     self.searchSuggestionVC.searchSuggestions = [searchSuggestions copy];
-    
+
     self.baseSearchTableView.hidden = !self.searchSuggestionHidden && [self.searchSuggestionVC.tableView numberOfRowsInSection:0];
     self.searchSuggestionVC.view.hidden = self.searchSuggestionHidden || ![self.searchSuggestionVC.tableView numberOfRowsInSection:0];
 }
@@ -829,7 +870,7 @@
     } else {
         _rankTagBackgroundColorHexStrings = @[rankTagBackgroundColorHexStrings[0], rankTagBackgroundColorHexStrings[1], rankTagBackgroundColorHexStrings[2], rankTagBackgroundColorHexStrings[3]];
     }
-    
+
     self.hotSearches = self.hotSearches;
 }
 
@@ -846,7 +887,7 @@
         }
         return;
     };
-    
+
     self.baseSearchTableView.tableHeaderView.hidden = NO;
     self.hotSearchHeader.hidden = NO;
     self.hotSearchTagsContentView.hidden = NO;
@@ -866,7 +907,7 @@
 - (void)setSearchHistoryStyle:(PYSearchHistoryStyle)searchHistoryStyle
 {
     _searchHistoryStyle = searchHistoryStyle;
-    
+
     if (!self.searchHistories.count || !self.showSearchHistory || UISearchBarStyleDefault == searchHistoryStyle) {
         self.searchHistoryHeader.hidden = YES;
         self.searchHistoryTagsContentView.hidden = YES;
@@ -874,13 +915,13 @@
         self.emptyButton.hidden = YES;
         return;
     };
-    
+
     self.searchHistoryHeader.hidden = NO;
     self.searchHistoryTagsContentView.hidden = NO;
     self.searchHistoryView.hidden = NO;
     self.emptyButton.hidden = NO;
     [self setupSearchHistoryTags];
-    
+
     switch (searchHistoryStyle) {
         case PYSearchHistoryStyleColorfulTag:
             for (UILabel *tag in self.searchHistoryTags) {
@@ -913,7 +954,7 @@
 - (void)setHotSearchStyle:(PYHotSearchStyle)hotSearchStyle
 {
     _hotSearchStyle = hotSearchStyle;
-    
+
     switch (hotSearchStyle) {
         case PYHotSearchStyleColorfulTag:
             for (UILabel *tag in self.hotSearchTags) {
@@ -944,7 +985,7 @@
         case PYHotSearchStyleRankTag:
             self.rankTagBackgroundColorHexStrings = nil;
             break;
-            
+
         default:
             break;
     }
@@ -966,24 +1007,24 @@
 - (void)cancelDidClick
 {
     [self.searchBar resignFirstResponder];
-    
+
     if ([self.delegate respondsToSelector:@selector(didClickCancel:)]) {
         [self.delegate didClickCancel:self];
         return;
     }
-    
+
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)backDidClick
 {
     [self.searchBar resignFirstResponder];
-    
+
     if ([self.delegate respondsToSelector:@selector(didClickBack:)]) {
         [self.delegate didClickBack:self];
         return;
     }
-    
+
     [self.navigationController popViewControllerAnimated:YES];
 }
 
@@ -1063,19 +1104,19 @@
     if (self.showSearchHistory && searchText.length > 0) {
         [self.searchHistories removeObject:searchText];
         [self.searchHistories insertObject:searchText atIndex:0];
-        
+
         if (self.searchHistories.count > self.searchHistoriesCount) {
             [self.searchHistories removeLastObject];
         }
         [NSKeyedArchiver archiveRootObject:self.searchHistories toFile:self.searchHistoriesCachePath];
-        
+
         if (PYSearchHistoryStyleCell == self.searchHistoryStyle) {
             [self.baseSearchTableView reloadData];
         } else {
             self.searchHistoryStyle = self.searchHistoryStyle;
         }
     }
-    
+
     [self handleSearchResultShow];
 }
 
@@ -1099,7 +1140,7 @@
             }
             break;
         case PYSearchResultShowModeCustom:
-            
+
             break;
         default:
             break;
@@ -1208,14 +1249,14 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *cellID = @"PYSearchHistoryCellID";
-    
+
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID];
         cell.textLabel.textColor = PYTextColor;
         cell.textLabel.font = [UIFont systemFontOfSize:14];
         cell.backgroundColor = [UIColor clearColor];
-        
+
         UIButton *closetButton = [[UIButton alloc] init];
         closetButton.py_size = CGSizeMake(cell.py_height, cell.py_height);
         [closetButton setImage:[NSBundle py_imageNamed:@"close"] forState:UIControlStateNormal];
@@ -1232,10 +1273,10 @@
         line.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         [cell.contentView addSubview:line];
     }
-    
+
     cell.imageView.image = [NSBundle py_imageNamed:@"search_history"];
     cell.textLabel.text = self.searchHistories[indexPath.row];
-    
+
     return cell;
 }
 
@@ -1260,7 +1301,7 @@
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     self.searchBar.text = cell.textLabel.text;
-        
+
     if ([self.delegate respondsToSelector:@selector(searchViewController:didSelectSearchHistoryAtIndex:searchText:)]) {
         [self.delegate searchViewController:self didSelectSearchHistoryAtIndex:indexPath.row searchText:cell.textLabel.text];
         [self saveSearchCacheAndRefreshView];
@@ -1276,6 +1317,18 @@
         self.searchSuggestionVC.tableView.contentInset = UIEdgeInsetsMake(-30, 0, 30, 0);
         [self.searchBar resignFirstResponder];
     }
+}
+
+#pragma mark - UIGestureRecognizerDelegate
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer*)gestureRecognizer
+{
+    return self.navigationController.childViewControllers.count > 1;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer*)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer*)otherGestureRecognizer
+{
+    return self.navigationController.viewControllers.count > 1;
 }
 
 @end
