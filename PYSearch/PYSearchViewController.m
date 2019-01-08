@@ -229,6 +229,14 @@
     }
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    // Fixed search history view may not be displayed or other problem at the first time.
+    [self setSearchHistoryStyle:self.searchHistoryStyle];
+}
+
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
