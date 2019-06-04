@@ -204,6 +204,9 @@
 {
     [super viewWillAppear:animated];
     
+    // Fixed search history view may not be displayed or other problem at the first time.
+    [self setSearchHistoryStyle:self.searchHistoryStyle];  // in method viewDidAppear，the view flashes when searchHistory count > 0
+    
     if (self.cancelButtonWidth == 0) { // Just adapt iOS 11.2
         [self viewDidLayoutSubviews];
     }
