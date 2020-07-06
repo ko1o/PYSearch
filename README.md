@@ -1,5 +1,5 @@
-## If you want to support the author, you only need to click on the advertising image below.
-<a href="https://tracking.gitads.io/?repo=PYSearch"><img src="https://images.gitads.io/PYSearch" height="388"></a>
+## PYSearch is being sponsored by the following tool; please help to support us by taking a look and signing up to a free trial.
+<a href="https://tracking.gitads.io/?repo=PYSearch"><img src="https://images.gitads.io/PYSearch" height="458"></a>
 
 <img src="https://github.com/iphone5solo/learngit/raw/master/imagesForPYSearch/logo.png" height="200">
 
