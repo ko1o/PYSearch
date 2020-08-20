@@ -1221,18 +1221,7 @@
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
 {
-    if (PYSearchResultShowModeEmbed == self.searchResultShowMode && self.showSearchResultWhenSearchTextChanged) {
-        [self handleSearchResultShow];
-        self.searchResultController.view.hidden = 0 == searchText.length;
-    } else if (self.searchResultController) {
-        self.searchResultController.view.hidden = YES;
-    }
-    self.baseSearchTableView.hidden = searchText.length && !self.searchSuggestionHidden && [self.searchSuggestionVC.tableView numberOfRowsInSection:0];
-    self.searchSuggestionVC.view.hidden = self.searchSuggestionHidden || !searchText.length || ![self.searchSuggestionVC.tableView numberOfRowsInSection:0];
-    if (self.searchSuggestionVC.view.hidden) {
-        self.searchSuggestions = nil;
-    }
-    [self.view bringSubviewToFront:self.searchSuggestionVC.view];
+
     if ([self.delegate respondsToSelector:@selector(searchViewController:searchTextDidChange:searchText:)]) {
         [self.delegate searchViewController:self searchTextDidChange:searchBar searchText:searchText];
     }
