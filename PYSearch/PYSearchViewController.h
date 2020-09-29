@@ -428,4 +428,6 @@ didSelectSearchSuggestionAtIndex:(NSInteger)index
                                searchBarPlaceholder:(NSString *)placeholder
                                      didSearchBlock:(PYDidSearchBlock)block;
 
+- (void)emptySearchHistoryDidClick;
+- (void)setSearchHistoryStyle:(PYSearchHistoryStyle)searchHistoryStyle;
 @end
